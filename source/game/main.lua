@@ -669,15 +669,34 @@ do
         debugbox("Close this dialog. Hit enter. Type the number to delete. Hit enter.")
     end
 
+    local function count_map_items(item_number)
+        local count = 0
+        for x=1,MAP_SQUARE do
+            for y=1,MAP_SQUARE do
+                if Save.map[x][y] == item_number then
+                    count = count + 1
+                end
+            end
+        end
+        return count
+    end
+
     local function alchcollect()
         local centerw = math.floor(ScreenWidth/SQUARESIZE/2)
         local centerh = math.floor(ScreenHeight/SQUARESIZE/2)
+        local new_x = randomgen:random(MAP_SQUARE)
+        local new_y = randomgen:random(MAP_SQUARE)
         for n=1,#TilestoAlch do
             local tile = Save.map[State.xprefix+centerw][math.max(State.yprefix+centerh)]
             if tile == TilestoAlch[n][1] then
                 table.insert(Save.alchinventory, TilestoAlch[n][2])
-                if AlchItems[TilestoAlch[n][2]].obstacle == false then
+                if AlchItems[TilestoAlch[n][2]].flower == true then
                     Save.map[State.xprefix+centerw][math.max(State.yprefix+centerh)] = 1
+                    while (Save.map[new_x][new_y] ~= 1) do
+                        new_x = randomgen:random(MAP_SQUARE)
+                        new_y = randomgen:random(MAP_SQUARE)
+                    end
+                    Save.map[new_x][new_y] = TilestoAlch[n][1]
                 end
                 refreshalchinventory()
             end
@@ -934,9 +953,9 @@ do
         }
 
         AlchItems={
-            {i = 1, name="White flower", file = gfx.newImage("graphics/flower1.png"), obstacle = false},
-            {i = 2, name="Black flower", file = gfx.newImage("graphics/flower2.png"), obstacle = false},
-            {i = 3, name="Red flower", file = gfx.newImage("graphics/flower3.png"), obstacle = false}
+            {i = 1, name="White flower", file = gfx.newImage("graphics/flower1.png"), flower = true},
+            {i = 2, name="Black flower", file = gfx.newImage("graphics/flower2.png"), flower = true},
+            {i = 3, name="Red flower", file = gfx.newImage("graphics/flower3.png"), flower = true}
         }
 
         NPC_tiles ={
@@ -1342,7 +1361,7 @@ do
 
         local posx, posy = getposfromhoover()
 
-        print_to_debug(ScreenWidth.."x"..ScreenHeight..", vsync="..love.window.getVSync()..", fps="..love.timer.getFPS()..", mem="..string.format("%.3f", collectgarbage("count")/1000.0).."MB, randomseed="..Randomseed..", xpos="..Save.positionx.."|"..posx..", ypos="..Save.positiony.."|"..posy..", mousehoover="..Tiles[Save.map[posx][posy]].name..", SQUARESIZE="..SQUARESIZE)
+        print_to_debug(ScreenWidth.."x"..ScreenHeight..", vsync="..love.window.getVSync()..", fps="..love.timer.getFPS()..", mem="..string.format("%.3f", collectgarbage("count")/1000.0).."MB, randomseed="..Randomseed..", xpos="..Save.positionx.."|"..posx..", ypos="..Save.positiony.."|"..posy..", mousehoover="..Tiles[Save.map[posx][posy]].name..", flower_n="..count_map_items(6)+count_map_items(7)+count_map_items(8))
         
         gfx.setCanvas()
         gfx.setColor(1, 1, 1, 1)
