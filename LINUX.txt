@@ -1,0 +1,5 @@
+Download the Linux AppImage from love2d.org
+Set it to have executable rights
+Run the command "./Love-AppImage /path/to/main.lua/source/folder"
+See an example in launch code.bat
+Have fun!
