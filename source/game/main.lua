@@ -1,6 +1,7 @@
 GAMENAME = "Doctor Sauerkraut"
 
 DEFSCREENSPACE = 88 -- a percentage, /100 . default 88
+MINIMUM_SCREEN_SCALE = 33 -- like above but minimum
 SMALLFONT = 0.0125
 BIGFONT = 0.02
 BIGSQUARESCALE = 1.3
@@ -793,6 +794,9 @@ do
     end
 
     local function set_screen_dim(percent, overwrite)
+        if percent < MINIMUM_SCREEN_SCALE then
+            percent = MINIMUM_SCREEN_SCALE
+        end
         if overwrite then
             love.filesystem.write(SCREENDIMFILE, tostring(percent))
         else
