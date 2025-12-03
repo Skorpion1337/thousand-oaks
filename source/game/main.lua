@@ -929,6 +929,8 @@ do
 
         set_screen_dim(DEFSCREENSPACE, false)
 
+        Scaling_Down = 0
+
         State = {leaf = 1, oldleaf = 1, hoover = 0, logo = gfx.newImage("graphics/logo.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = ScreenWidth*0.2*0.1, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, charleft = gfx.newImage("graphics/charleft.png"), charright = gfx.newImage("graphics/charright.png"), charchosen = gfx.newImage("graphics/charright.png"), lovepotion=gfx.newImage("graphics/potion.jpg"), waitingforsavename = false, waitingforsavename_n = 0, printingalchinventory = false, printingalchinventorytext = "Refresh inventory", waitingforalchcombine = false, waitingforalchremove=false, alchbottle = gfx.newImage("graphics/bottle.png"), alchdoc= gfx.newImage("graphics/doc.png"), alchankh = gfx.newImage("graphics/ankh.png"), mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10,  watersparklecur = 0, projectiles={}, shootwait = SHOOT_SPAWN}
 
         Projectile_Types = {
@@ -1158,16 +1160,28 @@ do
                     State.shootwait = SHOOT_SPAWN
 
                     if love.mouse.isDown(1) then
+                        calculate_shifting_constants()
+                        local correctsquare = ScreenWidth/TILEAMOUNT_W
+                        calculate_prefix(State.xprefix+ScreenWidth/correctsquare/2, State.yprefix+ScreenHeight/correctsquare/2)
                         --table.insert(State.projectiles,{1,1,10,1,500,500})
-                        table.insert(State.projectiles, {type=1,speed=1,age=1.3,angle=0,positionx=math.floor(ScreenWidth/SQUARESIZE/2+0.5-0.5)*SQUARESIZE,positiony=math.floor(ScreenHeight/SQUARESIZE/2+0.5-0.5)*SQUARESIZE})
+
+                        local centerw = math.floor(ScreenWidth/SQUARESIZE/2)
+                        local centerh = math.floor(ScreenHeight/SQUARESIZE/2)
+
+                        local type = 1
+                        table.insert(State.projectiles, {type=type,speed=0.07,age=1.3,angle=0,
+                        positionx=State.xprefix+centerw,
+                        positiony=State.yprefix+centerh})
 
                         --local n = #State.projectiles
                         --State.projectiles[n].positionx = math.floor(State.xprefix + ScreenWidth/SQUARESIZE/2+0.5)*SQUARESIZE
                         --State.projectiles[n].positiony = math.floor(State.yprefix + ScreenHeight/SQUARESIZE/2+0.5)*SQUARESIZE
 
-                        local mouseX, mouseY = love.mouse.getPosition() 
+                        local mouseX, mouseY = love.mouse.getPosition()
                         --math.floor(State.xprefix + ScreenWidth/SQUARESIZE/2+0.5)
-                        local dx, dy = mouseX - State.projectiles[#State.projectiles].positionx, mouseY - State.projectiles[#State.projectiles].positiony
+                        --local dx, dy = mouseX - State.projectiles[#State.projectiles].positionx, mouseY - State.projectiles[#State.projectiles].positiony
+                        local dx, dy = mouseX - (State.projectiles[#State.projectiles].positionx-State.xprefix)*SQUARESIZE, mouseY - (State.projectiles[#State.projectiles].positiony-State.yprefix)*SQUARESIZE
+                        
                         local angle = math.atan(dy/dx)
 
                         if dx < 0 then angle = angle + math.pi end
@@ -1286,11 +1300,13 @@ do
             gfx.push()
             local imagefile = State.charchosen
             local scalec = ScreenWidth/xamount/math.floor(imagefile:getWidth()+0.5)*BIGSQUARESCALE
+            Scaling_Down = scalec
             gfx.scale(scalec, scalec)
             gfx.draw(imagefile, squarerounded*math.floor(ScreenWidth/2/SQUARESIZE)/scalec+0.5*squarerounded/scalec-imagefile:getWidth()/2, squarerounded*math.floor(ScreenHeight/2/SQUARESIZE)/scalec+0.5*squarerounded/scalec-imagefile:getHeight()/2)
             for n=1, #State.projectiles do
                 --gfx.draw(Projectile_Types[State.projectiles[n].type].img, State.projectiles[n].positionx, State.projectiles[n].positiony, 0)
-                gfx.draw(Projectile_Types[State.projectiles[n].type].img, State.projectiles[n].positionx/scalec, State.projectiles[n].positiony/scalec, State.projectiles[n].angle/scalec, 1, 1, Projectile_Types[State.projectiles[n].type].img:getWidth()/2, Projectile_Types[State.projectiles[n].type].img:getHeight()/2)
+                local img = Projectile_Types[State.projectiles[n].type].img
+                gfx.draw(img, (State.projectiles[n].positionx-State.xprefix)*SQUARESIZE/scalec, (State.projectiles[n].positiony-State.yprefix)*SQUARESIZE/scalec, State.projectiles[n].angle, 1, 1, Projectile_Types[State.projectiles[n].type].img:getWidth()/2, Projectile_Types[State.projectiles[n].type].img:getHeight()/2)
             end
             gfx.pop()
         elseif State.leaf == 7 then
