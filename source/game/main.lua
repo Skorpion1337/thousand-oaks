@@ -21,6 +21,7 @@ SQUARESIZE = 0
 -- lower speed value is faster
 FPS = 75
 WALKSPEED = 1/FPS*10
+SHOOT_SPAWN = 1/2.0
 WATERSPARKLESPEED = 1/FPS
 WATERANIMATIONSPEED = math.floor(TILEAMOUNT_W*1.89)
 
@@ -928,7 +929,11 @@ do
 
         set_screen_dim(DEFSCREENSPACE, false)
 
-        State = {leaf = 1, oldleaf = 1, hoover = 0, logo = gfx.newImage("graphics/logo.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = ScreenWidth*0.2*0.1, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, charleft = gfx.newImage("graphics/charleft.png"), charright = gfx.newImage("graphics/charright.png"), charchosen = gfx.newImage("graphics/charright.png"), lovepotion=gfx.newImage("graphics/potion.jpg"), waitingforsavename = false, waitingforsavename_n = 0, printingalchinventory = false, printingalchinventorytext = "Refresh inventory", waitingforalchcombine = false, waitingforalchremove=false, alchbottle = gfx.newImage("graphics/bottle.png"), alchdoc= gfx.newImage("graphics/doc.png"), alchankh = gfx.newImage("graphics/ankh.png"), mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10,  watersparklecur = 0, projectiles={type=0,speed=0,age=0,angle=0,position={0,0}}}
+        State = {leaf = 1, oldleaf = 1, hoover = 0, logo = gfx.newImage("graphics/logo.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = ScreenWidth*0.2*0.1, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, charleft = gfx.newImage("graphics/charleft.png"), charright = gfx.newImage("graphics/charright.png"), charchosen = gfx.newImage("graphics/charright.png"), lovepotion=gfx.newImage("graphics/potion.jpg"), waitingforsavename = false, waitingforsavename_n = 0, printingalchinventory = false, printingalchinventorytext = "Refresh inventory", waitingforalchcombine = false, waitingforalchremove=false, alchbottle = gfx.newImage("graphics/bottle.png"), alchdoc= gfx.newImage("graphics/doc.png"), alchankh = gfx.newImage("graphics/ankh.png"), mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10,  watersparklecur = 0, projectiles={}, shootwait = SHOOT_SPAWN}
+
+        Projectile_Types = {
+            {img = gfx.newImage("graphics/apple.png")}
+        }
 
         Tiles={
             {i = 1, name="Sparse grass", file = gfx.newImage("graphics/sparse_grass.png"), obstacle = false},
@@ -1034,6 +1039,20 @@ do
             end
         end
 
+        local copyprojectiles = State.projectiles
+        State.projectiles = {}
+        for n=1, #copyprojectiles do
+            copyprojectiles[n].age = copyprojectiles[n].age - dt
+            if copyprojectiles[n].age > 0 then
+                table.insert(State.projectiles, copyprojectiles[n])
+            end
+        end
+
+        for n=1, #State.projectiles do
+            State.projectiles[n].positionx = State.projectiles[n].positionx + math.cos(State.projectiles[n].angle)*State.projectiles[n].speed
+            State.projectiles[n].positiony = State.projectiles[n].positiony + math.sin(State.projectiles[n].angle)*State.projectiles[n].speed
+        end
+
         CommandLine.focustime = CommandLine.focustime - dt
         if CommandLine.focustime <= 0 then
             CommandLine.focustime= CommandLine.focusmax
@@ -1131,6 +1150,36 @@ do
                                 State.charchosen = State.charright
                             end
                         end
+                    end
+                end
+
+                State.shootwait = State.shootwait - dt
+                if State.shootwait <= 0 then
+                    State.shootwait = SHOOT_SPAWN
+
+                    if love.mouse.isDown(1) then
+                        --table.insert(State.projectiles,{1,1,10,1,500,500})
+                        table.insert(State.projectiles, {type=1,speed=1,age=1.3,angle=0,positionx=math.floor(ScreenWidth/SQUARESIZE/2+0.5-0.5)*SQUARESIZE,positiony=math.floor(ScreenHeight/SQUARESIZE/2+0.5-0.5)*SQUARESIZE})
+
+                        --local n = #State.projectiles
+                        --State.projectiles[n].positionx = math.floor(State.xprefix + ScreenWidth/SQUARESIZE/2+0.5)*SQUARESIZE
+                        --State.projectiles[n].positiony = math.floor(State.yprefix + ScreenHeight/SQUARESIZE/2+0.5)*SQUARESIZE
+
+                        local mouseX, mouseY = love.mouse.getPosition() 
+                        --math.floor(State.xprefix + ScreenWidth/SQUARESIZE/2+0.5)
+                        local dx, dy = mouseX - State.projectiles[#State.projectiles].positionx, mouseY - State.projectiles[#State.projectiles].positiony
+                        local angle = math.atan(dy/dx)
+
+                        if dx < 0 then angle = angle + math.pi end
+                        if dx > 0 and dy < 0 then angle = angle + 2*math.pi end
+                        if dx == 0 then angle = 0.5*math.pi end
+
+                        State.projectiles[#State.projectiles].angle = angle
+
+                        --gfx.draw(Projectile_Types[State.projectiles[n].type].img, State.projectiles[n].positionx, State.projectiles[n].positiony, State.projectiles[n].angle)
+                        --projectiles={{type=1,speed=0,age=0,angle=0,positionx=0,positiony=0}}
+                        --Projectile_Types = {
+                            --{img = gfx.newImage("graphics/apple.png")}
                     end
                 end
             end
@@ -1239,6 +1288,10 @@ do
             local scalec = ScreenWidth/xamount/math.floor(imagefile:getWidth()+0.5)*BIGSQUARESCALE
             gfx.scale(scalec, scalec)
             gfx.draw(imagefile, squarerounded*math.floor(ScreenWidth/2/SQUARESIZE)/scalec+0.5*squarerounded/scalec-imagefile:getWidth()/2, squarerounded*math.floor(ScreenHeight/2/SQUARESIZE)/scalec+0.5*squarerounded/scalec-imagefile:getHeight()/2)
+            for n=1, #State.projectiles do
+                --gfx.draw(Projectile_Types[State.projectiles[n].type].img, State.projectiles[n].positionx, State.projectiles[n].positiony, 0)
+                gfx.draw(Projectile_Types[State.projectiles[n].type].img, State.projectiles[n].positionx/scalec, State.projectiles[n].positiony/scalec, State.projectiles[n].angle/scalec, 1, 1, Projectile_Types[State.projectiles[n].type].img:getWidth()/2, Projectile_Types[State.projectiles[n].type].img:getHeight()/2)
+            end
             gfx.pop()
         elseif State.leaf == 7 then
             gfx.setColor(0.3,0.3,0.3)
@@ -1361,7 +1414,7 @@ do
 
         local posx, posy = getposfromhoover()
 
-        print_to_debug(ScreenWidth.."x"..ScreenHeight..", vsync="..love.window.getVSync()..", fps="..love.timer.getFPS()..", mem="..string.format("%.3f", collectgarbage("count")/1000.0).."MB, randomseed="..Randomseed..", xpos="..Save.positionx.."|"..posx..", ypos="..Save.positiony.."|"..posy..", mousehoover="..Tiles[Save.map[posx][posy]].name..", flower_n="..count_map_items(6)+count_map_items(7)+count_map_items(8))
+        print_to_debug(ScreenWidth.."x"..ScreenHeight..", vsync="..love.window.getVSync()..", fps="..love.timer.getFPS()..", mem="..string.format("%.3f", collectgarbage("count")/1000.0).."MB, randomseed="..Randomseed..", xpos="..Save.positionx.."|"..posx..", ypos="..Save.positiony.."|"..posy..", mousehoover="..Tiles[Save.map[posx][posy]].name..", flower_n="..count_map_items(6)+count_map_items(7)+count_map_items(8)..", proj_table_n="..#State.projectiles)
         
         gfx.setCanvas()
         gfx.setColor(1, 1, 1, 1)
