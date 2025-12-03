@@ -1308,7 +1308,7 @@ do
             for n=1, #State.projectiles do
                 --gfx.draw(Projectile_Types[State.projectiles[n].type].img, State.projectiles[n].positionx, State.projectiles[n].positiony, 0)
                 local img = Projectile_Types[State.projectiles[n].type].img
-                gfx.draw(img, math.floor(State.projectiles[n].positionx-State.xprefix+0.5)*SQUARESIZE/scalec, math.floor(State.projectiles[n].positiony-State.yprefix+0.5)*SQUARESIZE/scalec, State.projectiles[n].angle, 1, 1, Projectile_Types[State.projectiles[n].type].img:getWidth()/2, Projectile_Types[State.projectiles[n].type].img:getHeight()/2)
+                gfx.draw(img, math.floor(State.projectiles[n].positionx-State.xprefix+0.5)*SQUARESIZE/scalec, math.floor(State.projectiles[n].positiony-State.yprefix+0.5)*SQUARESIZE/scalec, State.projectiles[n].angle, 1, 1, img:getWidth()/2, img:getHeight()/2)
             end
             gfx.pop()
         elseif State.leaf == 7 then
