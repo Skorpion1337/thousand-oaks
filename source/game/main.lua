@@ -1165,8 +1165,8 @@ do
                         calculate_prefix(State.xprefix+ScreenWidth/correctsquare/2, State.yprefix+ScreenHeight/correctsquare/2)
                         --table.insert(State.projectiles,{1,1,10,1,500,500})
 
-                        local centerw = math.floor(ScreenWidth/SQUARESIZE/2)
-                        local centerh = math.floor(ScreenHeight/SQUARESIZE/2)
+                        local centerw = math.floor(ScreenWidth/SQUARESIZE/2+0.5)
+                        local centerh = math.floor(ScreenHeight/SQUARESIZE/2+0.5)
 
                         local type = 1
                         table.insert(State.projectiles, {type=type,speed=0.07,age=1.3,angle=0,
@@ -1303,10 +1303,12 @@ do
             Scaling_Down = scalec
             gfx.scale(scalec, scalec)
             gfx.draw(imagefile, squarerounded*math.floor(ScreenWidth/2/SQUARESIZE)/scalec+0.5*squarerounded/scalec-imagefile:getWidth()/2, squarerounded*math.floor(ScreenHeight/2/SQUARESIZE)/scalec+0.5*squarerounded/scalec-imagefile:getHeight()/2)
+            local correctsquare = ScreenWidth/TILEAMOUNT_W
+            calculate_prefix(State.xprefix+ScreenWidth/correctsquare/2, State.yprefix+ScreenHeight/correctsquare/2)
             for n=1, #State.projectiles do
                 --gfx.draw(Projectile_Types[State.projectiles[n].type].img, State.projectiles[n].positionx, State.projectiles[n].positiony, 0)
                 local img = Projectile_Types[State.projectiles[n].type].img
-                gfx.draw(img, (State.projectiles[n].positionx-State.xprefix)*SQUARESIZE/scalec, (State.projectiles[n].positiony-State.yprefix)*SQUARESIZE/scalec, State.projectiles[n].angle, 1, 1, Projectile_Types[State.projectiles[n].type].img:getWidth()/2, Projectile_Types[State.projectiles[n].type].img:getHeight()/2)
+                gfx.draw(img, math.floor(State.projectiles[n].positionx-State.xprefix+0.5)*SQUARESIZE/scalec, math.floor(State.projectiles[n].positiony-State.yprefix+0.5)*SQUARESIZE/scalec, State.projectiles[n].angle, 1, 1, Projectile_Types[State.projectiles[n].type].img:getWidth()/2, Projectile_Types[State.projectiles[n].type].img:getHeight()/2)
             end
             gfx.pop()
         elseif State.leaf == 7 then
