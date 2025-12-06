@@ -37,6 +37,7 @@ LAKESIZE = 30
 LAKESIZEVARY = 10
 LAKEAMOUNT = math.floor(MAP_SQUARE*0.025)
 FLOWERAMOUNT = math.floor(MAP_SQUARE*0.5)*16
+FROG_AMOUNT = math.floor(MAP_SQUARE*0.5)*8
 ROADAMOUNT = math.floor(MAP_SQUARE*0.022)*2 -- both roads use this so its times two basically 1080/
 
 SAVEFILE = "savefile" -- +n
@@ -504,6 +505,19 @@ do
                 end
             end
         end
+            
+        local frog_x
+        local frog_y
+        local n = 0
+        while n < FROG_AMOUNT do
+            repeat
+                frog_x = randomgen:random(MAP_SQUARE)
+                frog_y = randomgen:random(MAP_SQUARE)
+            until (map[frog_x][frog_y]==2)
+
+            table.insert(State.npcs, {type=1, positionx=frog_x, positiony=frog_y})
+            n = n + 1
+        end
 
         Save.map = map
         MapGenerated = true
@@ -931,10 +945,14 @@ do
 
         Scaling_Down = 0
 
-        State = {leaf = 1, oldleaf = 1, hoover = 0, logo = gfx.newImage("graphics/logo.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = ScreenWidth*0.2*0.1, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, charleft = gfx.newImage("graphics/charleft.png"), charright = gfx.newImage("graphics/charright.png"), charchosen = gfx.newImage("graphics/charright.png"), lovepotion=gfx.newImage("graphics/potion.jpg"), waitingforsavename = false, waitingforsavename_n = 0, printingalchinventory = false, printingalchinventorytext = "Refresh inventory", waitingforalchcombine = false, waitingforalchremove=false, alchbottle = gfx.newImage("graphics/bottle.png"), alchdoc= gfx.newImage("graphics/doc.png"), alchankh = gfx.newImage("graphics/ankh.png"), mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10,  watersparklecur = 0, projectiles={}, shootwait = SHOOT_SPAWN}
+        State = {leaf = 1, oldleaf = 1, hoover = 0, logo = gfx.newImage("graphics/logo.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = ScreenWidth*0.2*0.1, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, charleft = gfx.newImage("graphics/charleft.png"), charright = gfx.newImage("graphics/charright.png"), charchosen = gfx.newImage("graphics/charright.png"), lovepotion=gfx.newImage("graphics/potion.jpg"), waitingforsavename = false, waitingforsavename_n = 0, printingalchinventory = false, printingalchinventorytext = "Refresh inventory", waitingforalchcombine = false, waitingforalchremove=false, alchbottle = gfx.newImage("graphics/bottle.png"), alchdoc= gfx.newImage("graphics/doc.png"), alchankh = gfx.newImage("graphics/ankh.png"), mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10,  watersparklecur = 0, projectiles={}, shootwait = SHOOT_SPAWN, npcs = {}}
 
         Projectile_Types = {
             {img = gfx.newImage("graphics/apple.png")}
+        }
+
+        NPC_Types = {
+            {img = gfx.newImage("graphics/frog.png")}
         }
 
         Tiles={
@@ -1309,6 +1327,11 @@ do
                 --gfx.draw(Projectile_Types[State.projectiles[n].type].img, State.projectiles[n].positionx, State.projectiles[n].positiony, 0)
                 local img = Projectile_Types[State.projectiles[n].type].img
                 gfx.draw(img, math.floor(State.projectiles[n].positionx-State.xprefix+0.5)*SQUARESIZE/scalec, math.floor(State.projectiles[n].positiony-State.yprefix+0.5)*SQUARESIZE/scalec, State.projectiles[n].angle, 1, 1, img:getWidth()/2, img:getHeight()/2)
+            end
+            for n=1, #State.npcs do
+                --gfx.draw(Projectile_Types[State.projectiles[n].type].img, State.projectiles[n].positionx, State.projectiles[n].positiony, 0)
+                local img = NPC_Types[State.npcs[n].type].img
+                gfx.draw(img, math.floor(State.npcs[n].positionx-State.xprefix+0.5)*SQUARESIZE/scalec, math.floor(State.npcs[n].positiony-State.yprefix+0.5)*SQUARESIZE/scalec)
             end
             gfx.pop()
         elseif State.leaf == 7 then
