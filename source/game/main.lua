@@ -44,7 +44,7 @@ SAVEFILE = "savefile" -- +n
 COMPRESSION = "zlib"
 SAVENAMEFILE = "savenames"
 SCREENDIMFILE = "screenpercentage"
-SAVEFILEAMOUNT = 10
+SAVEFILEAMOUNT = 11
 
 --STATEMENTS
 
@@ -736,8 +736,8 @@ do
         }
 
         Buttons[3] = {{}}
-        local buttonwidth, buttonheight = translatexy(0.2, 0.05)
-        local continuebuttonx, continuebuttony = translatexy(0.18, 0.035)
+        local buttonwidth, buttonheight = translatexy(0.33, 0.05)
+        local continuebuttonx, continuebuttony = translatexy(0.115, 0.035)
         local buttonpadding, __ = translatexy(0.01, 0)
         for i = 1, SAVEFILEAMOUNT do
             Buttons[3][i] = {size=1, text="Empty MAP File "..i, x = continuebuttonx, y = continuebuttony+buttonheight*i+buttonpadding*i, width = buttonwidth, height=buttonheight, call = save_file}
@@ -746,9 +746,6 @@ do
         Buttons[3][amount] = {size=1, text="Back to Main", x = continuebuttonx, y = continuebuttony+buttonheight*amount+buttonpadding*amount, width = buttonwidth, height=buttonheight, call = backtomain}
 
         Buttons[4] = {{}}
-        buttonwidth, buttonheight = translatexy(0.2, 0.05)
-        continuebuttonx, continuebuttony = translatexy(0.18, 0.035)
-        buttonpadding, __ = translatexy(0.01, 0)
         for i = 1, SAVEFILEAMOUNT do
             Buttons[4][i] = {size=1, text="Empty MAP File "..i, x = continuebuttonx, y = continuebuttony+buttonheight*i+buttonpadding*i, width = buttonwidth, height=buttonheight, call = load_n}
         end
@@ -782,6 +779,9 @@ do
         end
         local names = lume.deserialize(love.filesystem.read(SAVENAMEFILE))
         for n=1, SAVEFILEAMOUNT do
+            if names[n] == nil then
+                names[n] = "Unloaded File"
+            end
             Buttons[3][n].text = names[n]
             Buttons[4][n].text = names[n]
         end
