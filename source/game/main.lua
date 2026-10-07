@@ -42,15 +42,14 @@ ROADAMOUNT = math.floor(MAP_SQUARE*0.022)*2 -- both roads use this so its times 
 
 SAVEFILE = "savefile" -- +n
 COMPRESSION = "zlib"
-RANDOMNESSFILE = "randomness"
 SAVENAMEFILE = "savenames"
 SCREENDIMFILE = "screenpercentage"
 SAVEFILEAMOUNT = 10
 
 --STATEMENTS
-STARTING_RANDOMNESS = 300
 
-HELP_TEXT = 'ABOUT COMMANDS\n\n\nTo make a command. Hit enter, write a command to the command line, hit enter\nOr activate the command line with the mouse\n\n\nUse the command "scale n" to set the screen size to n percent. \nThe value is saved. The default is 88\n\n\nSOMETHING ABOUT CLUTTER\n\n\nLook at folder %APPDATA%/LOVE to save some space! This folder is \nfor starting directly from code.\n \n\nAnd look at folder %APPDATA%/gamename or simply /game. This folder is \nfor starting from the compiled executable.\n \n\nIf you delete the file "randomness" it is regenerated but edit its \ncontained number to avoid same map generation. Ideally it should be \naccumulating forever to avoid them.\n\n\nIn Linux look for these\n$XDG_DATA_HOME/love/ or ~/.local/share/love/\nlove may be replaced by game name or simply "game"\n\n\nAND NOW FOR LICENSES\n\n\nAdditional licenses not mentioned in the license file in the game folder \nand folder love in the source distribution\n\n\nThis game\nby Purlov\nnewest GPL\nhttps://www.gnu.org/licenses/gpl-3.0.html\n\n\n----Libraries----\n\n\nlume\nA collection of functions for Lua, geared towards game development.\nUsing it for serializing data before compression.\nhttps://github.com/rxi/lume\nMIT \n--\n-- lume\n--\n-- Copyright (c) 2020 rxi\n--\n-- Permission is hereby granted, free of charge, to any person obtaining a copy of\n-- this software and associated documentation files (the "Software"), to deal in\n-- the Software without restriction, including without limitation the rights to\n-- use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\n-- of the Software, and to permit persons to whom the Software is furnished to do\n-- so, subject to the following conditions:\n--\n-- The above copyright notice and this permission notice shall be included in all\n-- copies or substantial portions of the Software.\n--\n-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n-- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n-- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n-- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n-- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n-- SOFTWARE.\n--\n\n\n----Graphics----\n\n\nBackground love potion - graphics/potion.jpg\nhttps://en.wikipedia.org/wiki/File:Filtre_d%27Amour.jpg\nFrom user https://commons.wikimedia.org/wiki/User:Arnaud_25 - Arnaud_25\nCreative Commons Attribution-Share Alike 4.0 International\nhttps://creativecommons.org/licenses/by-sa/4.0/deed.en\n\n\nWater tile - graphics/water.jpg\nhttps://opengameart.org/content/texture-water\nwww.GodsAndIdols.com and https://opengameart.org/users/jattenalle - Johannes Pihl\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/\n\n\nFlower tiles - graphics/flower%n.png\nI changed their colours somewhat\nhttps://opengameart.org/content/pixel-flower-icons\nFrom user https://opengameart.org/users/sicklyseraph - Josephine (sicklyseraph)\nCC-BY 4.0\nhttps://creativecommons.org/licenses/by/4.0/\n\n\nRoad textures - graphics/road.png\nI am using the desert one\nhttps://opengameart.org/content/road-textures\nFrom user https://opengameart.org/users/dakal - dakal\nCC-BY-SA 3.0\nhttps://creativecommons.org/licenses/by-sa/3.0/\n\n\nRed outfit for main character - graphics/charright & left.png\nhttps://opengameart.org/content/occupational-icons\nhttps://opengameart.org/users/technopeasant - Graham L. Wilson (technopeasant)\nTiles have been drawn by David E. Gervais, and are published under the Creative \nCommons license. You are free to copy, distribute and transmit those tiles \nas long as you credit David Gervais as their creator.\nCC-BY 3.0\nhttp://creativecommons.org/licenses/by/3.0/\n\n\nA sand road - graphics/road2.png\nhttps://opengameart.org/content/pixel-art-top-down-tileset\nFrom user https://opengameart.org/users/dustdfg - Yevhen Babiichuk (DustDFG)\nCC-BY-SA 4.0\nhttps://creativecommons.org/licenses/by-sa/4.0/\n\n\nGold stuff in the Main Menu background\nhttps://opengameart.org/content/gold-treasure-icons-16x16s\nFrom user https://opengameart.org/users/bonsaiheldin - Bonsaiheldin\nPublic Domain\n\n\nA water tile\nhttps://opengameart.org/content/water\nBy Aswin Vos. https://opengameart.org/users/aswin909\nCC BY-SA 3.0\nhttps://creativecommons.org/licenses/by-sa/3.0/\n\n\nA water tile\nhttps://opengameart.org/content/water-texture-pack\nFrom user https://opengameart.org/users/proxy-games - Proxy Games\nPublic Domain'
+
+HELP_TEXT = 'ABOUT COMMANDS\n\n\nTo make a command. Hit TAB, write the command to the command line, hit enter\n\n\nUse the command "scale n" to set the screen size to n percent. \nThe value is saved. The default is 88\n\n\nSOMETHING ABOUT CLUTTER\n\n\nLook at folder %APPDATA%/LOVE to save some space! This folder is \nfor starting directly from code.\n \n\nAnd look at folder %APPDATA%/gamename or simply %APPDATA%/game. This folder is \nfor starting from the compiled executable.\n\n\nIn Linux look for these\n$XDG_DATA_HOME/love/ or ~/.local/share/love/\nlove may be replaced by game name or simply "game"\n\n\nAND NOW FOR LICENSES\n\n\nAdditional licenses not mentioned in the license file in the game folder \nand folder love in the source distribution\n\n\nThis game\nby Skorpion1337\nGPLv3\nhttps://www.gnu.org/licenses/gpl-3.0.html\n\n\n----Libraries----\n\n\nlume\nA collection of functions for Lua, geared towards game development.\nUsing it for serializing data before compression.\nhttps://github.com/rxi/lume\nMIT \n--\n-- lume\n--\n-- Copyright (c) 2020 rxi\n--\n-- Permission is hereby granted, free of charge, to any person obtaining a copy of\n-- this software and associated documentation files (the "Software"), to deal in\n-- the Software without restriction, including without limitation the rights to\n-- use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\n-- of the Software, and to permit persons to whom the Software is furnished to do\n-- so, subject to the following conditions:\n--\n-- The above copyright notice and this permission notice shall be included in all\n-- copies or substantial portions of the Software.\n--\n-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n-- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n-- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n-- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n-- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n-- SOFTWARE.\n--\n\n\n----Graphics----\n\n\nBackground love potion - graphics/potion.jpg\nhttps://en.wikipedia.org/wiki/File:Filtre_d%27Amour.jpg\nFrom user https://commons.wikimedia.org/wiki/User:Arnaud_25 - Arnaud_25\nCreative Commons Attribution-Share Alike 4.0 International\nhttps://creativecommons.org/licenses/by-sa/4.0/deed.en\n\n\nWater tile - graphics/water.jpg\nhttps://opengameart.org/content/texture-water\nwww.GodsAndIdols.com and https://opengameart.org/users/jattenalle - Johannes Pihl\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/\n\n\nFlower tiles - graphics/flower%n.png\nI changed their colours somewhat\nhttps://opengameart.org/content/pixel-flower-icons\nFrom user https://opengameart.org/users/sicklyseraph - Josephine (sicklyseraph)\nCC-BY 4.0\nhttps://creativecommons.org/licenses/by/4.0/\n\n\nRoad textures - graphics/road.png\nI am using the desert one\nhttps://opengameart.org/content/road-textures\nFrom user https://opengameart.org/users/dakal - dakal\nCC-BY-SA 3.0\nhttps://creativecommons.org/licenses/by-sa/3.0/\n\n\nRed outfit for main character - graphics/charright & left.png\nhttps://opengameart.org/content/occupational-icons\nhttps://opengameart.org/users/technopeasant - Graham L. Wilson (technopeasant)\nTiles have been drawn by David E. Gervais, and are published under the Creative \nCommons license. You are free to copy, distribute and transmit those tiles \nas long as you credit David Gervais as their creator.\nCC-BY 3.0\nhttp://creativecommons.org/licenses/by/3.0/\n\n\nA sand road - graphics/road2.png\nhttps://opengameart.org/content/pixel-art-top-down-tileset\nFrom user https://opengameart.org/users/dustdfg - Yevhen Babiichuk (DustDFG)\nCC-BY-SA 4.0\nhttps://creativecommons.org/licenses/by-sa/4.0/\n\n\nGold stuff in the Main Menu background\nhttps://opengameart.org/content/gold-treasure-icons-16x16s\nFrom user https://opengameart.org/users/bonsaiheldin - Bonsaiheldin\nPublic Domain\n\n\nA water tile\nhttps://opengameart.org/content/water\nBy Aswin Vos. https://opengameart.org/users/aswin909\nCC BY-SA 3.0\nhttps://creativecommons.org/licenses/by-sa/3.0/\n\n\nA water tile\nhttps://opengameart.org/content/water-texture-pack\nFrom user https://opengameart.org/users/proxy-games - Proxy Games\nPublic Domain\n\n\nApple for shooting\nhttps://opengameart.org/content/apple-2\nFrom user https://opengameart.org/users/kirajustine20 - Kira_Justine20\nCC BY 4.0'
 
 do
     local love = require("love")
@@ -59,20 +58,8 @@ do
 
     local gfx = love.graphics
 
-    local choice
-    if love.filesystem.getInfo(RANDOMNESSFILE) == nil then
-        love.filesystem.write(RANDOMNESSFILE, tostring(STARTING_RANDOMNESS))
-        choice = STARTING_RANDOMNESS
-    else
-        local contents, size = love.filesystem.read(RANDOMNESSFILE)
-        choice = tonumber(contents)+1
-        if choice > 2147483646 then
-            choice = 0
-        end
-        love.filesystem.write(RANDOMNESSFILE, tostring(choice))
-    end
-    local randomgen = love.math.newRandomGenerator(choice)
-    Randomseed = choice
+    randomgen = love.math.newRandomGenerator()
+    randomgen:setSeed(os.time())
 
     local function savefile(save_number)
         Save.positionx = math.floor(State.xprefix + ScreenWidth/SQUARESIZE/2+0.5)
@@ -88,7 +75,7 @@ do
     end
 
     local function load_file(save_number)
-        local contents, size = love.filesystem.read(SAVEFILE..save_number)
+        local contents, _ = love.filesystem.read(SAVEFILE..save_number)
 
         Save = lume.deserialize(love.data.decompress("string", COMPRESSION, contents))
     end
@@ -99,9 +86,6 @@ do
             n = n + 1
         end
         return n
-    end
-
-    local function boostrandom()
     end
 
     local function find_hoovered_button(x, y)
@@ -164,10 +148,6 @@ do
         calculate_prefix(px,py)
     end
 
-    local function moveoffset(x,y)
-
-    end
-
     local function format_map()
         local map = {}
         for i=1,MAP_SQUARE do
@@ -182,7 +162,7 @@ do
     local function generate_map()
         local map = format_map()
 
-        for n = 1, LAKEAMOUNT do
+        for _ = 1, LAKEAMOUNT do
             -- This code is partly contributed by chandan_jnu
             local rx = randomgen:random(LAKESIZE-LAKESIZEVARY, LAKESIZE+LAKESIZEVARY)
             local ry = randomgen:random(LAKESIZE-LAKESIZEVARY, LAKESIZE+LAKESIZEVARY)
@@ -232,7 +212,7 @@ do
             end
         end
 
-        for times=1, HOUSEAMOUNT do
+        for _ =1, HOUSEAMOUNT do
             local housex, housey = randomgen:random(MAP_SQUARE), randomgen:random(MAP_SQUARE)
             local housew, househ = randomgen:random(HOUSESIZE-HOUSESIZEVARY,HOUSESIZE+HOUSESIZEVARY), randomgen:random(HOUSESIZE-HOUSESIZEVARY,HOUSESIZE+HOUSESIZEVARY)
             local endpointx = housex+housew
@@ -250,7 +230,7 @@ do
                     obstacle = true
                 end
                 for y = housey+1, endpointy-1 do
-                    for x = i+1, i+endpointx-1 do
+                    for _ = i+1, i+endpointx-1 do
                         if map[i][y] == 11 or map[i][y] == 12 or map[i][y] == 13 then
                             obstacle = true
                         end
@@ -274,7 +254,7 @@ do
                         map[i][endpointy] = 3
                     end
                     for y = housey+1, endpointy-1 do
-                        for x = i+1, i+endpointx-1 do
+                        for _ = i+1, i+endpointx-1 do
                             map[i][y] = 4
                         end
                     end
@@ -296,13 +276,12 @@ do
                     map[along][housey] = 4
                 elseif whichwall == 4 then
                     local along = randomgen:random(housex+1, endpointx-1)
-                    local position = math.min(housey+househ, endpointy)
                     map[along][housey] = 4
                 end
             end
         end
 
-        for n=1,RIVERAMOUNT do
+        for _ =1,RIVERAMOUNT do
             local xposition = randomgen:random(1,MAP_SQUARE)
             local yposition = 1
             for j = yposition, MAP_SQUARE do
@@ -332,7 +311,7 @@ do
             end
         end
 
-        for n=1, FLOWERAMOUNT do
+        for _ =1, FLOWERAMOUNT do
             local fx = randomgen:random(MAP_SQUARE)
             local fy = randomgen:random(MAP_SQUARE)
             if Tiles[map[fx][fy]].obstacle == false and map[fx][fy] ~= 4 then
@@ -347,7 +326,7 @@ do
             end
         end
 
-        for amount=1, ROADAMOUNT do
+        for _ =1, ROADAMOUNT do
             local random = randomgen:random(4)
             local cx
             local cy
@@ -385,7 +364,7 @@ do
                 return suunta
             end
 
-            for n=1, 999999 do
+            for _ =1, 999999 do
                 if suunta == 1 then
                     local cxtest = math.min(cx+1, MAP_SQUARE)
                     local tile = map[cxtest][cy]
@@ -427,7 +406,7 @@ do
         end
 
         --second road
-        for amount=1, ROADAMOUNT do
+        for _ =1, ROADAMOUNT do
             local random = randomgen:random(4)
             local cx
             local cy
@@ -465,7 +444,7 @@ do
                 return suunta
             end
 
-            for n=1, 999999 do
+            for _ =1, 999999 do
                 if suunta == 1 then
                     local cxtest = math.min(cx+1, MAP_SQUARE)
                     local tile = map[cxtest][cy]
@@ -637,7 +616,7 @@ do
     end
 
     local function has_value (tab, val)
-        for index, value in ipairs(tab) do
+        for _, value in ipairs(tab) do
             if value == val then
                 return true
             end
@@ -837,7 +816,7 @@ do
             if love.filesystem.getInfo(SCREENDIMFILE) == nil then
                 love.filesystem.write(SCREENDIMFILE, tostring(percent))
             else
-                local contents, size = love.filesystem.read(SCREENDIMFILE)
+                local contents, _ = love.filesystem.read(SCREENDIMFILE)
                 percent = tonumber(contents)
             end
         end
@@ -914,7 +893,7 @@ do
         gfx.rectangle("fill",width,height,SmallFont:getWidth(text),SmallFont:getHeight(text))
         gfx.setFont(SmallFont)
         gfx.setColor(1,0,0)
-        for i=1, SMALLFONTDRAWS do
+        for _ =1, SMALLFONTDRAWS do
             gfx.print(text, width, height)
         end
     end
@@ -1230,7 +1209,7 @@ do
             gfx.setColor(0.4,0.4,0.4)
             gfx.rectangle("fill", 0, 0, ScreenWidth, ScreenHeight)
             gfx.setColor(255, 255, 255, 255)
-            local iconsize, __ = translatexy(0.002, 0)
+            local iconsize, _ = translatexy(0.002, 0)
             gfx.push()
             gfx.scale(iconsize, iconsize)
             for i=1,State.mainmenubgsamount do
@@ -1263,7 +1242,7 @@ do
             gfx.setFont(BigFont)
             gfx.setColor(1,1,1)
             local padx, pady = translatexy(0.02, 0.05)
-            for i=0, 2 do
+            for _ =0, 2 do
                 gfx.print("Use W, S, A, D - Don't start on a lake", padx, pady)
             end
         elseif State.leaf == 3 then
@@ -1422,7 +1401,7 @@ do
         gfx.draw(State.bannerm, ScreenWidth/scale-2*boxsize, 0)
         gfx.pop()
         gfx.setColor(1,1,1)
-        for i=1, SMALLFONTDRAWS do
+        for _ =1, SMALLFONTDRAWS do
             gfx.print(GAMENAME, ScreenWidth/2.0 - SmallFont:getWidth(GAMENAME)/2.0, theheight/2.0-SmallFont:getHeight(GAMENAME)/2.0)
         end
 
@@ -1445,7 +1424,7 @@ do
             color = CommandLine.color
         end
         gfx.setColor(color)
-        for i=1, SMALLFONTDRAWS do
+        for _ =1, SMALLFONTDRAWS do
             gfx.print(CommandLine.text, CommandLine.x, CommandLine.y+CommandLine.height/2.0-SmallFont:getHeight(CommandLine.text)/2.0)
             if CommandLine.focusswitch == true then
                 gfx.print(CommandLine.focuspostfix, CommandLine.x+SmallFont:getWidth(CommandLine.text), CommandLine.y+CommandLine.height/2.0-SmallFont:getHeight(CommandLine.text)/2.0)
@@ -1454,7 +1433,7 @@ do
 
         local posx, posy = getposfromhoover()
 
-        print_to_debug(ScreenWidth.."x"..ScreenHeight..", vsync="..love.window.getVSync()..", fps="..love.timer.getFPS()..", mem="..string.format("%.3f", collectgarbage("count")/1000.0).."MB, randomseed="..Randomseed..", xpos="..Save.positionx.."|"..posx..", ypos="..Save.positiony.."|"..posy..", mousehoover="..Tiles[Save.map[posx][posy]].name..", flower_n="..count_map_items(6)+count_map_items(7)+count_map_items(8)..", proj_table_n="..#State.projectiles)
+        print_to_debug(ScreenWidth.."x"..ScreenHeight..", vsync="..love.window.getVSync()..", fps="..love.timer.getFPS()..", mem="..string.format("%.3f", collectgarbage("count")/1000.0).."MB, randomseed="..randomgen:getSeed()..", xpos="..Save.positionx.."|"..posx..", ypos="..Save.positiony.."|"..posy..", mousehoover="..Tiles[Save.map[posx][posy]].name..", flower_n="..count_map_items(6)+count_map_items(7)+count_map_items(8)..", proj_table_n="..#State.projectiles)
         
         gfx.setCanvas()
         gfx.setColor(1, 1, 1, 1)
