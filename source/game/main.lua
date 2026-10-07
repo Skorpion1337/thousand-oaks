@@ -1,4 +1,4 @@
-GAMENAME = "Doctor Sauerkraut"
+GAMENAME = "Thousand Oaks"
 
 DEFSCREENSPACE = 88 -- a percentage, /100 . default 88
 MINIMUM_SCREEN_SCALE = 33 -- like above but minimum
@@ -1421,10 +1421,9 @@ do
         gfx.draw(State.bannerx, ScreenWidth/scale-boxsize, 0)
         gfx.draw(State.bannerm, ScreenWidth/scale-2*boxsize, 0)
         gfx.pop()
-        local text = "Doctor Sauerkraut"
         gfx.setColor(1,1,1)
         for i=1, SMALLFONTDRAWS do
-            gfx.print(text, ScreenWidth/2.0 - SmallFont:getWidth(text)/2.0, theheight/2.0-SmallFont:getHeight(text)/2.0)
+            gfx.print(GAMENAME, ScreenWidth/2.0 - SmallFont:getWidth(GAMENAME)/2.0, theheight/2.0-SmallFont:getHeight(GAMENAME)/2.0)
         end
 
         if State.hoover < 0 then

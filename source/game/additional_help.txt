@@ -38,7 +38,7 @@ and folder love in the source distribution
 
 
 This game
-by Purlov
+by Skorpion1337
 newest GPL
 https://www.gnu.org/licenses/gpl-3.0.html
 
