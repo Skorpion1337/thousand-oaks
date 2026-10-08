@@ -1,4 +1,4 @@
-GAMENAME = "Thousand Oaks"
+GAMENAME = "Thousand Oaks: The Mining Empire"
 
 DEFSCREENSPACE = 88 -- a percentage, /100 . default 88
 MINIMUM_SCREEN_SCALE = 33 -- like above but minimum
@@ -7,38 +7,20 @@ BIGFONT = 0.02
 BIGSQUARESCALE = 1.3
 BANNERH = 0.045
 LOGOW = 0.55
-ALCHEMYWINDOWSIZE = 1/1.5 -- times ScreenWidth and ScreenHeight, rectangle not square
 
 -- values with zero are shifting constants, see calculate_shifting_constants() when scaling
 
-MAP_SQUARE = 512
 SMALLFONTDRAWS = 3
 SCROLLLINESMAP = 2
 SCROLLLINES = 9
-TILEAMOUNT_W = 66
 SQUARESIZE = 0
 
 -- lower speed value is faster
 FPS = 75
 WALKSPEED = 1/FPS*10
-SHOOT_SPAWN = 1/2.0
-WATERSPARKLESPEED = 1/FPS
-WATERANIMATIONSPEED = math.floor(TILEAMOUNT_W*1.89)
 
 BUTTONHOOVERCOLOR = {0.5,0,0}
 BUTTONNORMALCOLOR = {0.5,0.5,0.5}
-
-HOUSEAMOUNT = math.floor(MAP_SQUARE*0.5859375) --- 512 is 300
-RIVERAMOUNT = math.floor(MAP_SQUARE*0.015) --512 is 7
-RIVERWIDTH = 5
-HOUSESIZE = 10
-HOUSESIZEVARY = 5
-LAKESIZE = 30
-LAKESIZEVARY = 10
-LAKEAMOUNT = math.floor(MAP_SQUARE*0.025)
-FLOWERAMOUNT = math.floor(MAP_SQUARE*0.5)*16
-FROG_AMOUNT = math.floor(MAP_SQUARE*0.5)*8
-ROADAMOUNT = math.floor(MAP_SQUARE*0.022)*2 -- both roads use this so its times two basically 1080/
 
 SAVEFILE = "savefile" -- +n
 COMPRESSION = "zlib"
@@ -49,12 +31,14 @@ SAVEFILEAMOUNT = 11
 --STATEMENTS
 
 
-HELP_TEXT = 'ABOUT COMMANDS\n\n\nTo make a command. Hit TAB, write the command to the command line, hit enter\n\n\nUse the command "scale n" to set the screen size to n percent. \nThe value is saved. The default is 88\n\n\nSOMETHING ABOUT CLUTTER\n\n\nLook at folder %APPDATA%/LOVE to save some space! This folder is \nfor starting directly from code.\n \n\nAnd look at folder %APPDATA%/gamename or simply %APPDATA%/game. This folder is \nfor starting from the compiled executable.\n\n\nIn Linux look for these\n$XDG_DATA_HOME/love/ or ~/.local/share/love/\nlove may be replaced by game name or simply "game"\n\n\nAND NOW FOR LICENSES\n\n\nAdditional licenses not mentioned in the license file in the game folder \nand folder love in the source distribution\n\n\nThis game\nby Skorpion1337\nGPLv3\nhttps://www.gnu.org/licenses/gpl-3.0.html\n\n\n----Libraries----\n\n\nlume\nA collection of functions for Lua, geared towards game development.\nUsing it for serializing data before compression.\nhttps://github.com/rxi/lume\nMIT \n--\n-- lume\n--\n-- Copyright (c) 2020 rxi\n--\n-- Permission is hereby granted, free of charge, to any person obtaining a copy of\n-- this software and associated documentation files (the "Software"), to deal in\n-- the Software without restriction, including without limitation the rights to\n-- use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\n-- of the Software, and to permit persons to whom the Software is furnished to do\n-- so, subject to the following conditions:\n--\n-- The above copyright notice and this permission notice shall be included in all\n-- copies or substantial portions of the Software.\n--\n-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n-- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n-- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n-- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n-- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n-- SOFTWARE.\n--\n\n\n----Graphics----\n\n\nBackground love potion - graphics/potion.jpg\nhttps://en.wikipedia.org/wiki/File:Filtre_d%27Amour.jpg\nFrom user https://commons.wikimedia.org/wiki/User:Arnaud_25 - Arnaud_25\nCreative Commons Attribution-Share Alike 4.0 International\nhttps://creativecommons.org/licenses/by-sa/4.0/deed.en\n\n\nWater tile - graphics/water.jpg\nhttps://opengameart.org/content/texture-water\nwww.GodsAndIdols.com and https://opengameart.org/users/jattenalle - Johannes Pihl\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/\n\n\nFlower tiles - graphics/flower%n.png\nI changed their colours somewhat\nhttps://opengameart.org/content/pixel-flower-icons\nFrom user https://opengameart.org/users/sicklyseraph - Josephine (sicklyseraph)\nCC-BY 4.0\nhttps://creativecommons.org/licenses/by/4.0/\n\n\nRoad textures - graphics/road.png\nI am using the desert one\nhttps://opengameart.org/content/road-textures\nFrom user https://opengameart.org/users/dakal - dakal\nCC-BY-SA 3.0\nhttps://creativecommons.org/licenses/by-sa/3.0/\n\n\nRed outfit for main character - graphics/charright & left.png\nhttps://opengameart.org/content/occupational-icons\nhttps://opengameart.org/users/technopeasant - Graham L. Wilson (technopeasant)\nTiles have been drawn by David E. Gervais, and are published under the Creative \nCommons license. You are free to copy, distribute and transmit those tiles \nas long as you credit David Gervais as their creator.\nCC-BY 3.0\nhttp://creativecommons.org/licenses/by/3.0/\n\n\nA sand road - graphics/road2.png\nhttps://opengameart.org/content/pixel-art-top-down-tileset\nFrom user https://opengameart.org/users/dustdfg - Yevhen Babiichuk (DustDFG)\nCC-BY-SA 4.0\nhttps://creativecommons.org/licenses/by-sa/4.0/\n\n\nGold stuff in the Main Menu background\nhttps://opengameart.org/content/gold-treasure-icons-16x16s\nFrom user https://opengameart.org/users/bonsaiheldin - Bonsaiheldin\nPublic Domain\n\n\nA water tile\nhttps://opengameart.org/content/water\nBy Aswin Vos. https://opengameart.org/users/aswin909\nCC BY-SA 3.0\nhttps://creativecommons.org/licenses/by-sa/3.0/\n\n\nA water tile\nhttps://opengameart.org/content/water-texture-pack\nFrom user https://opengameart.org/users/proxy-games - Proxy Games\nPublic Domain\n\n\nApple for shooting\nhttps://opengameart.org/content/apple-2\nFrom user https://opengameart.org/users/kirajustine20 - Kira_Justine20\nCC BY 4.0'
+HELP_TEXT = 'SOMETHING ABOUT CLUTTER\n\n\nLook at folder %APPDATA%/LOVE to save some space! This folder is \nfor starting directly from code.\n \n\nAnd look at folder %APPDATA%/gamename or simply %APPDATA%/game. This folder is \nfor starting from the compiled executable.\n\n\nIn Linux look for these\n$XDG_DATA_HOME/love/ or ~/.local/share/love/\nlove may be replaced by game name or simply "game"\n\n\nAND NOW FOR LICENSES\n\n\nAdditional licenses not mentioned in the license file in the game folder \nand folder love in the source distribution\n\n\nThis game\nby Skorpion1337\ntinyurl.com/1000oakz\nGPLv3\nhttps://www.gnu.org/licenses/gpl-3.0.html\n\n\n----Libraries----\n\n\nlume\nA collection of functions for Lua, geared towards game development.\nUsing it for serializing data before compression.\nhttps://github.com/rxi/lume\nMIT \n--\n-- lume\n--\n-- Copyright (c) 2020 rxi\n--\n-- Permission is hereby granted, free of charge, to any person obtaining a copy of\n-- this software and associated documentation files (the "Software"), to deal in\n-- the Software without restriction, including without limitation the rights to\n-- use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\n-- of the Software, and to permit persons to whom the Software is furnished to do\n-- so, subject to the following conditions:\n--\n-- The above copyright notice and this permission notice shall be included in all\n-- copies or substantial portions of the Software.\n--\n-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n-- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n-- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n-- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n-- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n-- SOFTWARE.\n--\n\n\n----Graphics----\n\n\nBackground love potion - graphics/potion.jpg\nhttps://en.wikipedia.org/wiki/File:Filtre_d%27Amour.jpg\nFrom user https://commons.wikimedia.org/wiki/User:Arnaud_25 - Arnaud_25\nCreative Commons Attribution-Share Alike 4.0 International\nhttps://creativecommons.org/licenses/by-sa/4.0/deed.en'
 
 do
     local love = require("love")
     local lume = require("lib.lume")
     local utf8 = require("utf8")
+
+    love.window.setIcon(love.image.newImageData("graphics/large_purple.png"))
 
     local gfx = love.graphics
 
@@ -90,15 +74,13 @@ do
 
     local function find_hoovered_button(x, y)
         local found = false
-        if State.hoover ~= -2 then
-            local len = table_len(Buttons[State.leaf])
-            for i=1,len do
-                local button = Buttons[State.leaf][i]
-                if x > button.x and x < button.x + button.width and y > button.y and y < button.y + button.height then
-                    State.hoover = i
-                    found = true
-                    break
-                end
+        local len = table_len(Buttons[State.leaf])
+        for i=1,len do
+            local button = Buttons[State.leaf][i]
+            if x > button.x and x < button.x + button.width and y > button.y and y < button.y + button.height then
+                State.hoover = i
+                found = true
+                break
             end
         end
         return found
@@ -115,9 +97,6 @@ do
         State.oldleaf = State.leaf
         State.leaf = n
         State.hoover = 0
-        State.waitingforsavename = false
-        State.waitingforalchcombine = false
-        State.waitingforalchremove = false
         find_hoovered_button(Currentx, Currenty)
     end
 
@@ -162,359 +141,15 @@ do
     local function generate_map()
         local map = format_map()
 
-        for _ = 1, LAKEAMOUNT do
-            -- This code is partly contributed by chandan_jnu
-            local rx = randomgen:random(LAKESIZE-LAKESIZEVARY, LAKESIZE+LAKESIZEVARY)
-            local ry = randomgen:random(LAKESIZE-LAKESIZEVARY, LAKESIZE+LAKESIZEVARY)
-            local xc = randomgen:random(1,MAP_SQUARE)
-            local yc = randomgen:random(1,MAP_SQUARE)
-
-            local x = 0;
-            local y = ry
-
-            -- Initial decision parameter of region 1 
-            local d1 = ((ry * ry) - (rx * rx * ry) + (0.25 * rx * rx)); 
-            local dx = 2 * ry * ry * x
-            local dy = 2 * rx * rx * y
-
-            while dx < dy do
-                --Print points based on 4-way symmetry 
-                --print("(", x + xc, ",", y + yc, ")")
-                --print("(",-x + xc,",", y + yc, ")")
-                --print("(",x + xc,",", -y + yc ,")")
-                --print("(",-x + xc, ",", -y + yc, ")"
-
-                for ix = math.max(-x+xc,1), math.min(x+xc, MAP_SQUARE) do
-                    for iy = math.max(-y+yc,1), math.min(y+yc, MAP_SQUARE) do
-                        choice = randomgen:random(3)
-                        if choice == 1 then
-                            map[ix][iy] = 11
-                        elseif choice == 2 then
-                            map[ix][iy] = 12
-                        else
-                            map[ix][iy] = 13
-                        end
-                    end
-                end
-
-                -- Checking and updating value of decision parameter based on algorithm 
-                if (d1 < 0) then
-                    x = x + 1
-                    dx = dx + (2 * ry * ry)
-                    d1 = d1 + dx + (ry * ry)
-                else
-                    x = x + 1; 
-                    y = y - 1; 
-                    dx = dx + (2 * ry * ry)
-                    dy = dy - (2 * rx * rx)
-                    d1 = d1 + dx - dy + (ry * ry)
-                end
-            end
-        end
-
-        for _ =1, HOUSEAMOUNT do
-            local housex, housey = randomgen:random(MAP_SQUARE), randomgen:random(MAP_SQUARE)
-            local housew, househ = randomgen:random(HOUSESIZE-HOUSESIZEVARY,HOUSESIZE+HOUSESIZEVARY), randomgen:random(HOUSESIZE-HOUSESIZEVARY,HOUSESIZE+HOUSESIZEVARY)
-            local endpointx = housex+housew
-            local endpointy = housey+househ
-
-            local obstacle = false
-            if endpointx > MAP_SQUARE then
-                endpointx = MAP_SQUARE
-            end
-            if endpointy > MAP_SQUARE then
-                endpointy = MAP_SQUARE
-            end
-            for i=housex, endpointx do
-                if map[i][housey] == 11 or map[i][endpointy] == 11 or map[i][housey] == 12 or map[i][endpointy] == 12 or map[i][housey] == 13 or map[i][endpointy] == 13 then
-                    obstacle = true
-                end
-                for y = housey+1, endpointy-1 do
-                    for _ = i+1, i+endpointx-1 do
-                        if map[i][y] == 11 or map[i][y] == 12 or map[i][y] == 13 then
-                            obstacle = true
-                        end
-                    end
-                end
-            end
-
-            if obstacle == false then
-
-                if endpointx > MAP_SQUARE then
-                    endpointx = MAP_SQUARE
-                end
-                if endpointy > MAP_SQUARE then
-                    endpointy = MAP_SQUARE
-                end
-                for i=housex, endpointx do
-                    if map[i][housey] ~= 4 then
-                        map[i][housey] = 3
-                    end
-                    if map[i][endpointy] ~= 4 then
-                        map[i][endpointy] = 3
-                    end
-                    for y = housey+1, endpointy-1 do
-                        for _ = i+1, i+endpointx-1 do
-                            map[i][y] = 4
-                        end
-                    end
-                end
-                for j=housey, endpointy do
-                    map[housex][j] = 3
-                    map[endpointx][j] = 3
-                end
-                local whichwall = randomgen:random(4)
-                if whichwall == 1 then
-                    local along = randomgen:random(housey+1, endpointy-1)
-                    map[housex][along] = 4
-                elseif whichwall == 2 then
-                    local along = randomgen:random(housey+1, endpointy-1)
-                    local position = math.min(housex+housew, endpointx)
-                    map[position][along] = 4
-                elseif whichwall == 3 then
-                    local along = randomgen:random(housex+1, endpointx-1)
-                    map[along][housey] = 4
-                elseif whichwall == 4 then
-                    local along = randomgen:random(housex+1, endpointx-1)
-                    map[along][housey] = 4
-                end
-            end
-        end
-
-        for _ =1,RIVERAMOUNT do
-            local xposition = randomgen:random(1,MAP_SQUARE)
-            local yposition = 1
-            for j = yposition, MAP_SQUARE do
-                local amountfree = 0
-                for i = xposition, MAP_SQUARE do
-                    if Tiles[map[i][j]].obstacle == false or map[i][j] == 6 then
-                        amountfree = amountfree + 1
-                        if amountfree == RIVERWIDTH then
-                            local xstart = math.max(i - RIVERWIDTH, 1)
-                            for ii = xstart, i do
-                                map[math.min(ii+1,MAP_SQUARE)][j] = 5
-                            end
-                            xposition = xstart + 1
-                            break
-                        end
-                    else
-                        local jdlimit = math.max(j-RIVERWIDTH, 1)+1
-                        local xdlimit = math.min(i+RIVERWIDTH+1, MAP_SQUARE)
-                        for jd = jdlimit, j do
-                            for xd = i,xdlimit do
-                                map[xd][jd-1] = 5
-                            end
-                        end
-                        amountfree = 0
-                    end
-                end
-            end
-        end
-
-        for _ =1, FLOWERAMOUNT do
-            local fx = randomgen:random(MAP_SQUARE)
-            local fy = randomgen:random(MAP_SQUARE)
-            if Tiles[map[fx][fy]].obstacle == false and map[fx][fy] ~= 4 then
-                local choice = randomgen:random(3)
-                if choice == 1 then
-                    map[fx][fy] = 7
-                elseif choice == 2 then
-                    map[fx][fy] = 8
-                else
-                    map[fx][fy] = 6
-                end
-            end
-        end
-
-        for _ =1, ROADAMOUNT do
-            local random = randomgen:random(4)
-            local cx
-            local cy
-            local suunta
-            if random == 1 then
-                cx = 1
-                cy = randomgen:random(MAP_SQUARE-1)
-                suunta = 1
-            elseif random == 2 then
-                cx = MAP_SQUARE-1
-                cy = randomgen:random(MAP_SQUARE-1)
-                suunta = -1
-            elseif random == 3 then
-                cx = randomgen:random(MAP_SQUARE-1)
-                cy = 1
-                suunta = 2
-            elseif random == 4 then
-                cx = randomgen:random(MAP_SQUARE-1)
-                cy = MAP_SQUARE-1
-                suunta = -2
-            end
-
-            local function randomsuunta()
-                local random = randomgen:random(4)
-                local suunta
-                if random == 1 then
-                    suunta = 1
-                elseif random == 2 then
-                    suunta = -1
-                elseif random == 3 then
-                    suunta = 2
-                elseif random == 4 then
-                    suunta = -2
-                end
-                return suunta
-            end
-
-            for _ =1, 999999 do
-                if suunta == 1 then
-                    local cxtest = math.min(cx+1, MAP_SQUARE)
-                    local tile = map[cxtest][cy]
-                    if Tiles[tile].obstacle == false or tile == 11 or tile == 12 or tile == 13  then
-                        cx = cxtest
-                        map[cx][cy] = 9
-                    else
-                        suunta = randomsuunta()
-                    end
-                elseif suunta == -1 then
-                    local cxtest = math.max(cx-1, 1)
-                    local tile = map[cxtest][cy]
-                    if Tiles[tile].obstacle == false or tile == 11 or tile == 12 or tile == 13  then
-                        cx = cxtest
-                        map[cx][cy] = 9
-                    else
-                        suunta = randomsuunta()
-                    end
-                elseif suunta == 2 then
-                    local cytest = math.min(cy+1, MAP_SQUARE)
-                    local tile = map[cx][cytest]
-                    if Tiles[tile].obstacle == false or tile == 11 or tile == 12 or tile == 13 then
-                        cy = cytest
-                        map[cx][cy] = 9
-                    else
-                        suunta = randomsuunta()
-                    end
-                elseif suunta == -2 then
-                    local cytest = math.max(cy-1, 1)
-                    local tile = map[cx][cytest]
-                    if Tiles[tile].obstacle == false or tile == 11 or tile == 12 or tile == 13 then
-                        cy = cytest
-                        map[cx][cy] = 9
-                    else
-                        suunta = randomsuunta()
-                    end
-                end
-            end
-        end
-
-        --second road
-        for _ =1, ROADAMOUNT do
-            local random = randomgen:random(4)
-            local cx
-            local cy
-            local suunta
-            if random == 1 then
-                cx = 1
-                cy = randomgen:random(MAP_SQUARE-1)
-                suunta = 1
-            elseif random == 2 then
-                cx = MAP_SQUARE-1
-                cy = randomgen:random(MAP_SQUARE-1)
-                suunta = -1
-            elseif random == 3 then
-                cx = randomgen:random(MAP_SQUARE-1)
-                cy = 1
-                suunta = 2
-            elseif random == 4 then
-                cx = randomgen:random(MAP_SQUARE-1)
-                cy = MAP_SQUARE-1
-                suunta = -2
-            end
-
-            local function randomsuunta()
-                local random = randomgen:random(4)
-                local suunta
-                if random == 1 then
-                    suunta = 1
-                elseif random == 2 then
-                    suunta = -1
-                elseif random == 3 then
-                    suunta = 2
-                elseif random == 4 then
-                    suunta = -2
-                end
-                return suunta
-            end
-
-            for _ =1, 999999 do
-                if suunta == 1 then
-                    local cxtest = math.min(cx+1, MAP_SQUARE)
-                    local tile = map[cxtest][cy]
-                    if Tiles[tile].obstacle == false or tile == 11 or tile == 12 or tile == 13  then
-                        cx = cxtest
-                        map[cx][cy] = 10
-                    else
-                        suunta = randomsuunta()
-                    end
-                elseif suunta == -1 then
-                    local cxtest = math.max(cx-1, 1)
-                    local tile = map[cxtest][cy]
-                    if Tiles[tile].obstacle == false or tile == 11 or tile == 12 or tile == 13  then
-                        cx = cxtest
-                        map[cx][cy] = 10
-                    else
-                        suunta = randomsuunta()
-                    end
-                elseif suunta == 2 then
-                    local cytest = math.min(cy+1, MAP_SQUARE)
-                    local tile = map[cx][cytest]
-                    if Tiles[tile].obstacle == false or tile == 11 or tile == 12 or tile == 13 then
-                        cy = cytest
-                        map[cx][cy] = 10
-                    else
-                        suunta = randomsuunta()
-                    end
-                elseif suunta == -2 then
-                    local cytest = math.max(cy-1, 1)
-                    local tile = map[cx][cytest]
-                    if Tiles[tile].obstacle == false or tile == 11 or tile == 12 or tile == 13 then
-                        cy = cytest
-                        map[cx][cy] = 10
-                    else
-                        suunta = randomsuunta()
-                    end
-                end
-            end
-        end
-            
-        local frog_x
-        local frog_y
-        local n = 0
-        while n < FROG_AMOUNT do
-            repeat
-                frog_x = randomgen:random(MAP_SQUARE)
-                frog_y = randomgen:random(MAP_SQUARE)
-            until (map[frog_x][frog_y]==2)
-
-            table.insert(State.npcs, {type=1, positionx=frog_x, positiony=frog_y})
-            n = n + 1
-        end
-
         Save.map = map
         MapGenerated = true
-
-        --randomlocation()
     end
 
     local function init_save()
         --initialize savedata
         MapGenerated = false
         local map = {}
-        for i=1,MAP_SQUARE do
-            map[i] = {}
-            for j=1,MAP_SQUARE do
-                map[i][j] = 1
-            end
-        end
-        Save = {map=map, npcs={}, positionx = 1, positiony = 1, alchinventory = {}}
+        Save = {map=map, npcs={}, positionx = 1, positiony = 1}
     end
 
     local function newgame()
@@ -523,7 +158,7 @@ do
             init_save()
             change_page(2)
         end
-        
+
     end
 
     local function loadgame()
@@ -557,7 +192,7 @@ do
         sep=sep or '%s'
         local t={}
         for field,s in string.gmatch(inputstr, "([^"..sep.."]*)("..sep.."?)") do
-            table.insert(t,field)  
+            table.insert(t,field)
             if s=="" then return t
             end
         end
@@ -582,6 +217,10 @@ do
     local function helpwindow()
         change_page(5)
         State.help_text = load_help_text(State.savedhelpprefix)
+    end
+
+    local function optionwindow()
+        change_page(5)
     end
 
     local function quitgame()
@@ -621,7 +260,7 @@ do
                 return true
             end
         end
-    
+
         return false
     end
 
@@ -629,10 +268,6 @@ do
         x1 = x1*ScreenWidth
         y1 = y1*ScreenHeight
         return x1, y1
-    end
-
-    local function calculate_shifting_constants() -- when u scale
-        SQUARESIZE = ScreenWidth/TILEAMOUNT_W -- /n is the amount of tiles
     end
 
     local function backtomain()
@@ -675,34 +310,6 @@ do
         return count
     end
 
-    local function alchcollect()
-        local centerw = math.floor(ScreenWidth/SQUARESIZE/2)
-        local centerh = math.floor(ScreenHeight/SQUARESIZE/2)
-        local new_x = randomgen:random(MAP_SQUARE)
-        local new_y = randomgen:random(MAP_SQUARE)
-        for n=1,#TilestoAlch do
-            local tile = Save.map[State.xprefix+centerw][math.max(State.yprefix+centerh)]
-            if tile == TilestoAlch[n][1] then
-                table.insert(Save.alchinventory, TilestoAlch[n][2])
-                if AlchItems[TilestoAlch[n][2]].flower == true then
-                    Save.map[State.xprefix+centerw][math.max(State.yprefix+centerh)] = 1
-                    while (Save.map[new_x][new_y] ~= 1) do
-                        new_x = randomgen:random(MAP_SQUARE)
-                        new_y = randomgen:random(MAP_SQUARE)
-                    end
-                    Save.map[new_x][new_y] = TilestoAlch[n][1]
-                end
-                refreshalchinventory()
-            end
-        end
-    end
-
-    local function alchscrollup()
-    end
-
-    local function alchscrolldown()
-    end
-
     local function refresh_state()
         love.window.setTitle(GAMENAME)
         love.window.setVSync(1)
@@ -710,10 +317,6 @@ do
 
         Canvas = gfx.newCanvas(ScreenWidth, ScreenHeight)
 
-        calculate_shifting_constants()
-        local correctsquare = ScreenWidth/TILEAMOUNT_W
-        calculate_prefix(State.xprefix+ScreenWidth/correctsquare/2, State.yprefix+ScreenHeight/correctsquare/2)
-        
         local fontsize, _ = translatexy(SMALLFONT,0)
         SmallFont = gfx.newFont(fontsize)
         fontsize, _ = translatexy(BIGFONT, 0)
@@ -724,7 +327,7 @@ do
         local wt, newgamebuttonpadding = translatexy(0.5, 0.02)
 
         Buttons = {{}}
-        Buttons[1] = {{size=1, text="Continue", x = ScreenWidth/2.0-newgamebuttonw/2.0, y = newbuttonstarth, width = newgamebuttonw, height=newgamebuttonh, call = continuegame}, {size=1, text="New Game", x = ScreenWidth/2.0-newgamebuttonw/2.0, y = newbuttonstarth+newgamebuttonh+newgamebuttonpadding, width = newgamebuttonw, height=newgamebuttonh, call = newgame},{size=1, text="Save Game", x = ScreenWidth/2.0-newgamebuttonw/2.0, y =  newbuttonstarth+2*newgamebuttonh+2*newgamebuttonpadding, width = newgamebuttonw, height=newgamebuttonh, call = save_game}, {size=1, text="Load Game", x = ScreenWidth/2.0-newgamebuttonw/2.0, y = newbuttonstarth+3*newgamebuttonh+3*newgamebuttonpadding, width = newgamebuttonw, height=newgamebuttonh, call = loadgame}, {size=1, text="Help", x = ScreenWidth/2.0-newgamebuttonw/2.0, y = newbuttonstarth+4*newgamebuttonh+4*newgamebuttonpadding, width = newgamebuttonw, height=newgamebuttonh, call = helpwindow}, {size=1, text="Quit", x = ScreenWidth/2.0-newgamebuttonw/2.0, y = newbuttonstarth+5*newgamebuttonh+5*newgamebuttonpadding, width = newgamebuttonw, height=newgamebuttonh, call = quitgame}}
+        Buttons[1] = {{size=1, text="Continue", x = ScreenWidth/2.0-newgamebuttonw/2.0, y = newbuttonstarth, width = newgamebuttonw, height=newgamebuttonh, call = continuegame}, {size=1, text="New Game", x = ScreenWidth/2.0-newgamebuttonw/2.0, y = newbuttonstarth+newgamebuttonh+newgamebuttonpadding, width = newgamebuttonw, height=newgamebuttonh, call = newgame},{size=1, text="Save Game", x = ScreenWidth/2.0-newgamebuttonw/2.0, y =  newbuttonstarth+2*newgamebuttonh+2*newgamebuttonpadding, width = newgamebuttonw, height=newgamebuttonh, call = save_game}, {size=1, text="Load Game", x = ScreenWidth/2.0-newgamebuttonw/2.0, y = newbuttonstarth+3*newgamebuttonh+3*newgamebuttonpadding, width = newgamebuttonw, height=newgamebuttonh, call = loadgame}, {size=1, text="Options", x = ScreenWidth/2.0-newgamebuttonw/2.0, y = newbuttonstarth+4*newgamebuttonh+4*newgamebuttonpadding, width = newgamebuttonw, height=newgamebuttonh, call = optionwindow}, {size=1, text="Help", x = ScreenWidth/2.0-newgamebuttonw/2.0, y = newbuttonstarth+5*newgamebuttonh+5*newgamebuttonpadding, width = newgamebuttonw, height=newgamebuttonh, call = helpwindow}, {size=1, text="Quit", x = ScreenWidth/2.0-newgamebuttonw/2.0, y = newbuttonstarth+6*newgamebuttonh+6*newgamebuttonpadding, width = newgamebuttonw, height=newgamebuttonh, call = quitgame}}
 
         local newbuttonwidth, newbuttonheight = translatexy(0.2,0.05)
         local paddingx, paddingy = translatexy(0.01,0.01)
@@ -761,14 +364,7 @@ do
         local wpadding, hpadding = translatexy(0,0.15)
         Buttons[6] = {{size=2, text="Alchemy", x = 0, y = 0*gamebuttonh+hpadding, width = gamebuttonw, height=gamebuttonh, call = newalchemy}, {size=2, text="Back to Main", x = 0, y = 1*gamebuttonh+hpadding, width = gamebuttonw, height=gamebuttonh, call = backtomain}}
 
-        local alchbuttonw, alchbuttonh = translatexy(0.13, 0.03)
-        local alchwpadding, alchhpadding = translatexy(0.1,0.15)
-        Buttons[7] = {
-            {size=2, text="Combine", x = alchwpadding, y = 0*alchbuttonh+alchhpadding, width = alchbuttonw, height=alchbuttonh, call = startalchcombine},
-            {size=2, text="Remove", x = alchwpadding, y = 1*alchbuttonh+alchhpadding, width = alchbuttonw, height=alchbuttonh, call = startalchremove},
-            {size=2, text="Collect from ground", x = alchwpadding, y = 2*alchbuttonh+alchhpadding, width = alchbuttonw, height=alchbuttonh, call = alchcollect},
-            {size=2, text="Inventory", x = alchwpadding, y = 3*alchbuttonh+alchhpadding, width = alchbuttonw, height=alchbuttonh, call = refreshalchinventory}, {size=2, text="Back to Game", x = alchwpadding, y = 4*alchbuttonh+alchhpadding, width = alchbuttonw, height=alchbuttonh, call = continuegame},
-            {size=2, text="Scroll Up", x = alchwpadding+alchbuttonw+ScreenWidth*ALCHEMYWINDOWSIZE-alchbuttonw, y = alchhpadding, width = alchbuttonw, height=alchbuttonh, call = alchscrollup}, {size=2, text="Scroll Down", x = alchwpadding+alchbuttonw+ScreenWidth*ALCHEMYWINDOWSIZE-alchbuttonw, y = alchhpadding+ScreenHeight*ALCHEMYWINDOWSIZE-alchbuttonh, width = alchbuttonw, height=alchbuttonh, call = alchscrolldown}}
+        Buttons[7] = {}
 
         if love.filesystem.getInfo(SAVENAMEFILE) == nil then
             local names = {}
@@ -786,9 +382,6 @@ do
             Buttons[4][n].text = names[n]
         end
 
-        local commandlinewidth=ScreenWidth/1.4
-        CommandLine = {width=commandlinewidth, height=SmallFont:getHeight("debug"), x=ScreenWidth/2.0-commandlinewidth/2.0, y=ScreenHeight-ScreenHeight/10.0, button=gfx.newImage("graphics/enterbutton.png"), color = {1, 1, 1, 1}, focusedcolor = {0.2, 0.2, 0.2, 1}, focuspostfix="x_", focusswitch = true, focustime=0.7, focusmax = 0.7, text="dr"}
-
         for i=1,State.mainmenubgsamount do
             State.mainmenubgs[i] = gfx.newImage("graphics/mainmenu/"..i..".png")
         end
@@ -798,12 +391,6 @@ do
                 State.mainmenubgslocation[j+(i-1)*State.mainmenurepeat] = {i,randomgen:random(1,ScreenWidth-State.mainmenubgs[i]:getWidth()), randomgen:random(1,ScreenHeight-State.mainmenubgs[i]:getHeight())}
             end
         end
-    end
-
-    local function getposfromhoover()
-        local posx = math.min(math.max(State.xprefix+Hooveredx,1), MAP_SQUARE)
-        local posy = math.min(math.max(State.yprefix+Hooveredy,1), MAP_SQUARE)
-        return posx, posy
     end
 
     local function set_screen_dim(percent, overwrite)
@@ -836,49 +423,11 @@ do
     end
 
     function love.keypressed(key, scancode, isrepeat)
-        if key == "return" then
-            if State.hoover >= 0 then
-                State.hoover = -2
-            elseif State.hoover == -2 then
-                if State.waitingforsavename == true then
-                    save_n(State.waitingforsavename_n)
-                    State.waitingforsavename = false
-                elseif State.waitingforalchcombine == true then
-                    local first = true
-                    local text = ""
-                    local usedlocs = {}
-                    for i in string.gmatch(CommandLine.text, "%d+") do
-                        if first == true then
-                            text = i.."."
-                            first = false
-                            table.insert(usedlocs, i)
-                        elseif has_value(usedlocs, i) == false then
-                            text = text.." + "..i.."."
-                            table.insert(usedlocs, i)
-                        end
-                    end
-                    State.printingalchinventorytext = "\n\n\n\n\n\n"..text
-                    State.waitingforalchcombine = false
-                else
-                    local arguments = separate_spaces(CommandLine.text)
-                    if #arguments > 0 then
-                        local command = string.lower(arguments[1])
-                        if command == "scale" and type(tonumber(arguments[2])) == "number" then
-                            set_screen_dim(tonumber(arguments[2]), true)
-                            refresh_state()
-                        end
-                    end
-                end
-            end
-        elseif key == "backspace"and State.hoover == -2 then
-            if string.len(CommandLine.text) > 0 then
-                CommandLine.text = CommandLine.text:sub(1,utf8.offset(CommandLine.text, -1)-1)
-            end
-        end
+
     end
 
     function love.keyreleased(key, scancode, isrepeat)
-        if  key == "escape" then
+        if key == "escape" then
             if State.leaf == 1 and State.oldleaf == 1 then
                 quitmessage()
             else
@@ -898,9 +447,6 @@ do
         end
     end
 
-    local function generate_npc()
-    end
-
     local function mousepressed(x, y, mouse_button)
         Buttons[State.leaf][State.hoover].call()
     end
@@ -908,12 +454,9 @@ do
     function love.mousemoved(x, y, dx, dy, istouch )
         local found = false
         found = find_hoovered_button(x, y)
-        if found == false and x > CommandLine.x and x < CommandLine.x + CommandLine.width and y > CommandLine.y and y < CommandLine.y + CommandLine.height and State.hoover ~= -2 then
-            State.hoover = -1
-        elseif found == false and State.hoover ~= -2 then
+        if found == false then
             State.hoover = 0
         end
-        Hooveredx, Hooveredy = math.floor(x/SQUARESIZE), math.floor(y/SQUARESIZE)
         Currentx, Currenty = x,y
     end
 
@@ -924,57 +467,25 @@ do
 
         Scaling_Down = 0
 
-        State = {leaf = 1, oldleaf = 1, hoover = 0, logo = gfx.newImage("graphics/logo.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = ScreenWidth*0.2*0.1, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, charleft = gfx.newImage("graphics/charleft.png"), charright = gfx.newImage("graphics/charright.png"), charchosen = gfx.newImage("graphics/charright.png"), lovepotion=gfx.newImage("graphics/potion.jpg"), waitingforsavename = false, waitingforsavename_n = 0, printingalchinventory = false, printingalchinventorytext = "Refresh inventory", waitingforalchcombine = false, waitingforalchremove=false, alchbottle = gfx.newImage("graphics/bottle.png"), alchdoc= gfx.newImage("graphics/doc.png"), alchankh = gfx.newImage("graphics/ankh.png"), mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10,  watersparklecur = 0, projectiles={}, shootwait = SHOOT_SPAWN, npcs = {}}
+        State = {leaf = 1, oldleaf = 1, hoover = 0, logo = gfx.newImage("graphics/logo.png"), logo2 = gfx.newImage("graphics/logo2.png"), button_bg = nil, button_bg_quad = nil, button_bg_hover = nil, bg_tile = gfx.newImage("graphics/bg_tile.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = ScreenWidth*0.2*0.1, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, lovepotion=gfx.newImage("graphics/potion.jpg"), waitingforsavename = false, waitingforsavename_n = 0, mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10}
 
-        Projectile_Types = {
-            {img = gfx.newImage("graphics/apple.png")}
-        }
+        local gradientData = love.image.newImageData(2, 1, 'rgba8', '\200\200\200' .. '\255' .. '\050\050\050' .. '\255')
+        State.button_bg = gfx.newImage(gradientData)
+        State.button_bg:setFilter('linear', 'linear')
 
-        NPC_Types = {
-            {img = gfx.newImage("graphics/frog.png")}
-        }
+        gradientData = love.image.newImageData(2, 1, 'rgba8', '\050\050\050' .. '\255' .. '\200\200\200' .. '\255')
+        State.button_bg_hover = gfx.newImage(gradientData)
+        State.button_bg_hover:setFilter('linear', 'linear')
+
+        State.button_bg_quad = gfx.newQuad(0.5, 0, 1, 1, 2, 1)
 
         Tiles={
-            {i = 1, name="Sparse grass", file = gfx.newImage("graphics/sparse_grass.png"), obstacle = false},
-            {i = 2, name="Dense grass", file = gfx.newImage("graphics/dense_grass.png"), obstacle = false},
-            {i = 3, name="Wooden wall", file = gfx.newImage("graphics/wooden_wall.png"), obstacle = true},
-            {i = 4, name="Wooden floor", file = gfx.newImage("graphics/wooden_floor.png"), obstacle = false},
-            {i = 5, name="River", file = gfx.newImage("graphics/river.png"), obstacle = false},
-            {i = 6, name="Red flower", file = gfx.newImage("graphics/flower3.png"), obstacle = false},
-            {i = 7, name="White flower", file = gfx.newImage("graphics/flower1.png"), obstacle = false},
-            {i = 8, name="Black flower", file = gfx.newImage("graphics/flower2.png"), obstacle = false},
-            {i = 9, name="Sand road", file = gfx.newImage("graphics/road.png"), obstacle = false},
-            {i = 10, name="Dark sand road", file = gfx.newImage("graphics/road2.png"), obstacle = false},
-            {i = 11, name="Water 1", file = gfx.newImage("graphics/water.jpg"), obstacle = true},
-            {i = 12, name="Water 2", file = gfx.newImage("graphics/water2.jpg"), obstacle = true},
-            {i = 13, name="Water 3", file = gfx.newImage("graphics/water3.jpg"), obstacle = true}
-        }
-
-        TilestoAlch = {
-            {7,1},
-            {8,2},
-            {6,3}
-        }
-
-        AlchItems={
-            {i = 1, name="White flower", file = gfx.newImage("graphics/flower1.png"), flower = true},
-            {i = 2, name="Black flower", file = gfx.newImage("graphics/flower2.png"), flower = true},
-            {i = 3, name="Red flower", file = gfx.newImage("graphics/flower3.png"), flower = true}
-        }
-
-        NPC_tiles ={
-            {i = 1, name="Skeleton", file = gfx.newImage("graphics/sparse_grass.png")},
-            {i = 2, name="Dense grass", file = gfx.newImage("graphics/dense_grass.png")},
-            {i = 3, name="Dense grass", file = gfx.newImage("graphics/dense_grass.png")}
+            {i = 1, name="", file = gfx.newImage("graphics/logo.png"), obstacle = false},
         }
 
         Hooveredx, Hooveredy = 0, 0
 
         refresh_state()
-        --jata magneetti
-        --for i=0, 999 do
-        --    MapTotal = generate_map()
-        --end
     end
 
     function love.mousereleased(x, y, button, istouch, presses)
@@ -984,8 +495,6 @@ do
             else
                 Buttons[State.leaf][State.hoover].call()
             end
-        elseif x > CommandLine.x and x < CommandLine.x + CommandLine.width and y > CommandLine.y and y < CommandLine.y + CommandLine.height then
-            State.hoover = -2
         elseif x > ScreenWidth-ScreenHeight*BANNERH and x < ScreenWidth and y > 0 and y < ScreenHeight*BANNERH then
             if State.hoover == -2 then
                 State.hoover = 0
@@ -1010,12 +519,12 @@ do
             timeout = 0
         end
         love.timer.sleep(timeout)
-        
+
         if (State.leaf == 2 or State.leaf == 6) and MapGenerated then
             State.watersparklecur = State.watersparklecur - dt
             if State.watersparklecur <= 0 then
                 State.watersparklecur = WATERSPARKLESPEED
-                
+
                 local value
                 local randomchoice
                 for x=math.max(State.xprefix-6,1),math.min(math.floor(State.xprefix+ScreenWidth/SQUARESIZE+6), MAP_SQUARE) do
@@ -1035,30 +544,6 @@ do
                         end
                     end
                 end
-            end
-        end
-
-        local copyprojectiles = State.projectiles
-        State.projectiles = {}
-        for n=1, #copyprojectiles do
-            copyprojectiles[n].age = copyprojectiles[n].age - dt
-            if copyprojectiles[n].age > 0 then
-                table.insert(State.projectiles, copyprojectiles[n])
-            end
-        end
-
-        for n=1, #State.projectiles do
-            State.projectiles[n].positionx = State.projectiles[n].positionx + math.cos(State.projectiles[n].angle)*State.projectiles[n].speed
-            State.projectiles[n].positiony = State.projectiles[n].positiony + math.sin(State.projectiles[n].angle)*State.projectiles[n].speed
-        end
-
-        CommandLine.focustime = CommandLine.focustime - dt
-        if CommandLine.focustime <= 0 then
-            CommandLine.focustime= CommandLine.focusmax
-            if CommandLine.focusswitch == true then
-                CommandLine.focusswitch = false
-            else
-                CommandLine.focusswitch = true
             end
         end
 
@@ -1157,286 +642,220 @@ do
                     State.shootwait = SHOOT_SPAWN
 
                     if love.mouse.isDown(1) then
-                        calculate_shifting_constants()
-                        local correctsquare = ScreenWidth/TILEAMOUNT_W
-                        calculate_prefix(State.xprefix+ScreenWidth/correctsquare/2, State.yprefix+ScreenHeight/correctsquare/2)
-                        --table.insert(State.projectiles,{1,1,10,1,500,500})
 
-                        local centerw = math.floor(ScreenWidth/SQUARESIZE/2+0.5)
-                        local centerh = math.floor(ScreenHeight/SQUARESIZE/2+0.5)
-
-                        local type = 1
-                        table.insert(State.projectiles, {type=type,speed=0.07,age=1.3,angle=0,
-                        positionx=State.xprefix+centerw,
-                        positiony=State.yprefix+centerh})
-
-                        --local n = #State.projectiles
-                        --State.projectiles[n].positionx = math.floor(State.xprefix + ScreenWidth/SQUARESIZE/2+0.5)*SQUARESIZE
-                        --State.projectiles[n].positiony = math.floor(State.yprefix + ScreenHeight/SQUARESIZE/2+0.5)*SQUARESIZE
-
-                        local mouseX, mouseY = love.mouse.getPosition()
-                        --math.floor(State.xprefix + ScreenWidth/SQUARESIZE/2+0.5)
-                        --local dx, dy = mouseX - State.projectiles[#State.projectiles].positionx, mouseY - State.projectiles[#State.projectiles].positiony
-                        local dx, dy = mouseX - (State.projectiles[#State.projectiles].positionx-State.xprefix)*SQUARESIZE, mouseY - (State.projectiles[#State.projectiles].positiony-State.yprefix)*SQUARESIZE
-                        
-                        local angle = math.atan(dy/dx)
-
-                        if dx < 0 then angle = angle + math.pi end
-                        if dx > 0 and dy < 0 then angle = angle + 2*math.pi end
-                        if dx == 0 then angle = 0.5*math.pi end
-
-                        State.projectiles[#State.projectiles].angle = angle
-
-                        --gfx.draw(Projectile_Types[State.projectiles[n].type].img, State.projectiles[n].positionx, State.projectiles[n].positiony, State.projectiles[n].angle)
-                        --projectiles={{type=1,speed=0,age=0,angle=0,positionx=0,positiony=0}}
-                        --Projectile_Types = {
-                            --{img = gfx.newImage("graphics/apple.png")}
                     end
                 end
             end
         end
-    end
 
-    function love.textinput(text)
-        if State.hoover == -2 then
-            CommandLine.text = CommandLine.text..text
-        end
-    end
+        function love.draw()
+            gfx.setCanvas(Canvas)
 
-    function love.draw()
-        gfx.setCanvas(Canvas)
-        if State.leaf == 1 then
-            gfx.setColor(0.4,0.4,0.4)
-            gfx.rectangle("fill", 0, 0, ScreenWidth, ScreenHeight)
             gfx.setColor(255, 255, 255, 255)
-            local iconsize, _ = translatexy(0.002, 0)
-            gfx.push()
-            gfx.scale(iconsize, iconsize)
-            for i=1,State.mainmenubgsamount do
-                for j=1, State.mainmenurepeat do
-                    gfx.draw(State.mainmenubgs[i], State.mainmenubgslocation[j+(i-1)*State.mainmenurepeat][2]/iconsize, State.mainmenubgslocation[j+(i-1)*State.mainmenurepeat][3]/iconsize)
-                end
-            end
-            gfx.pop()
-            gfx.push()
-            local _, my = translatexy(0, 0.166)
-            local scalex = ScreenWidth*LOGOW/State.logo:getWidth()
-            gfx.scale(scalex, scalex)
-            gfx.draw(State.logo, ScreenWidth/scalex/2-State.logo:getWidth()/2,my/scalex-State.logo:getHeight()/2)
-            gfx.pop()
-        elseif State.leaf == 2 then
-            local xamount = ScreenWidth/SQUARESIZE
-            local yamount = ScreenHeight/SQUARESIZE
-            local squarerounded = math.floor(SQUARESIZE+0.5)
-            gfx.setColor(255, 255, 255, 255)
-            for i=1, math.floor(xamount+0.5)+2 do
-                for j=1, math.floor(yamount+0.5)+2 do
-                    gfx.push()
-                    local imagefile = Tiles[Save.map[math.min(math.max(1,i+State.xprefix-1),MAP_SQUARE)][math.min(math.max(1,j+State.yprefix-1),MAP_SQUARE)]].file
-                    local scale = ScreenWidth/xamount/math.floor(imagefile:getWidth()+0.5)
-                    gfx.scale(scale, scale)
-                    gfx.draw(imagefile, (i-1)*squarerounded/scale, (j-1)*squarerounded/scale)
-                    gfx.pop()
-                end
-            end
-            gfx.setFont(BigFont)
-            gfx.setColor(1,1,1)
-            local padx, pady = translatexy(0.02, 0.05)
-            for _ =0, 2 do
-                gfx.print("Use W, S, A, D - Don't start on a lake", padx, pady)
-            end
-        elseif State.leaf == 3 then
-            gfx.setColor(0.1,0.45,0.1)
-            gfx.rectangle("fill", 0, 0, ScreenWidth, ScreenHeight)
-            gfx.setColor(255, 255, 255, 255)
-            gfx.push()
-            local imagefile = State.lovepotion
-            local scale = ScreenHeight/imagefile:getHeight()
-            gfx.scale(scale, scale)
-            gfx.draw(imagefile, ScreenWidth/scale-imagefile:getWidth(), 0)
-            gfx.pop()
-        elseif State.leaf == 4 then
-            gfx.setColor(0,0,0,1)
-            gfx.rectangle("fill", 0, 0, ScreenWidth, ScreenHeight)
-            gfx.setColor(0.7,0.1,0.1)
-            gfx.push()
-            local rotatefile = State.lovepotion
-            local rotatescale = ScreenHeight/rotatefile:getHeight()
-            gfx.scale(rotatescale, rotatescale)
-            gfx.draw(rotatefile, ScreenWidth/rotatescale-rotatefile:getWidth(), math.max(1,ScreenHeight/2-rotatefile:getHeight()/2))
-            gfx.pop()
-        elseif State.leaf == 5 then
-            gfx.setColor(255, 255, 255, 255)
-            gfx.push()
-            local scalex = ScreenWidth/State.helpbg:getWidth()
-            local scaley = ScreenHeight/State.helpbg:getHeight()
-            gfx.scale(scalex, scaley)
-            gfx.draw(State.helpbg, 0, 0)
-            gfx.pop()
-            gfx.setColor(0.72,0.59,0.33)
-            local beyondbuttonw, beyondbuttonh = translatexy(0.2, 0.2)
-            gfx.rectangle("fill", Buttons[State.leaf][2].x-beyondbuttonw, Buttons[State.leaf][2].y+Buttons[State.leaf][2].height, Buttons[State.leaf][2].width+ 2*beyondbuttonw, Buttons[State.leaf][3].y-(Buttons[State.leaf][2].y+Buttons[State.leaf][2].height))
-            gfx.setColor(1,1,1)
-            gfx.rectangle("line", Buttons[State.leaf][2].x-beyondbuttonw, Buttons[State.leaf][2].y+Buttons[State.leaf][2].height, Buttons[State.leaf][2].width+ 2*beyondbuttonw, Buttons[State.leaf][3].y-(Buttons[State.leaf][2].y+Buttons[State.leaf][2].height))
-            gfx.print(State.help_text, Buttons[State.leaf][2].x-beyondbuttonw+State.helppadding, Buttons[State.leaf][2].y+Buttons[State.leaf][2].height+State.helppadding)
-        elseif State.leaf == 6 then
-            local xamount = ScreenWidth/SQUARESIZE
-            local yamount = ScreenHeight/SQUARESIZE
-            local squarerounded = math.floor(SQUARESIZE+0.5)
-            gfx.setColor(255, 255, 255, 255)
-            for i=1, math.floor(xamount+0.5)+2 do
-                for j=1, math.floor(yamount+0.5)+2 do
-                    gfx.push()
-                    local imagefile = Tiles[Save.map[math.min(math.max(1,i+State.xprefix-1),MAP_SQUARE)][math.min(math.max(1,j+State.yprefix-1),MAP_SQUARE)]].file
-                    local scale = ScreenWidth/xamount/math.floor(imagefile:getWidth()+0.5)
-                    gfx.scale(scale, scale)
-                    gfx.draw(imagefile, (i-1)*squarerounded/scale, (j-1)*squarerounded/scale)
-                    gfx.pop()
-                end
-            end
-            gfx.push()
-            local imagefile = State.charchosen
-            local scalec = ScreenWidth/xamount/math.floor(imagefile:getWidth()+0.5)*BIGSQUARESCALE
-            Scaling_Down = scalec
-            gfx.scale(scalec, scalec)
-            gfx.draw(imagefile, squarerounded*math.floor(ScreenWidth/2/SQUARESIZE)/scalec+0.5*squarerounded/scalec-imagefile:getWidth()/2, squarerounded*math.floor(ScreenHeight/2/SQUARESIZE)/scalec+0.5*squarerounded/scalec-imagefile:getHeight()/2)
-            local correctsquare = ScreenWidth/TILEAMOUNT_W
-            calculate_prefix(State.xprefix+ScreenWidth/correctsquare/2, State.yprefix+ScreenHeight/correctsquare/2)
-            for n=1, #State.projectiles do
-                --gfx.draw(Projectile_Types[State.projectiles[n].type].img, State.projectiles[n].positionx, State.projectiles[n].positiony, 0)
-                local img = Projectile_Types[State.projectiles[n].type].img
-                gfx.draw(img, math.floor(State.projectiles[n].positionx-State.xprefix+0.5)*SQUARESIZE/scalec, math.floor(State.projectiles[n].positiony-State.yprefix+0.5)*SQUARESIZE/scalec, State.projectiles[n].angle, 1, 1, img:getWidth()/2, img:getHeight()/2)
-            end
-            for n=1, #State.npcs do
-                --gfx.draw(Projectile_Types[State.projectiles[n].type].img, State.projectiles[n].positionx, State.projectiles[n].positiony, 0)
-                local img = NPC_Types[State.npcs[n].type].img
-                gfx.draw(img, math.floor(State.npcs[n].positionx-State.xprefix+0.5)*SQUARESIZE/scalec, math.floor(State.npcs[n].positiony-State.yprefix+0.5)*SQUARESIZE/scalec)
-            end
-            gfx.pop()
-        elseif State.leaf == 7 then
-            gfx.setColor(0.3,0.3,0.3)
-            local collectbutton = Buttons[State.leaf][1]
-            gfx.rectangle("fill",collectbutton.x+collectbutton.width, collectbutton.y, ScreenWidth*ALCHEMYWINDOWSIZE, ScreenHeight*ALCHEMYWINDOWSIZE)
-            gfx.setColor(0.5,0,0)
-            gfx.rectangle("line",collectbutton.x+collectbutton.width, collectbutton.y, ScreenWidth*ALCHEMYWINDOWSIZE , ScreenHeight*ALCHEMYWINDOWSIZE )
-            gfx.setColor(1,0,0)
-            gfx.push()
-            local scalesquare = 1/20
-            local imagefile = State.alchbottle
-            local bottlewidth = imagefile:getWidth()
-            local bottleheight = imagefile:getHeight()
-            local scalebottle = ScreenWidth/bottlewidth*scalesquare
-            gfx.scale(scalebottle, scalebottle)
-            gfx.draw(imagefile, (collectbutton.x+collectbutton.width)/scalebottle, collectbutton.y/scalebottle)
-            gfx.pop()
-            gfx.push()
-            imagefile = State.alchdoc
-            local docwidth = imagefile:getWidth()
-            local docheight = imagefile:getHeight()
-            local scaledoc = ScreenWidth/docwidth*scalesquare
-            gfx.scale(scaledoc, scaledoc)
-            gfx.draw(imagefile, (collectbutton.x+collectbutton.width)/scaledoc, (collectbutton.y+bottleheight*scalebottle)/scaledoc) -- good stretching
-            gfx.pop()
-            gfx.push()
-            imagefile = State.alchankh
-            local ankhwidth = imagefile:getWidth()
-            local ankhheight = imagefile:getHeight()
-            local scaleankh = ScreenWidth/ankhwidth*scalesquare
-            gfx.scale(scaleankh, scaleankh)
-            gfx.draw(imagefile, (collectbutton.x+collectbutton.width)/scaleankh, (collectbutton.y+ScreenHeight*ALCHEMYWINDOWSIZE)/scaleankh-ankhheight)--good stretching
-            gfx.pop()
-            if State.printingalchinventory == true then
-                gfx.setColor(1,0,0)
-                gfx.print(State.printingalchinventorytext, collectbutton.x+collectbutton.width+bottlewidth*scalebottle, collectbutton.y)
-            end
-            gfx.setColor(0,0,0.8)
-            local linepadding = 1/4
-            gfx.line(collectbutton.x+collectbutton.width+ankhwidth*scaleankh/2, collectbutton.y + docheight*scaledoc + bottleheight*scalebottle + bottleheight*scalebottle*linepadding, collectbutton.x+collectbutton.width+ankhwidth*scaleankh/2, collectbutton.y+ScreenHeight*ALCHEMYWINDOWSIZE-ankhheight*scaleankh*(1+linepadding))
-        end
+            if State.leaf == 1 then
 
-        local len = table_len(Buttons[State.leaf])
-        for i=1,len do
-            local button = Buttons[State.leaf][i]
-            local width, height
-            if button.size == 1 then
+                for x = 0, ScreenWidth, State.bg_tile:getWidth() do
+                    for y = 0, ScreenHeight, State.bg_tile:getHeight() do
+                        gfx.draw(State.bg_tile, x, y)
+                    end
+                end
+
+                local iconsize, _ = translatexy(0.002, 0)
+                gfx.push()
+                gfx.scale(iconsize, iconsize)
+                for i=1,State.mainmenubgsamount do
+                    for j=1, State.mainmenurepeat do
+                        gfx.draw(State.mainmenubgs[i], State.mainmenubgslocation[j+(i-1)*State.mainmenurepeat][2]/iconsize, State.mainmenubgslocation[j+(i-1)*State.mainmenurepeat][3]/iconsize)
+                    end
+                end
+                gfx.pop()
+                gfx.push()
+                local _, my = translatexy(0, 0.166)
+                local scalex = ScreenWidth*LOGOW/State.logo:getWidth()
+                gfx.scale(scalex, scalex)
+                gfx.draw(State.logo, ScreenWidth/scalex/2-State.logo:getWidth()/2,my/scalex-State.logo:getHeight()/2)
+                gfx.draw(State.logo2, ScreenWidth/scalex/2-State.logo2:getWidth()/2,my/scalex-State.logo2:getHeight()/2+State.logo:getHeight()+10)
+                gfx.pop()
+            elseif State.leaf == 2 then
+                local xamount = ScreenWidth/SQUARESIZE
+                local yamount = ScreenHeight/SQUARESIZE
+                local squarerounded = math.floor(SQUARESIZE+0.5)
+                gfx.setColor(255, 255, 255, 255)
+                for i=1, math.floor(xamount+0.5)+2 do
+                    for j=1, math.floor(yamount+0.5)+2 do
+                        gfx.push()
+                        local imagefile = Tiles[Save.map[math.min(math.max(1,i+State.xprefix-1),MAP_SQUARE)][math.min(math.max(1,j+State.yprefix-1),MAP_SQUARE)]].file
+                        local scale = ScreenWidth/xamount/math.floor(imagefile:getWidth()+0.5)
+                        gfx.scale(scale, scale)
+                        gfx.draw(imagefile, (i-1)*squarerounded/scale, (j-1)*squarerounded/scale)
+                        gfx.pop()
+                    end
+                end
                 gfx.setFont(BigFont)
-                width = BigFont:getWidth(button.text)
-                height = BigFont:getHeight(button.text)
-            elseif button.size == 2 then
-                gfx.setFont(SmallFont)
-                width = SmallFont:getWidth(button.text)
-                height = SmallFont:getHeight(button.text)
+                gfx.setColor(1,1,1)
+                local padx, pady = translatexy(0.02, 0.05)
+                for _ =0, 2 do
+                    gfx.print("Use W, S, A, D - Don't start on a lake", padx, pady)
+                end
+            elseif State.leaf == 3 then
+                gfx.setColor(0.1,0.45,0.1)
+                gfx.rectangle("fill", 0, 0, ScreenWidth, ScreenHeight)
+                gfx.setColor(255, 255, 255, 255)
+                gfx.push()
+                local imagefile = State.lovepotion
+                local scale = ScreenHeight/imagefile:getHeight()
+                gfx.scale(scale, scale)
+                gfx.draw(imagefile, ScreenWidth/scale-imagefile:getWidth(), 0)
+                gfx.pop()
+            elseif State.leaf == 4 then
+                gfx.setColor(0,0,0,1)
+                gfx.rectangle("fill", 0, 0, ScreenWidth, ScreenHeight)
+                gfx.setColor(0.7,0.1,0.1)
+                gfx.push()
+                local rotatefile = State.lovepotion
+                local rotatescale = ScreenHeight/rotatefile:getHeight()
+                gfx.scale(rotatescale, rotatescale)
+                gfx.draw(rotatefile, ScreenWidth/rotatescale-rotatefile:getWidth(), math.max(1,ScreenHeight/2-rotatefile:getHeight()/2))
+                gfx.pop()
+            elseif State.leaf == 5 then
+                gfx.setColor(255, 255, 255, 255)
+                gfx.push()
+                local scalex = ScreenWidth/State.helpbg:getWidth()
+                local scaley = ScreenHeight/State.helpbg:getHeight()
+                gfx.scale(scalex, scaley)
+                gfx.draw(State.helpbg, 0, 0)
+                gfx.pop()
+                gfx.setColor(0.72,0.59,0.33)
+                local beyondbuttonw, beyondbuttonh = translatexy(0.2, 0.2)
+                gfx.rectangle("fill", Buttons[State.leaf][2].x-beyondbuttonw, Buttons[State.leaf][2].y+Buttons[State.leaf][2].height, Buttons[State.leaf][2].width+ 2*beyondbuttonw, Buttons[State.leaf][3].y-(Buttons[State.leaf][2].y+Buttons[State.leaf][2].height))
+                gfx.setColor(1,1,1)
+                gfx.rectangle("line", Buttons[State.leaf][2].x-beyondbuttonw, Buttons[State.leaf][2].y+Buttons[State.leaf][2].height, Buttons[State.leaf][2].width+ 2*beyondbuttonw, Buttons[State.leaf][3].y-(Buttons[State.leaf][2].y+Buttons[State.leaf][2].height))
+                gfx.print(State.help_text, Buttons[State.leaf][2].x-beyondbuttonw+State.helppadding, Buttons[State.leaf][2].y+Buttons[State.leaf][2].height+State.helppadding)
+            elseif State.leaf == 6 then
+                local xamount = ScreenWidth/SQUARESIZE
+                local yamount = ScreenHeight/SQUARESIZE
+                local squarerounded = math.floor(SQUARESIZE+0.5)
+                gfx.setColor(255, 255, 255, 255)
+                for i=1, math.floor(xamount+0.5)+2 do
+                    for j=1, math.floor(yamount+0.5)+2 do
+                        gfx.push()
+                        local imagefile = Tiles[Save.map[math.min(math.max(1,i+State.xprefix-1),MAP_SQUARE)][math.min(math.max(1,j+State.yprefix-1),MAP_SQUARE)]].file
+                        local scale = ScreenWidth/xamount/math.floor(imagefile:getWidth()+0.5)
+                        gfx.scale(scale, scale)
+                        gfx.draw(imagefile, (i-1)*squarerounded/scale, (j-1)*squarerounded/scale)
+                        gfx.pop()
+                    end
+                end
+                gfx.push()
+                local imagefile = State.charchosen
+                local scalec = ScreenWidth/xamount/math.floor(imagefile:getWidth()+0.5)*BIGSQUARESCALE
+                Scaling_Down = scalec
+                gfx.scale(scalec, scalec)
+                gfx.draw(imagefile, squarerounded*math.floor(ScreenWidth/2/SQUARESIZE)/scalec+0.5*squarerounded/scalec-imagefile:getWidth()/2, squarerounded*math.floor(ScreenHeight/2/SQUARESIZE)/scalec+0.5*squarerounded/scalec-imagefile:getHeight()/2)
+                local correctsquare = ScreenWidth/TILEAMOUNT_W
+                calculate_prefix(State.xprefix+ScreenWidth/correctsquare/2, State.yprefix+ScreenHeight/correctsquare/2)
+                for n=1, #State.npcs do
+                    local img = NPC_Types[State.npcs[n].type].img
+                    gfx.draw(img, math.floor(State.npcs[n].positionx-State.xprefix+0.5)*SQUARESIZE/scalec, math.floor(State.npcs[n].positiony-State.yprefix+0.5)*SQUARESIZE/scalec)
+                end
+                gfx.pop()
+            elseif State.leaf == 7 then
+                gfx.setColor(0.3,0.3,0.3)
+                local collectbutton = Buttons[State.leaf][1]
+                gfx.rectangle("fill",collectbutton.x+collectbutton.width, collectbutton.y, ScreenWidth*ALCHEMYWINDOWSIZE, ScreenHeight*ALCHEMYWINDOWSIZE)
+                gfx.setColor(0.5,0,0)
+                gfx.rectangle("line",collectbutton.x+collectbutton.width, collectbutton.y, ScreenWidth*ALCHEMYWINDOWSIZE , ScreenHeight*ALCHEMYWINDOWSIZE )
+                gfx.setColor(1,0,0)
+                gfx.push()
+                local scalesquare = 1/20
+                local imagefile = State.alchbottle
+                local bottlewidth = imagefile:getWidth()
+                local bottleheight = imagefile:getHeight()
+                local scalebottle = ScreenWidth/bottlewidth*scalesquare
+                gfx.scale(scalebottle, scalebottle)
+                gfx.draw(imagefile, (collectbutton.x+collectbutton.width)/scalebottle, collectbutton.y/scalebottle)
+                gfx.pop()
+                gfx.push()
+                imagefile = State.alchdoc
+                local docwidth = imagefile:getWidth()
+                local docheight = imagefile:getHeight()
+                local scaledoc = ScreenWidth/docwidth*scalesquare
+                gfx.scale(scaledoc, scaledoc)
+                gfx.draw(imagefile, (collectbutton.x+collectbutton.width)/scaledoc, (collectbutton.y+bottleheight*scalebottle)/scaledoc) -- good stretching
+                gfx.pop()
+                gfx.push()
+                imagefile = State.alchankh
+                local ankhwidth = imagefile:getWidth()
+                local ankhheight = imagefile:getHeight()
+                local scaleankh = ScreenWidth/ankhwidth*scalesquare
+                gfx.scale(scaleankh, scaleankh)
+                gfx.draw(imagefile, (collectbutton.x+collectbutton.width)/scaleankh, (collectbutton.y+ScreenHeight*ALCHEMYWINDOWSIZE)/scaleankh-ankhheight)--good stretching
+                gfx.pop()
+                if State.printingalchinventory == true then
+                    gfx.setColor(1,0,0)
+                    gfx.print(State.printingalchinventorytext, collectbutton.x+collectbutton.width+bottlewidth*scalebottle, collectbutton.y)
+                end
+                gfx.setColor(0,0,0.8)
+                local linepadding = 1/4
+                gfx.line(collectbutton.x+collectbutton.width+ankhwidth*scaleankh/2, collectbutton.y + docheight*scaledoc + bottleheight*scalebottle + bottleheight*scalebottle*linepadding, collectbutton.x+collectbutton.width+ankhwidth*scaleankh/2, collectbutton.y+ScreenHeight*ALCHEMYWINDOWSIZE-ankhheight*scaleankh*(1+linepadding))
             end
-            if State.hoover == i then
-                gfx.setColor(BUTTONHOOVERCOLOR)
-                gfx.rectangle("fill", button.x, button.y, button.width, button.height)
-                gfx.setColor(BUTTONNORMALCOLOR)
-                gfx.rectangle("line", button.x, button.y, button.width, button.height)
-                gfx.print(button.text, button.x+button.width/2.0-width/2.0, button.y+button.height/2.0-height/2.0)
-            else
-                gfx.setColor(BUTTONNORMALCOLOR)
-                gfx.rectangle("fill", button.x, button.y, button.width, button.height)
-                gfx.rectangle("line", button.x, button.y, button.width, button.height)
-                gfx.setColor(BUTTONHOOVERCOLOR)
-                gfx.print(button.text, button.x+button.width/2.0-width/2.0, button.y+button.height/2.0-height/2.0)
+
+            local len = table_len(Buttons[State.leaf])
+            for i=1,len do
+                local button = Buttons[State.leaf][i]
+                local width, height
+                if button.size == 1 then
+                    gfx.setFont(BigFont)
+                    width = BigFont:getWidth(button.text)
+                    height = BigFont:getHeight(button.text)
+                elseif button.size == 2 then
+                    gfx.setFont(SmallFont)
+                    width = SmallFont:getWidth(button.text)
+                    height = SmallFont:getHeight(button.text)
+                end
+                if State.hoover == i then
+                    gfx.setColor(255, 255, 255, 255)
+                    love.graphics.draw(State.button_bg_hover, State.button_bg_quad, button.x, button.y, math.rad(0), button.width, button.height, 0, 0)
+                    gfx.setColor(BUTTONNORMALCOLOR)
+                    gfx.rectangle("line", button.x, button.y, button.width, button.height)
+                    gfx.print(button.text, button.x+button.width/2.0-width/2.0, button.y+button.height/2.0-height/2.0)
+                else
+                    gfx.setColor(255, 255, 255, 255)
+                    love.graphics.draw(State.button_bg, State.button_bg_quad, button.x, button.y, math.rad(0), button.width, button.height, 0, 0)
+                    gfx.rectangle("line", button.x, button.y, button.width, button.height)
+                    gfx.setColor(BUTTONHOOVERCOLOR)
+                    gfx.print(button.text, button.x+button.width/2.0-width/2.0, button.y+button.height/2.0-height/2.0)
+                end
             end
-        end
 
-        --first after custom leaves is banner
-        gfx.setFont(SmallFont)
-        gfx.setColor(255, 255, 255, 255)
-        gfx.push()
-        local theheight = ScreenHeight*BANNERH
-        local scale = theheight/State.banner:getHeight()
-        gfx.scale(scale, scale)
-        for i=0,ScreenWidth/scale/(State.banner:getWidth()) do
-            gfx.draw(State.banner, i*State.banner:getWidth(), 0)
-        end
-        gfx.pop()
-        gfx.push()
-        scale = theheight/State.bannerx:getHeight()
-        gfx.scale(scale, scale)
-        local boxsize = State.bannerx:getWidth()
-        gfx.draw(State.bannerx, ScreenWidth/scale-boxsize, 0)
-        gfx.draw(State.bannerm, ScreenWidth/scale-2*boxsize, 0)
-        gfx.pop()
-        gfx.setColor(1,1,1)
-        for _ =1, SMALLFONTDRAWS do
-            gfx.print(GAMENAME, ScreenWidth/2.0 - SmallFont:getWidth(GAMENAME)/2.0, theheight/2.0-SmallFont:getHeight(GAMENAME)/2.0)
-        end
-
-        if State.hoover < 0 then
-            gfx.setColor(CommandLine.focusedcolor)
-        else
-            gfx.setColor(CommandLine.color)
-        end
-        gfx.rectangle("fill", CommandLine.x, CommandLine.y, CommandLine.width, CommandLine.height)
-        gfx.setColor(255, 255, 255, 255)
-        gfx.push()
-        scale = CommandLine.height/CommandLine.button:getHeight()
-        gfx.scale(scale, scale)
-        gfx.draw(CommandLine.button, CommandLine.x/scale + CommandLine.width/scale-CommandLine.button:getWidth(), CommandLine.y/scale)
-        gfx.pop()
-        local color
-        if State.hoover >= 0 then
-            color = CommandLine.focusedcolor
-        else
-            color = CommandLine.color
-        end
-        gfx.setColor(color)
-        for _ =1, SMALLFONTDRAWS do
-            gfx.print(CommandLine.text, CommandLine.x, CommandLine.y+CommandLine.height/2.0-SmallFont:getHeight(CommandLine.text)/2.0)
-            if CommandLine.focusswitch == true then
-                gfx.print(CommandLine.focuspostfix, CommandLine.x+SmallFont:getWidth(CommandLine.text), CommandLine.y+CommandLine.height/2.0-SmallFont:getHeight(CommandLine.text)/2.0)
+            --first after custom leaves is banner
+            gfx.setFont(SmallFont)
+            gfx.setColor(255, 255, 255, 255)
+            gfx.push()
+            local theheight = ScreenHeight*BANNERH
+            local scale = theheight/State.banner:getHeight()
+            gfx.scale(scale, scale)
+            for i=0,ScreenWidth/scale/(State.banner:getWidth()) do
+                gfx.draw(State.banner, i*State.banner:getWidth(), 0)
             end
+            gfx.pop()
+            gfx.push()
+            scale = theheight/State.bannerx:getHeight()
+            gfx.scale(scale, scale)
+            local boxsize = State.bannerx:getWidth()
+            gfx.draw(State.bannerx, ScreenWidth/scale-boxsize, 0)
+            gfx.draw(State.bannerm, ScreenWidth/scale-2*boxsize, 0)
+            gfx.pop()
+            gfx.setColor(1,1,1)
+            for _ =1, SMALLFONTDRAWS do
+                gfx.print(GAMENAME, ScreenWidth/2.0 - SmallFont:getWidth(GAMENAME)/2.0, theheight/2.0-SmallFont:getHeight(GAMENAME)/2.0)
+            end
+
+            print_to_debug(ScreenWidth.."x"..ScreenHeight..", vsync="..love.window.getVSync()..", fps="..love.timer.getFPS()..", mem="..string.format("%.3f", collectgarbage("count")/1000.0).."MB, randomseed="..randomgen:getSeed())
+
+            gfx.setCanvas()
+            gfx.setColor(1, 1, 1, 1)
+            gfx.draw(Canvas, 0,0)
         end
-
-        local posx, posy = getposfromhoover()
-
-        print_to_debug(ScreenWidth.."x"..ScreenHeight..", vsync="..love.window.getVSync()..", fps="..love.timer.getFPS()..", mem="..string.format("%.3f", collectgarbage("count")/1000.0).."MB, randomseed="..randomgen:getSeed()..", xpos="..Save.positionx.."|"..posx..", ypos="..Save.positiony.."|"..posy..", mousehoover="..Tiles[Save.map[posx][posy]].name..", flower_n="..count_map_items(6)+count_map_items(7)+count_map_items(8)..", proj_table_n="..#State.projectiles)
-        
-        gfx.setCanvas()
-        gfx.setColor(1, 1, 1, 1)
-        gfx.draw(Canvas, 0,0)
     end
 end

@@ -1,13 +1,3 @@
-ABOUT COMMANDS
-
-
-To make a command. Hit TAB, write the command to the command line, hit enter
-
-
-Use the command "scale n" to set the screen size to n percent. 
-The value is saved. The default is 88
-
-
 SOMETHING ABOUT CLUTTER
 
 
@@ -33,6 +23,7 @@ and folder love in the source distribution
 
 This game
 by Skorpion1337
+tinyurl.com/1000oakz
 GPLv3
 https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -78,71 +69,3 @@ https://en.wikipedia.org/wiki/File:Filtre_d%27Amour.jpg
 From user https://commons.wikimedia.org/wiki/User:Arnaud_25 - Arnaud_25
 Creative Commons Attribution-Share Alike 4.0 International
 https://creativecommons.org/licenses/by-sa/4.0/deed.en
-
-
-Water tile - graphics/water.jpg
-https://opengameart.org/content/texture-water
-www.GodsAndIdols.com and https://opengameart.org/users/jattenalle - Johannes Pihl
-CC-BY 3.0
-https://creativecommons.org/licenses/by/3.0/
-
-
-Flower tiles - graphics/flower%n.png
-I changed their colours somewhat
-https://opengameart.org/content/pixel-flower-icons
-From user https://opengameart.org/users/sicklyseraph - Josephine (sicklyseraph)
-CC-BY 4.0
-https://creativecommons.org/licenses/by/4.0/
-
-
-Road textures - graphics/road.png
-I am using the desert one
-https://opengameart.org/content/road-textures
-From user https://opengameart.org/users/dakal - dakal
-CC-BY-SA 3.0
-https://creativecommons.org/licenses/by-sa/3.0/
-
-
-Red outfit for main character - graphics/charright & left.png
-https://opengameart.org/content/occupational-icons
-https://opengameart.org/users/technopeasant - Graham L. Wilson (technopeasant)
-Tiles have been drawn by David E. Gervais, and are published under the Creative 
-Commons license. You are free to copy, distribute and transmit those tiles 
-as long as you credit David Gervais as their creator.
-CC-BY 3.0
-http://creativecommons.org/licenses/by/3.0/
-
-
-A sand road - graphics/road2.png
-https://opengameart.org/content/pixel-art-top-down-tileset
-From user https://opengameart.org/users/dustdfg - Yevhen Babiichuk (DustDFG)
-CC-BY-SA 4.0
-https://creativecommons.org/licenses/by-sa/4.0/
-
-
-Gold stuff in the Main Menu background
-https://opengameart.org/content/gold-treasure-icons-16x16s
-From user https://opengameart.org/users/bonsaiheldin - Bonsaiheldin
-Public Domain
-
-
-A water tile
-https://opengameart.org/content/water
-By Aswin Vos. https://opengameart.org/users/aswin909
-CC BY-SA 3.0
-https://creativecommons.org/licenses/by-sa/3.0/
-
-
-A water tile
-https://opengameart.org/content/water-texture-pack
-From user https://opengameart.org/users/proxy-games - Proxy Games
-Public Domain
-
-
-Apple for shooting
-https://opengameart.org/content/apple-2
-From user https://opengameart.org/users/kirajustine20 - Kira_Justine20
-CC BY 4.0
-
-
-frog needs license

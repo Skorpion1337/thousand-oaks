@@ -1,0 +1,15 @@
+a:link, a:visited {
+  color: pink;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+.flex { display: flex; align-items: center;}
+
+.bigfont {
+    font-size: 20px;
+}
+
+.smallfont {
+    font-size: 17px;
+}
