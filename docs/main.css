@@ -1,6 +1,6 @@
 body {
     color: white;
-    background: url(bg_tile.png);
+    background: url("bg_tile.png");
 }
 
 a:link, a:visited {
