@@ -4,20 +4,12 @@ DEFSCREENSPACE = 88 -- a percentage, /100 . default 88
 MINIMUM_SCREEN_SCALE = 33 -- like above but minimum
 SMALLFONT = 0.0125
 BIGFONT = 0.02
-BIGSQUARESCALE = 1.3
 BANNERH = 0.045
-LOGOW = 0.55
 
 -- values with zero are shifting constants, see calculate_shifting_constants() when scaling
 
 SMALLFONTDRAWS = 3
-SCROLLLINESMAP = 2
 SCROLLLINES = 9
-SQUARESIZE = 0
-
--- lower speed value is faster
-FPS = 75
-WALKSPEED = 1/FPS*10
 
 BUTTONHOOVERCOLOR = {0.5,0,0}
 BUTTONNORMALCOLOR = {0.5,0.5,0.5}
@@ -312,7 +304,7 @@ do
 
     local function refresh_state()
         love.window.setTitle(GAMENAME)
-        love.window.setVSync(1)
+        love.window.setVSync(2)
         love.keyboard.setKeyRepeat(true)
 
         Canvas = gfx.newCanvas(ScreenWidth, ScreenHeight)
@@ -514,12 +506,6 @@ do
     end
 
     function love.update(dt)
-        local timeout = 1.0/FPS - dt
-        if timeout < 0 then
-            timeout = 0
-        end
-        love.timer.sleep(timeout)
-
         if (State.leaf == 2 or State.leaf == 6) and MapGenerated then
             State.watersparklecur = State.watersparklecur - dt
             if State.watersparklecur <= 0 then
@@ -671,7 +657,7 @@ do
                 gfx.pop()
                 gfx.push()
                 local _, my = translatexy(0, 0.166)
-                local scalex = ScreenWidth*LOGOW/State.logo:getWidth()
+                local scalex = ScreenWidth*0.55/State.logo:getWidth()
                 gfx.scale(scalex, scalex)
                 gfx.draw(State.logo, ScreenWidth/scalex/2-State.logo:getWidth()/2,my/scalex-State.logo:getHeight()/2)
                 gfx.draw(State.logo2, ScreenWidth/scalex/2-State.logo2:getWidth()/2,my/scalex-State.logo2:getHeight()/2+State.logo:getHeight()+10)
@@ -732,72 +718,12 @@ do
                 gfx.rectangle("line", Buttons[State.leaf][2].x-beyondbuttonw, Buttons[State.leaf][2].y+Buttons[State.leaf][2].height, Buttons[State.leaf][2].width+ 2*beyondbuttonw, Buttons[State.leaf][3].y-(Buttons[State.leaf][2].y+Buttons[State.leaf][2].height))
                 gfx.print(State.help_text, Buttons[State.leaf][2].x-beyondbuttonw+State.helppadding, Buttons[State.leaf][2].y+Buttons[State.leaf][2].height+State.helppadding)
             elseif State.leaf == 6 then
-                local xamount = ScreenWidth/SQUARESIZE
-                local yamount = ScreenHeight/SQUARESIZE
-                local squarerounded = math.floor(SQUARESIZE+0.5)
-                gfx.setColor(255, 255, 255, 255)
-                for i=1, math.floor(xamount+0.5)+2 do
-                    for j=1, math.floor(yamount+0.5)+2 do
-                        gfx.push()
-                        local imagefile = Tiles[Save.map[math.min(math.max(1,i+State.xprefix-1),MAP_SQUARE)][math.min(math.max(1,j+State.yprefix-1),MAP_SQUARE)]].file
-                        local scale = ScreenWidth/xamount/math.floor(imagefile:getWidth()+0.5)
-                        gfx.scale(scale, scale)
-                        gfx.draw(imagefile, (i-1)*squarerounded/scale, (j-1)*squarerounded/scale)
-                        gfx.pop()
-                    end
-                end
                 gfx.push()
-                local imagefile = State.charchosen
-                local scalec = ScreenWidth/xamount/math.floor(imagefile:getWidth()+0.5)*BIGSQUARESCALE
-                Scaling_Down = scalec
-                gfx.scale(scalec, scalec)
-                gfx.draw(imagefile, squarerounded*math.floor(ScreenWidth/2/SQUARESIZE)/scalec+0.5*squarerounded/scalec-imagefile:getWidth()/2, squarerounded*math.floor(ScreenHeight/2/SQUARESIZE)/scalec+0.5*squarerounded/scalec-imagefile:getHeight()/2)
-                local correctsquare = ScreenWidth/TILEAMOUNT_W
-                calculate_prefix(State.xprefix+ScreenWidth/correctsquare/2, State.yprefix+ScreenHeight/correctsquare/2)
-                for n=1, #State.npcs do
-                    local img = NPC_Types[State.npcs[n].type].img
-                    gfx.draw(img, math.floor(State.npcs[n].positionx-State.xprefix+0.5)*SQUARESIZE/scalec, math.floor(State.npcs[n].positiony-State.yprefix+0.5)*SQUARESIZE/scalec)
-                end
                 gfx.pop()
             elseif State.leaf == 7 then
-                gfx.setColor(0.3,0.3,0.3)
-                local collectbutton = Buttons[State.leaf][1]
-                gfx.rectangle("fill",collectbutton.x+collectbutton.width, collectbutton.y, ScreenWidth*ALCHEMYWINDOWSIZE, ScreenHeight*ALCHEMYWINDOWSIZE)
-                gfx.setColor(0.5,0,0)
-                gfx.rectangle("line",collectbutton.x+collectbutton.width, collectbutton.y, ScreenWidth*ALCHEMYWINDOWSIZE , ScreenHeight*ALCHEMYWINDOWSIZE )
-                gfx.setColor(1,0,0)
                 gfx.push()
-                local scalesquare = 1/20
-                local imagefile = State.alchbottle
-                local bottlewidth = imagefile:getWidth()
-                local bottleheight = imagefile:getHeight()
-                local scalebottle = ScreenWidth/bottlewidth*scalesquare
-                gfx.scale(scalebottle, scalebottle)
-                gfx.draw(imagefile, (collectbutton.x+collectbutton.width)/scalebottle, collectbutton.y/scalebottle)
+                --gfx.draw(imagefile, (collectbutton.x+collectbutton.width)/scaleankh, (collectbutton.y+ScreenHeight*ALCHEMYWINDOWSIZE)/scaleankh-ankhheight)--good stretching
                 gfx.pop()
-                gfx.push()
-                imagefile = State.alchdoc
-                local docwidth = imagefile:getWidth()
-                local docheight = imagefile:getHeight()
-                local scaledoc = ScreenWidth/docwidth*scalesquare
-                gfx.scale(scaledoc, scaledoc)
-                gfx.draw(imagefile, (collectbutton.x+collectbutton.width)/scaledoc, (collectbutton.y+bottleheight*scalebottle)/scaledoc) -- good stretching
-                gfx.pop()
-                gfx.push()
-                imagefile = State.alchankh
-                local ankhwidth = imagefile:getWidth()
-                local ankhheight = imagefile:getHeight()
-                local scaleankh = ScreenWidth/ankhwidth*scalesquare
-                gfx.scale(scaleankh, scaleankh)
-                gfx.draw(imagefile, (collectbutton.x+collectbutton.width)/scaleankh, (collectbutton.y+ScreenHeight*ALCHEMYWINDOWSIZE)/scaleankh-ankhheight)--good stretching
-                gfx.pop()
-                if State.printingalchinventory == true then
-                    gfx.setColor(1,0,0)
-                    gfx.print(State.printingalchinventorytext, collectbutton.x+collectbutton.width+bottlewidth*scalebottle, collectbutton.y)
-                end
-                gfx.setColor(0,0,0.8)
-                local linepadding = 1/4
-                gfx.line(collectbutton.x+collectbutton.width+ankhwidth*scaleankh/2, collectbutton.y + docheight*scaledoc + bottleheight*scalebottle + bottleheight*scalebottle*linepadding, collectbutton.x+collectbutton.width+ankhwidth*scaleankh/2, collectbutton.y+ScreenHeight*ALCHEMYWINDOWSIZE-ankhheight*scaleankh*(1+linepadding))
             end
 
             local len = table_len(Buttons[State.leaf])
