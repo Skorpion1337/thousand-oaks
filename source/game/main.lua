@@ -38,9 +38,6 @@ do
     randomgen:setSeed(os.time())
 
     local function savefile(save_number)
-        Save.positionx = math.floor(State.xprefix + ScreenWidth/SQUARESIZE/2+0.5)
-        Save.positiony = math.floor(State.yprefix + ScreenHeight/SQUARESIZE/2+0.5)
-
         local compressed = love.data.compress("string", COMPRESSION, lume.serialize(Save), 9)
 
         love.filesystem.write(SAVEFILE..save_number, compressed)
@@ -105,20 +102,6 @@ do
         end
     end
 
-    local function calculate_prefix(px, py)
-        State.xprefix = math.floor(px-ScreenWidth/SQUARESIZE/2+0.5)
-        State.yprefix = math.floor(py-ScreenHeight/SQUARESIZE/2+0.5)
-    end
-
-    local function randomlocation()
-        local px, py
-        repeat
-            px = randomgen:random(MAP_SQUARE-RIVERWIDTH-1)
-            py = randomgen:random(MAP_SQUARE)
-        until Tiles[Save.map[px][py]].obstacle == false
-        calculate_prefix(px,py)
-    end
-
     local function format_map()
         local map = {}
         for i=1,MAP_SQUARE do
@@ -159,25 +142,6 @@ do
 
     local function continuegame()
         change_page(6)
-    end
-
-    local function refreshalchinventory()
-        if #Save.alchinventory == 0 then
-            State.printingalchinventorytext = "Empty Alchemy Bag"
-        else
-            State.printingalchinventorytext = ""
-            for i=1, #Save.alchinventory do
-                if Save.alchinventory[i] ~= 0 then
-                    State.printingalchinventorytext = State.printingalchinventorytext..i..". "..AlchItems[Save.alchinventory[i]].name.."\n"
-                end
-            end
-        end
-        State.printingalchinventory = true
-    end
-
-    local function newalchemy()
-        refreshalchinventory()
-        change_page(7)
     end
 
     local function explode(inputstr, sep)
@@ -238,7 +202,6 @@ do
             local pressedbutton = love.window.showMessageBox("Lose all data when loading", "Loading a game formats the current memory. Want to continue?", {"OK", "No!", enterbutton = 2}, "warning", true)
             if pressedbutton == 1 then
                 load_file(n)
-                calculate_prefix(Save.positionx, Save.positiony)
                 MapGenerated = true
                 change_page(6)
                 State.oldleaf = 1
@@ -429,13 +392,14 @@ do
     end
 
     local function print_to_debug(text)
-        local width, height = translatexy(0.01, 0.97)
-        gfx.setColor(1,1,1)
-        gfx.rectangle("fill",width,height,SmallFont:getWidth(text),SmallFont:getHeight(text))
+        local width, height = translatexy(0, 1)
+        gfx.setColor(0.5,0.2,0.1)
+        local height2 = SmallFont:getHeight(text)
+        gfx.rectangle("fill",0,height-height2,SmallFont:getWidth(text), height2)
         gfx.setFont(SmallFont)
         gfx.setColor(1,0,0)
         for _ =1, SMALLFONTDRAWS do
-            gfx.print(text, width, height)
+            gfx.print(text, width, height-height2)
         end
     end
 
