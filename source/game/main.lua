@@ -62,17 +62,15 @@ do
     end
 
     local function find_hoovered_button(x, y)
-        local found = false
+        State.hoover = 0
         local len = table_len(Buttons[State.leaf])
         for i=1,len do
             local button = Buttons[State.leaf][i]
             if x > button.x and x < button.x + button.width and y > button.y and y < button.y + button.height then
                 State.hoover = i
-                found = true
                 break
             end
         end
-        return found
     end
 
     local function quitmessage()
@@ -204,7 +202,6 @@ do
                 load_file(n)
                 MapGenerated = true
                 change_page(6)
-                State.oldleaf = 1
             end
         end
     end
@@ -227,7 +224,6 @@ do
 
     local function backtomain()
         change_page(1)
-        State.oldleaf = 1
     end
 
     local function scrollhelpup()
@@ -408,11 +404,7 @@ do
     end
 
     function love.mousemoved(x, y, dx, dy, istouch )
-        local found = false
-        found = find_hoovered_button(x, y)
-        if found == false then
-            State.hoover = 0
-        end
+        find_hoovered_button(x, y)
         Currentx, Currenty = x,y
     end
 
