@@ -31,10 +31,11 @@ do
     local utf8 = require("utf8")
 
     love.window.setIcon(love.image.newImageData("graphics/large_purple.png"))
+    love.keyboard.setKeyRepeat(true)
 
     local gfx = love.graphics
 
-    randomgen = love.math.newRandomGenerator()
+    local randomgen = love.math.newRandomGenerator()
     randomgen:setSeed(os.time())
 
     local function savefile(save_number)
@@ -80,11 +81,51 @@ do
         end
     end
 
-    local function change_page(n)
-        State.oldleaf = State.leaf
+    local function change_page(n, ignore_old_leaf)
+        if ignore_old_leaf == nil then
+            State.old_leaf = State.leaf
+        else
+            State.dialog_leaf = State.leaf
+            Labels[7][2].text = ""
+        end
         State.leaf = n
         State.hoover = 0
         find_hoovered_button(Currentx, Currenty)
+    end
+
+    local function save_n(n)
+        savefile(n)
+        Buttons[3][n].text = Labels[7][2].text
+        Buttons[4][n].text = Labels[7][2].text
+        local names = {}
+        for i = 1, SAVEFILEAMOUNT do
+            names[i] = Buttons[3][i].text
+        end
+        love.filesystem.write(SAVENAMEFILE, lume.serialize(names))
+        debugbox("Saved slot "..n.."!")
+    end
+
+    local function show_dialog(type, param1, param2, param3, param4)
+        if type == "save" then
+            Labels[7][1].text = "Give the save name, please."
+            State.dialog_param1 = param1
+        end
+        change_page(7, true)
+    end
+
+    local function process_dialog(type)
+        if type == "save" then
+            save_n(State.dialog_param1)
+        end
+    end
+
+    local function dialog_accept_save()
+        process_dialog("save")
+        change_page(State.dialog_leaf, true)
+    end
+
+    local function dialog_cancel()
+        change_page(State.dialog_leaf, true)
     end
 
     local function save_game()
@@ -94,9 +135,7 @@ do
     local function save_file(i)
         local pressedbutton = love.window.showMessageBox("Want to save slot "..i.."?", "Old data will be lost.", {"OK", "No!", enterbutton = 2}, "warning", true)
         if pressedbutton == 1 then
-            debugbox("Close this dialog, Press ENTER, Write Name, Press ENTER - Slot "..i)
-            State.waitingforsavename = true
-            State.waitingforsavename_n = i
+            show_dialog("save", i)
         end
     end
 
@@ -181,18 +220,6 @@ do
         quitmessage()
     end
 
-    local function save_n(n)
-        savefile(n)
-        Buttons[3][n].text = CommandLine.text
-        Buttons[4][n].text = CommandLine.text
-        local names = {}
-        for i = 1, SAVEFILEAMOUNT do
-            names[i] = Buttons[3][i].text
-        end
-        love.filesystem.write(SAVENAMEFILE, lume.serialize(names))
-        debugbox("Saved!")
-    end
-
     local function load_n(n)
         if love.filesystem.getInfo(SAVEFILE..n) == nil then
             debugbox("Unloaded Save File")
@@ -239,16 +266,6 @@ do
         State.help_text = load_help_text(State.savedhelpprefix)
     end
 
-    local function startalchcombine()
-        State.waitingforalchcombine=true
-        debugbox("Close this dialog. Hit enter. Type number+number+number+.. . Hit enter.")
-    end
-
-    local function startalchremove()
-        State.waitingforalchremove= true
-        debugbox("Close this dialog. Hit enter. Type the number to delete. Hit enter.")
-    end
-
     local function count_map_items(item_number)
         local count = 0
         for x=1,MAP_SQUARE do
@@ -278,7 +295,9 @@ do
         local wt, newgamebuttonpadding = translatexy(0.5, 0.02)
 
         Buttons = {{}}
+        Labels = {{}}
         Buttons[1] = {{size=1, text="Continue", x = ScreenWidth/2.0-newgamebuttonw/2.0, y = newbuttonstarth, width = newgamebuttonw, height=newgamebuttonh, call = continuegame}, {size=1, text="New Game", x = ScreenWidth/2.0-newgamebuttonw/2.0, y = newbuttonstarth+newgamebuttonh+newgamebuttonpadding, width = newgamebuttonw, height=newgamebuttonh, call = newgame},{size=1, text="Save Game", x = ScreenWidth/2.0-newgamebuttonw/2.0, y =  newbuttonstarth+2*newgamebuttonh+2*newgamebuttonpadding, width = newgamebuttonw, height=newgamebuttonh, call = save_game}, {size=1, text="Load Game", x = ScreenWidth/2.0-newgamebuttonw/2.0, y = newbuttonstarth+3*newgamebuttonh+3*newgamebuttonpadding, width = newgamebuttonw, height=newgamebuttonh, call = loadgame}, {size=1, text="Options", x = ScreenWidth/2.0-newgamebuttonw/2.0, y = newbuttonstarth+4*newgamebuttonh+4*newgamebuttonpadding, width = newgamebuttonw, height=newgamebuttonh, call = optionwindow}, {size=1, text="Help", x = ScreenWidth/2.0-newgamebuttonw/2.0, y = newbuttonstarth+5*newgamebuttonh+5*newgamebuttonpadding, width = newgamebuttonw, height=newgamebuttonh, call = helpwindow}, {size=1, text="Quit", x = ScreenWidth/2.0-newgamebuttonw/2.0, y = newbuttonstarth+6*newgamebuttonh+6*newgamebuttonpadding, width = newgamebuttonw, height=newgamebuttonh, call = quitgame}}
+        Labels[1] ={}
 
         local newbuttonwidth, newbuttonheight = translatexy(0.2,0.05)
         local paddingx, paddingy = translatexy(0.01,0.01)
@@ -288,6 +307,7 @@ do
             {size=1, text="Save MAP", x = 0, y = newbuttonheight+paddingy+startpaddingy, width = newbuttonwidth, height=newbuttonheight, call = save_game},
             {size=1, text="Back to Main", x = 0, y = 2*newbuttonheight+2*paddingy+startpaddingy, width = newbuttonwidth, height=newbuttonheight, call = backtomain},
         }
+        Labels[2] ={}
 
         Buttons[3] = {{}}
         local buttonwidth, buttonheight = translatexy(0.33, 0.05)
@@ -298,6 +318,7 @@ do
         end
         local amount = SAVEFILEAMOUNT+1
         Buttons[3][amount] = {size=1, text="Back to Main", x = continuebuttonx, y = continuebuttony+buttonheight*amount+buttonpadding*amount, width = buttonwidth, height=buttonheight, call = backtomain}
+        Labels[3] ={}
 
         Buttons[4] = {{}}
         for i = 1, SAVEFILEAMOUNT do
@@ -305,17 +326,39 @@ do
         end
         amount = SAVEFILEAMOUNT+1
         Buttons[4][amount] = {size=1, text="Back to Main", x = continuebuttonx, y = continuebuttony+buttonheight*amount+buttonpadding*amount, width = buttonwidth, height=buttonheight, call = backtomain}
+        Labels[4] ={}
 
         local helpbuttonw, helpbuttonh = translatexy(0.3, 0.07)
         local helpbuttonstartx, helpbuttonstarty = translatexy(0, 0.1)
         local centeredx = ScreenWidth/2.0-helpbuttonw/2.0
         Buttons[5] = {{size=1, text="Back to Main", x = centeredx, y = helpbuttonstarty, width = helpbuttonw, height=helpbuttonh, call = backtomain}, {size=1, text="Scroll Up", x = centeredx, y = helpbuttonstarty+helpbuttonh, width = helpbuttonw, height=helpbuttonh, call = scrollhelpup}, {size=1, text="Scroll Down", x = centeredx, y = helpbuttonstarty+10*helpbuttonh, width = helpbuttonw, height=helpbuttonh, call = scrollhelpdown}}
+        Labels[5] ={}
 
         local gamebuttonw, gamebuttonh = translatexy(0.115, 0.03)
         local wpadding, hpadding = translatexy(0,0.15)
         Buttons[6] = {{size=2, text="Alchemy", x = 0, y = 0*gamebuttonh+hpadding, width = gamebuttonw, height=gamebuttonh, call = newalchemy}, {size=2, text="Back to Main", x = 0, y = 1*gamebuttonh+hpadding, width = gamebuttonw, height=gamebuttonh, call = backtomain}}
+        Labels[6] ={}
 
-        Buttons[7] = {}
+        State.dialog_width, State.dialog_height = translatexy(0.5, 0.4)
+        local button_width, button_height = translatexy(0.115, 0.03)
+        local padding, _ = translatexy(0.013, 0)
+        Buttons[7] = {{size=2, text="OK", x = ScreenWidth/2+State.dialog_width/2-button_width, y = ScreenHeight/2+State.dialog_height/2-button_height, width = button_width, height=button_height, call = dialog_accept_save}, {size=2, text="CANCEL", x = ScreenWidth/2+State.dialog_width/2-button_width*2-padding, y = ScreenHeight/2+State.dialog_height/2-button_height, width = button_width, height=button_height, call = dialog_cancel},}
+        Labels[7] ={{size=2, text="null dialog", color={0.5,0.25,0}, x = ScreenWidth/2-State.dialog_width/2+padding, y = ScreenHeight/2-State.dialog_height/2+padding}, {size=2, text="", color={0.5,0,0}, x = ScreenWidth/2-State.dialog_width/2+3*padding, y = ScreenHeight/2-padding}}
+
+
+        --[[for i = 1, #Labels do
+            for j=1, #Labels[i] do
+                label = Labels[i][j]
+                if label.size == 1 then
+                    label.width = BigFont:getWidth(label.text)
+                    label.width = BigFont:getHeight(label.text)
+                elseif label.size == 2 then
+                    label.width = SmallFont:getWidth(label.text)
+                    label.width = SmallFont:getHeight(label.text)
+                end
+            end
+        end]]--
+
 
         if love.filesystem.getInfo(SAVENAMEFILE) == nil then
             local names = {}
@@ -373,16 +416,26 @@ do
         return chunks
     end
 
-    function love.keypressed(key, scancode, isrepeat)
+    function love.textinput(key)
+        Labels[7][2].text = Labels[7][2].text..key
+    end
 
+    function love.keypressed(key)
+        if key == "backspace" then
+            local byteoffset = utf8.offset(Labels[7][2].text, -1)
+
+            if byteoffset then
+                Labels[7][2].text = string.sub(Labels[7][2].text, 1, byteoffset - 1)
+            end
+        end
     end
 
     function love.keyreleased(key, scancode, isrepeat)
         if key == "escape" then
-            if State.leaf == 1 and State.oldleaf == 1 then
+            if State.leaf == 1 and State.old_leaf == 1 then
                 quitmessage()
             else
-                change_page(State.oldleaf)
+                change_page(State.old_leaf)
             end
         end
     end
@@ -399,10 +452,6 @@ do
         end
     end
 
-    local function mousepressed(x, y, mouse_button)
-        Buttons[State.leaf][State.hoover].call()
-    end
-
     function love.mousemoved(x, y, dx, dy, istouch )
         find_hoovered_button(x, y)
         Currentx, Currenty = x,y
@@ -415,7 +464,7 @@ do
 
         Scaling_Down = 0
 
-        State = {leaf = 1, oldleaf = 1, hoover = 0, logo = gfx.newImage("graphics/logo.png"), logo2 = gfx.newImage("graphics/logo2.png"), button_bg = nil, button_bg_quad = nil, button_bg_hover = nil, bg_tile = gfx.newImage("graphics/bg_tile.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = ScreenWidth*0.2*0.1, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, lovepotion=gfx.newImage("graphics/potion.jpg"), waitingforsavename = false, waitingforsavename_n = 0, mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10}
+        State = { leaf = 1, old_leaf = 1, dialog_leaf = nil, dialog_param1=nil, dialog_param2=nil,dialog_param3=nil, dialog_param4=nil, hoover = 0, logo = gfx.newImage("graphics/logo.png"), logo2 = gfx.newImage("graphics/logo2.png"), button_bg = nil, button_bg_quad = nil, button_bg_hover = nil, bg_tile = gfx.newImage("graphics/bg_tile.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = ScreenWidth*0.2*0.1, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, lovepotion=gfx.newImage("graphics/potion.jpg"), waitingforsavename = false, waitingforsavename_n = 0, mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10, dialog_width = 0, dialog_height = 0}
 
         local gradientData = love.image.newImageData(2, 1, 'rgba8', '\200\200\200' .. '\255' .. '\050\050\050' .. '\255')
         State.button_bg = gfx.newImage(gradientData)
@@ -678,12 +727,12 @@ do
                 gfx.pop()
             elseif State.leaf == 7 then
                 gfx.push()
-                --gfx.draw(imagefile, (collectbutton.x+collectbutton.width)/scaleankh, (collectbutton.y+ScreenHeight*ALCHEMYWINDOWSIZE)/scaleankh-ankhheight)--good stretching
+                gfx.setColor(0.72,0.59,0.33,1)
+                gfx.rectangle("fill", ScreenWidth/2-State.dialog_width/2, ScreenHeight/2-State.dialog_height/2, State.dialog_width, State.dialog_height)
                 gfx.pop()
             end
 
-            local len = table_len(Buttons[State.leaf])
-            for i=1,len do
+            for i=1,#Buttons[State.leaf] do
                 local button = Buttons[State.leaf][i]
                 local width, height
                 if button.size == 1 then
@@ -708,6 +757,12 @@ do
                     gfx.setColor(BUTTONHOOVERCOLOR)
                     gfx.print(button.text, button.x+button.width/2.0-width/2.0, button.y+button.height/2.0-height/2.0)
                 end
+            end
+
+            for i=1,#Labels[State.leaf] do
+                local label = Labels[State.leaf][i]
+                gfx.setColor(label.color)
+                gfx.print(label.text, label.x, label.y)
             end
 
             --first after custom leaves is banner
