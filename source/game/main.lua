@@ -5,6 +5,7 @@ MINIMUM_SCREEN_SCALE = 33 -- like above but minimum
 SMALLFONT = 0.0125
 BIGFONT = 0.02
 BANNERH = 0.045
+NORMAL_SIZE_AT_PX = 1689
 
 -- values with zero are shifting constants, see calculate_shifting_constants() when scaling
 
@@ -647,12 +648,15 @@ do
 
             gfx.setColor(255, 255, 255, 255)
             if State.leaf == 1 then
-
-                for x = 0, ScreenWidth, State.bg_tile:getWidth() do
-                    for y = 0, ScreenHeight, State.bg_tile:getHeight() do
-                        gfx.draw(State.bg_tile, x, y)
+                gfx.push()
+                local scale = ScreenWidth/NORMAL_SIZE_AT_PX
+                gfx.scale(scale, scale)
+                for x = 0, ScreenWidth/(State.bg_tile:getWidth()*scale) do
+                    for y = 0, ScreenHeight/(State.bg_tile:getHeight()*scale) do
+                        gfx.draw(State.bg_tile, x*State.bg_tile:getWidth(), y*State.bg_tile:getHeight())
                     end
                 end
+                gfx.pop()
 
                 local iconsize, _ = translatexy(0.002, 0)
                 gfx.push()
@@ -709,7 +713,7 @@ do
                 local rotatefile = State.lovepotion
                 local rotatescale = ScreenHeight/rotatefile:getHeight()
                 gfx.scale(rotatescale, rotatescale)
-                gfx.draw(rotatefile, ScreenWidth/rotatescale-rotatefile:getWidth(), math.max(1,ScreenHeight/2-rotatefile:getHeight()/2))
+                gfx.draw(rotatefile, ScreenWidth/rotatescale-rotatefile:getWidth(), math.max(0,ScreenHeight/2-rotatefile:getHeight()/2))
                 gfx.pop()
             elseif State.leaf == 5 then
                 gfx.setColor(255, 255, 255, 255)
@@ -786,9 +790,8 @@ do
             gfx.push()
             scale = theheight/State.bannerx:getHeight()
             gfx.scale(scale, scale)
-            local boxsize = State.bannerx:getWidth()
-            gfx.draw(State.bannerx, ScreenWidth/scale-boxsize, 0)
-            gfx.draw(State.bannerm, ScreenWidth/scale-2*boxsize, 0)
+            gfx.draw(State.bannerx, ScreenWidth/scale-State.bannerx:getWidth(), 0)
+            gfx.draw(State.bannerm, ScreenWidth/scale-2*State.bannerm:getWidth(), 0)
             gfx.pop()
             gfx.setColor(1,1,1)
             for _ =1, SMALLFONTDRAWS do
