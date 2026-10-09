@@ -106,6 +106,7 @@ do
     end
 
     local function show_dialog(type, param1, param2, param3, param4)
+        State.dialog_type = type
         if type == "save" then
             Labels[7][1].text = "Give the save name, please."
             State.dialog_param1 = param1
@@ -113,18 +114,20 @@ do
         change_page(7, true)
     end
 
-    local function process_dialog(type)
-        if type == "save" then
+    local function process_dialog()
+        if State.dialog_type == "save" then
             save_n(State.dialog_param1)
         end
     end
 
-    local function dialog_accept_save()
-        process_dialog("save")
+    local function dialog_accept()
+        process_dialog()
+        State.dialog_type = ""
         change_page(State.dialog_leaf, true)
     end
 
     local function dialog_cancel()
+        State.dialog_type = ""
         change_page(State.dialog_leaf, true)
     end
 
@@ -342,7 +345,7 @@ do
         State.dialog_width, State.dialog_height = translatexy(0.5, 0.4)
         local button_width, button_height = translatexy(0.115, 0.03)
         local padding, _ = translatexy(0.013, 0)
-        Buttons[7] = {{size=2, text="OK", x = ScreenWidth/2+State.dialog_width/2-button_width, y = ScreenHeight/2+State.dialog_height/2-button_height, width = button_width, height=button_height, call = dialog_accept_save}, {size=2, text="CANCEL", x = ScreenWidth/2+State.dialog_width/2-button_width*2-padding, y = ScreenHeight/2+State.dialog_height/2-button_height, width = button_width, height=button_height, call = dialog_cancel},}
+        Buttons[7] = {{size=2, text="OK", x = ScreenWidth/2+State.dialog_width/2-button_width, y = ScreenHeight/2+State.dialog_height/2-button_height, width = button_width, height=button_height, call = dialog_accept}, {size=2, text="CANCEL", x = ScreenWidth/2+State.dialog_width/2-button_width*2-padding, y = ScreenHeight/2+State.dialog_height/2-button_height, width = button_width, height=button_height, call = dialog_cancel},}
         Labels[7] ={{size=2, text="null dialog", color={0.5,0.25,0}, x = ScreenWidth/2-State.dialog_width/2+padding, y = ScreenHeight/2-State.dialog_height/2+padding}, {size=2, text="", color={0.5,0,0}, x = ScreenWidth/2-State.dialog_width/2+3*padding, y = ScreenHeight/2-padding}}
 
 
@@ -464,7 +467,7 @@ do
 
         Scaling_Down = 0
 
-        State = { leaf = 1, old_leaf = 1, dialog_leaf = nil, dialog_param1=nil, dialog_param2=nil,dialog_param3=nil, dialog_param4=nil, hoover = 0, logo = gfx.newImage("graphics/logo.png"), logo2 = gfx.newImage("graphics/logo2.png"), button_bg = nil, button_bg_quad = nil, button_bg_hover = nil, bg_tile = gfx.newImage("graphics/bg_tile.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), red_crystal = gfx.newImage("graphics/crystal.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = ScreenWidth*0.2*0.1, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, lovepotion=gfx.newImage("graphics/potion.jpg"), waitingforsavename = false, waitingforsavename_n = 0, mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10, dialog_width = 0, dialog_height = 0}
+        State = { leaf = 1, old_leaf = 1, dialog_type = nil, dialog_param1=nil, dialog_param2=nil,dialog_param3=nil, dialog_param4=nil, hoover = 0, logo = gfx.newImage("graphics/logo.png"), logo2 = gfx.newImage("graphics/logo2.png"), button_bg = nil, button_bg_quad = nil, button_bg_hover = nil, bg_tile = gfx.newImage("graphics/bg_tile.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), red_crystal = gfx.newImage("graphics/crystal.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = ScreenWidth*0.2*0.1, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, lovepotion=gfx.newImage("graphics/potion.jpg"), waitingforsavename = false, waitingforsavename_n = 0, mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10, dialog_width = 0, dialog_height = 0}
 
         local gradientData = love.image.newImageData(2, 1, 'rgba8', '\200\200\200' .. '\255' .. '\050\050\050' .. '\255')
         State.button_bg = gfx.newImage(gradientData)
