@@ -464,7 +464,7 @@ do
 
         Scaling_Down = 0
 
-        State = { leaf = 1, old_leaf = 1, dialog_leaf = nil, dialog_param1=nil, dialog_param2=nil,dialog_param3=nil, dialog_param4=nil, hoover = 0, logo = gfx.newImage("graphics/logo.png"), logo2 = gfx.newImage("graphics/logo2.png"), button_bg = nil, button_bg_quad = nil, button_bg_hover = nil, bg_tile = gfx.newImage("graphics/bg_tile.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = ScreenWidth*0.2*0.1, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, lovepotion=gfx.newImage("graphics/potion.jpg"), waitingforsavename = false, waitingforsavename_n = 0, mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10, dialog_width = 0, dialog_height = 0}
+        State = { leaf = 1, old_leaf = 1, dialog_leaf = nil, dialog_param1=nil, dialog_param2=nil,dialog_param3=nil, dialog_param4=nil, hoover = 0, logo = gfx.newImage("graphics/logo.png"), logo2 = gfx.newImage("graphics/logo2.png"), button_bg = nil, button_bg_quad = nil, button_bg_hover = nil, bg_tile = gfx.newImage("graphics/bg_tile.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), red_crystal = gfx.newImage("graphics/crystal.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = ScreenWidth*0.2*0.1, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, lovepotion=gfx.newImage("graphics/potion.jpg"), waitingforsavename = false, waitingforsavename_n = 0, mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10, dialog_width = 0, dialog_height = 0}
 
         local gradientData = love.image.newImageData(2, 1, 'rgba8', '\200\200\200' .. '\255' .. '\050\050\050' .. '\255')
         State.button_bg = gfx.newImage(gradientData)
@@ -729,6 +729,10 @@ do
                 gfx.push()
                 gfx.setColor(0.72,0.59,0.33,1)
                 gfx.rectangle("fill", ScreenWidth/2-State.dialog_width/2, ScreenHeight/2-State.dialog_height/2, State.dialog_width, State.dialog_height)
+                gfx.setColor(255,255,255,255)
+                local iconsize, pos = translatexy(0.001, 0.1)
+                gfx.scale(iconsize, iconsize)
+                gfx.draw(State.red_crystal, (ScreenWidth/2-State.dialog_width/2.2)/iconsize, (ScreenHeight/2-State.dialog_height/2+pos)/iconsize)
                 gfx.pop()
             end
 
