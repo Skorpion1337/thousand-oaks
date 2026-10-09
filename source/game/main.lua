@@ -664,11 +664,11 @@ do
                 end
                 gfx.pop()
                 gfx.push()
-                local _, my = translatexy(0, 0.166)
+                local padding, my = translatexy(0.007, 0.166)
                 local scalex = ScreenWidth*0.55/State.logo:getWidth()
                 gfx.scale(scalex, scalex)
                 gfx.draw(State.logo, ScreenWidth/scalex/2-State.logo:getWidth()/2,my/scalex-State.logo:getHeight()/2)
-                gfx.draw(State.logo2, ScreenWidth/scalex/2-State.logo2:getWidth()/2,my/scalex-State.logo2:getHeight()/2+State.logo:getHeight()+10)
+                gfx.draw(State.logo2, ScreenWidth/scalex/2-State.logo2:getWidth()/2,my/scalex-State.logo2:getHeight()/2+State.logo:getHeight()+padding/scalex)
                 gfx.pop()
             elseif State.leaf == 2 then
                 local xamount = ScreenWidth/SQUARESIZE
