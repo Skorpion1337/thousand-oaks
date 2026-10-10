@@ -7,8 +7,6 @@ BIGFONT = 0.02
 BANNERH = 0.045
 NORMAL_SIZE_AT_PX = 1689
 
--- values with zero are shifting constants, see calculate_shifting_constants() when scaling
-
 SMALLFONTDRAWS = 3
 SCROLLLINES = 9
 
@@ -20,9 +18,6 @@ COMPRESSION = "zlib"
 SAVENAMEFILE = "savenames"
 SCREENDIMFILE = "screenpercentage"
 SAVEFILEAMOUNT = 11
-
---STATEMENTS
-
 
 HELP_TEXT = 'SOMETHING ABOUT CLUTTER\n\n\nLook at folder %APPDATA%/LOVE to save some space! This folder is \nfor starting directly from code.\n \n\nAnd look at folder %APPDATA%/gamename or simply %APPDATA%/game. This folder is \nfor starting from the compiled executable.\n\n\nIn Linux look for these\n$XDG_DATA_HOME/love/ or ~/.local/share/love/\nlove may be replaced by game name or simply "game"\n\n\nAND NOW FOR LICENSES\n\n\nAdditional licenses not mentioned in the license file in the game folder \nand folder love in the source distribution\n\n\nThis game\nby Skorpion1337\ntinyurl.com/1000oakz\nGPLv3\nhttps://www.gnu.org/licenses/gpl-3.0.html\n\n\n----Libraries----\n\n\nlume\nA collection of functions for Lua, geared towards game development.\nUsing it for serializing data before compression.\nhttps://github.com/rxi/lume\nMIT \n--\n-- lume\n--\n-- Copyright (c) 2020 rxi\n--\n-- Permission is hereby granted, free of charge, to any person obtaining a copy of\n-- this software and associated documentation files (the "Software"), to deal in\n-- the Software without restriction, including without limitation the rights to\n-- use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\n-- of the Software, and to permit persons to whom the Software is furnished to do\n-- so, subject to the following conditions:\n--\n-- The above copyright notice and this permission notice shall be included in all\n-- copies or substantial portions of the Software.\n--\n-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n-- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n-- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n-- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n-- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n-- SOFTWARE.\n--\n\n\n----Graphics----\n\n\nBackground love potion - graphics/potion.jpg\nhttps://en.wikipedia.org/wiki/File:Filtre_d%27Amour.jpg\nFrom user https://commons.wikimedia.org/wiki/User:Arnaud_25 - Arnaud_25\nCreative Commons Attribution-Share Alike 4.0 International\nhttps://creativecommons.org/licenses/by-sa/4.0/deed.en'
 
@@ -421,15 +416,19 @@ do
     end
 
     function love.textinput(key)
-        Labels[7][2].text = Labels[7][2].text..key
+        if State.leaf == 7 then
+            Labels[7][2].text = Labels[7][2].text..key
+        end
     end
 
     function love.keypressed(key)
-        if key == "backspace" then
-            local byteoffset = utf8.offset(Labels[7][2].text, -1)
+        if State.leaf == 7 then
+            if key == "backspace" then
+                local byteoffset = utf8.offset(Labels[7][2].text, -1)
 
-            if byteoffset then
-                Labels[7][2].text = string.sub(Labels[7][2].text, 1, byteoffset - 1)
+                if byteoffset then
+                    Labels[7][2].text = string.sub(Labels[7][2].text, 1, byteoffset - 1)
+                end
             end
         end
     end
