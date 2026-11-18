@@ -1,6 +1,6 @@
 GAMENAME = "Thousand Oaks: The Mining Empire"
 
-MINIMUM_SCREEN_SCALE = 33 -- like above but minimum
+MINIMUM_SCREEN_SCALE = 33
 MINIFONT = 0.0075
 SMALLFONT = 0.0125
 BIGFONT = 0.02
@@ -490,8 +490,6 @@ do
         State.button_bg_hover:setFilter('linear', 'linear')
 
         State.button_bg_quad = gfx.newQuad(0.5, 0, 1, 1, 2, 1)
-
-        load_options()
 
         Tiles={
             {i = 1, name="", file = gfx.newImage("graphics/logo.png"), obstacle = false},
