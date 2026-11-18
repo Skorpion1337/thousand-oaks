@@ -1,11 +1,13 @@
 GAMENAME = "Thousand Oaks: The Mining Empire"
 
-DEFSCREENSPACE = 88 -- a percentage, /100 . default 88
 MINIMUM_SCREEN_SCALE = 33 -- like above but minimum
+MINIFONT = 0.0075
 SMALLFONT = 0.0125
 BIGFONT = 0.02
 BANNERH = 0.045
-NORMAL_SIZE_AT_PX = 1689
+NORMAL_SIZE_AT_PX = 1689.6
+
+DELIMITER = "+"
 
 SMALLFONTDRAWS = 3
 SCROLLLINES = 9
@@ -16,10 +18,10 @@ BUTTONNORMALCOLOR = {0.5,0.5,0.5}
 SAVEFILE = "savefile" -- +n
 COMPRESSION = "zlib"
 SAVENAMEFILE = "savenames"
-SCREENDIMFILE = "screenpercentage"
+OPTIONSFILE = "options"
 SAVEFILEAMOUNT = 11
 
-HELP_TEXT = 'SOMETHING ABOUT CLUTTER\n\n\nLook at folder %APPDATA%/LOVE to save some space! This folder is \nfor starting directly from code.\n \n\nAnd look at folder %APPDATA%/gamename or simply %APPDATA%/game. This folder is \nfor starting from the compiled executable.\n\n\nIn Linux look for these\n$XDG_DATA_HOME/love/ or ~/.local/share/love/\nlove may be replaced by game name or simply "game"\n\n\nAND NOW FOR LICENSES\n\n\nAdditional licenses not mentioned in the license file in the game folder \nand folder love in the source distribution\n\n\nThis game\nby Skorpion1337\ntinyurl.com/1000oakz\nGPLv3\nhttps://www.gnu.org/licenses/gpl-3.0.html\n\n\n----Libraries----\n\n\nlume\nA collection of functions for Lua, geared towards game development.\nUsing it for serializing data before compression.\nhttps://github.com/rxi/lume\nMIT \n--\n-- lume\n--\n-- Copyright (c) 2020 rxi\n--\n-- Permission is hereby granted, free of charge, to any person obtaining a copy of\n-- this software and associated documentation files (the "Software"), to deal in\n-- the Software without restriction, including without limitation the rights to\n-- use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\n-- of the Software, and to permit persons to whom the Software is furnished to do\n-- so, subject to the following conditions:\n--\n-- The above copyright notice and this permission notice shall be included in all\n-- copies or substantial portions of the Software.\n--\n-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n-- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n-- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n-- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n-- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n-- SOFTWARE.\n--\n\n\n----Graphics----\n\n\nBackground love potion - graphics/potion.jpg\nhttps://en.wikipedia.org/wiki/File:Filtre_d%27Amour.jpg\nFrom user https://commons.wikimedia.org/wiki/User:Arnaud_25 - Arnaud_25\nCreative Commons Attribution-Share Alike 4.0 International\nhttps://creativecommons.org/licenses/by-sa/4.0/deed.en'
+HELP_TEXT = 'REPORTING BUGS\n\n\nPlease report bugs at\n1. Github issues at https://github.com/Skorpion1337/thousand-oaks/issues\n2. Shoutbox at https://tinyurl.com/1000oakz\n\n\nSOMETHING ABOUT CLUTTER\n\n\nLook at folder %APPDATA%/LOVE to save some space! This folder is \nfor starting directly from code.\n \n\nAnd look at folder %APPDATA%/gamename or simply %APPDATA%/game. This folder is \nfor starting from the compiled executable.\n\n\nIn Linux look for these\n$XDG_DATA_HOME/love/ or ~/.local/share/love/\nlove may be replaced by game name or simply "game"\n\n\nAND NOW FOR LICENSES\n\n\nAdditional licenses not mentioned in the license file in the game folder \nand folder love in the source distribution\n\n\nThis game\nby Skorpion1337\ntinyurl.com/1000oakz\nGPLv3\nhttps://www.gnu.org/licenses/gpl-3.0.html\n\n\n----Libraries----\n\n\nlume\nA collection of functions for Lua, geared towards game development.\nUsing it for serializing data before compression.\nhttps://github.com/rxi/lume\nMIT \n--\n-- lume\n--\n-- Copyright (c) 2020 rxi\n--\n-- Permission is hereby granted, free of charge, to any person obtaining a copy of\n-- this software and associated documentation files (the "Software"), to deal in\n-- the Software without restriction, including without limitation the rights to\n-- use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\n-- of the Software, and to permit persons to whom the Software is furnished to do\n-- so, subject to the following conditions:\n--\n-- The above copyright notice and this permission notice shall be included in all\n-- copies or substantial portions of the Software.\n--\n-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n-- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n-- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n-- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n-- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n-- SOFTWARE.\n--\n\n\n----Graphics----\n\n\nBackground love potion - graphics/potion.jpg\nhttps://en.wikipedia.org/wiki/File:Filtre_d%27Amour.jpg\nFrom user https://commons.wikimedia.org/wiki/User:Arnaud_25 - Arnaud_25\nCreative Commons Attribution-Share Alike 4.0 International\nhttps://creativecommons.org/licenses/by-sa/4.0/deed.en'
 
 do
     local love = require("love")
@@ -101,30 +103,34 @@ do
         debugbox("Saved slot "..n.."!")
     end
 
-    local function show_dialog(type, param1, param2, param3, param4)
+    local function show_dialog(type, params)
         State.dialog_type = type
         if type == "save" then
             Labels[7][1].text = "Give the save name, please."
-            State.dialog_param1 = param1
+            State.dialog_param = params
         end
         change_page(7, true)
     end
 
     local function process_dialog()
         if State.dialog_type == "save" then
-            save_n(State.dialog_param1)
+            save_n(State.dialog_param.number)
         end
+    end
+
+    local function end_dialog()
+        State.dialog_type = ""
+        State.dialog_param = {}
+        change_page(State.dialog_leaf, true)
     end
 
     local function dialog_accept()
         process_dialog()
-        State.dialog_type = ""
-        change_page(State.dialog_leaf, true)
+        end_dialog()
     end
 
     local function dialog_cancel()
-        State.dialog_type = ""
-        change_page(State.dialog_leaf, true)
+        end_dialog()
     end
 
     local function save_game()
@@ -134,26 +140,8 @@ do
     local function save_file(i)
         local pressedbutton = love.window.showMessageBox("Want to save slot "..i.."?", "Old data will be lost.", {"OK", "No!", enterbutton = 2}, "warning", true)
         if pressedbutton == 1 then
-            show_dialog("save", i)
+            show_dialog("save", {number=i})
         end
-    end
-
-    local function format_map()
-        local map = {}
-        for i=1,MAP_SQUARE do
-            map[i] = {}
-            for j=1,MAP_SQUARE do
-                map[i][j] = randomgen:random(2)
-            end
-        end
-        return map
-    end
-
-    local function generate_map()
-        local map = format_map()
-
-        Save.map = map
-        MapGenerated = true
     end
 
     local function init_save()
@@ -386,25 +374,49 @@ do
         end
     end
 
-    local function set_screen_dim(percent, overwrite)
-        if percent < MINIMUM_SCREEN_SCALE then
-            percent = MINIMUM_SCREEN_SCALE
+    local function split(str, sep)
+        sep = sep or "%s"
+        local t = {}
+        for s in string.gmatch(str, "([^" .. sep .. "]+)") do
+            t[#t + 1] = s
         end
-        if overwrite then
-            love.filesystem.write(SCREENDIMFILE, tostring(percent))
+        return t
+    end
+
+    local function reset_options()
+        DEFSCREENSPACE = 88
+        local x, y = love.window.getDesktopDimensions()
+        ScreenWidth, ScreenHeight = x*DEFSCREENSPACE/100, y*DEFSCREENSPACE/100
+        ScreenX = (x-ScreenWidth)/2
+        ScreenY = (y-ScreenHeight)/2
+    end
+
+    local function save_options()
+        love.filesystem.write(OPTIONSFILE, tostring(DEFSCREENSPACE)..DELIMITER..tostring(ScreenX)..DELIMITER..tostring(ScreenY))
+    end
+
+    local function load_option_values()
+        local contents, _ = love.filesystem.read(OPTIONSFILE)
+        contents = split(contents, DELIMITER)
+        DEFSCREENSPACE = tonumber(contents[1])
+        local x, y = love.window.getDesktopDimensions()
+        ScreenWidth, ScreenHeight = x*DEFSCREENSPACE/100, y*DEFSCREENSPACE/100
+        ScreenX = tonumber(contents[2])
+        ScreenY = tonumber(contents[3])
+    end
+
+    local function set_options()
+        love.window.setMode(ScreenWidth, ScreenHeight, {resizable = false, borderless = true, y=ScreenY, x=ScreenX})
+    end
+
+    local function load_options()
+        if love.filesystem.getInfo(OPTIONSFILE) == nil then
+            reset_options()
+            save_options()
         else
-            if love.filesystem.getInfo(SCREENDIMFILE) == nil then
-                love.filesystem.write(SCREENDIMFILE, tostring(percent))
-            else
-                local contents, _ = love.filesystem.read(SCREENDIMFILE)
-                percent = tonumber(contents)
-            end
+            load_option_values()
         end
-        DEFSCREENSPACE = percent
-        percent = percent / 100.0
-        ScreenWidth, ScreenHeight = love.window.getDesktopDimensions()
-        ScreenWidth, ScreenHeight = ScreenWidth*percent, ScreenHeight*percent
-        love.window.setMode(ScreenWidth, ScreenHeight, {resizable = false, borderless = true, y=ScreenHeight/percent*(1-percent)/2.0, x=ScreenWidth/percent*(1-percent)/2.0})
+        set_options()
     end
 
     local function separate_spaces(s)
@@ -463,11 +475,11 @@ do
     function love.load()
         init_save()
 
-        set_screen_dim(DEFSCREENSPACE, false)
+        load_options()
 
         Scaling_Down = 0
 
-        State = { leaf = 1, old_leaf = 1, dialog_type = nil, dialog_param1=nil, dialog_param2=nil,dialog_param3=nil, dialog_param4=nil, hoover = 0, logo = gfx.newImage("graphics/logo.png"), logo2 = gfx.newImage("graphics/logo2.png"), button_bg = nil, button_bg_quad = nil, button_bg_hover = nil, bg_tile = gfx.newImage("graphics/bg_tile.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), red_crystal = gfx.newImage("graphics/crystal.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = ScreenWidth*0.2*0.1, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, lovepotion=gfx.newImage("graphics/potion.jpg"), waitingforsavename = false, waitingforsavename_n = 0, mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10, dialog_width = 0, dialog_height = 0}
+        State = { leaf = 1, old_leaf = 1, dialog_type = nil, dialog_param=nil, hoover = 0, logo = gfx.newImage("graphics/logo.png"), logo2 = gfx.newImage("graphics/logo2.png"), button_bg = nil, button_bg_quad = nil, button_bg_hover = nil, bg_tile = gfx.newImage("graphics/bg_tile.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), red_crystal = gfx.newImage("graphics/crystal.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = ScreenWidth*0.2*0.1, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, lovepotion=gfx.newImage("graphics/potion.jpg"), mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10, dialog_width = 0, dialog_height = 0, window_dragging = false}
 
         local gradientData = love.image.newImageData(2, 1, 'rgba8', '\200\200\200' .. '\255' .. '\050\050\050' .. '\255')
         State.button_bg = gfx.newImage(gradientData)
@@ -479,6 +491,8 @@ do
 
         State.button_bg_quad = gfx.newQuad(0.5, 0, 1, 1, 2, 1)
 
+        load_options()
+
         Tiles={
             {i = 1, name="", file = gfx.newImage("graphics/logo.png"), obstacle = false},
         }
@@ -488,7 +502,16 @@ do
         refresh_state()
     end
 
+    function love.mousepressed(x, y, button)
+        if button == 1 and y > 0 and y < ScreenHeight*BANNERH then
+            State.window_dragging = true
+        end
+    end
+
     function love.mousereleased(x, y, button, istouch, presses)
+        if button == 1 and y > 0 and y < ScreenHeight*BANNERH then
+            State.window_dragging = false
+        end
         if button == 1 and State.hoover > 0 then
             if State.leaf == 3 or State.leaf == 4 then
                 Buttons[State.leaf][State.hoover].call(State.hoover)

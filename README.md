@@ -1,5 +1,5 @@
 This is the Vanilla Version (on GitHub). Derivatives must be clearly marked as such.
-Remember to credit me Skorpion1337 and link to tinyurl.com/1000oakz
+Please remember to credit me Skorpion1337 and link to tinyurl.com/1000oakz
 
 
 In the .bat files:

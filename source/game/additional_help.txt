@@ -1,3 +1,11 @@
+REPORTING BUGS
+
+
+Please report bugs at
+1. Github issues at https://github.com/Skorpion1337/thousand-oaks/issues
+2. Shoutbox at https://tinyurl.com/1000oakz
+
+
 SOMETHING ABOUT CLUTTER
 
 
