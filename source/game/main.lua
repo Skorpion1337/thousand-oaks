@@ -302,7 +302,6 @@ do
         ScreenY = tonumber(contents[3])
     end
 
-    local refresh_state
     local function set_options()
         love.window.setMode(ScreenWidth, ScreenHeight, {resizable = false, borderless = true, y=ScreenY, x=ScreenX})
         refresh_state()
