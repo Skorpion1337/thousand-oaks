@@ -303,7 +303,6 @@ do
     end
 
     local function set_options()
-        love.window.setMode(ScreenWidth, ScreenHeight, {resizable = false, borderless = true, y=ScreenY, x=ScreenX})
         refresh_state()
     end
 
@@ -370,6 +369,8 @@ do
     end
 
     refresh_state = function()
+        love.window.setMode(ScreenWidth, ScreenHeight, {resizable = false, borderless = true, y=ScreenY, x=ScreenX})
+
         love.window.setTitle(GAMENAME)
         love.window.setVSync(2)
         love.keyboard.setKeyRepeat(true)
