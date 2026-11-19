@@ -272,7 +272,6 @@ do
         return t
     end
 
-
     local function set_screen_dimension()
         local x, y = love.window.getDesktopDimensions()
         ScreenWidth, ScreenHeight = x*DEFSCREENSPACE/100, x/SCREENRATIO*DEFSCREENSPACE/100
@@ -303,8 +302,10 @@ do
         ScreenY = tonumber(contents[3])
     end
 
+    local refresh_state
     local function set_options()
         love.window.setMode(ScreenWidth, ScreenHeight, {resizable = false, borderless = true, y=ScreenY, x=ScreenX})
+        refresh_state()
     end
 
     local function load_options()
@@ -369,7 +370,7 @@ do
 
     end
 
-    local function refresh_state()
+    refresh_state = function()
         love.window.setTitle(GAMENAME)
         love.window.setVSync(2)
         love.keyboard.setKeyRepeat(true)
@@ -549,11 +550,7 @@ do
     function love.load()
         init_save()
 
-        load_options()
-
-        Scaling_Down = 0
-
-        State = { leaf = 1, old_leaf = 1, dialog_type = nil, dialog_param=nil, hoover = 0, logo = gfx.newImage("graphics/logo.png"), logo2 = gfx.newImage("graphics/logo2.png"), button_bg = nil, button_bg_quad = nil, button_bg_hover = nil, bg_tile = gfx.newImage("graphics/bg_tile.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), red_crystal = gfx.newImage("graphics/crystal.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = ScreenWidth*0.2*0.1, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, lovepotion=gfx.newImage("graphics/potion.jpg"), sulphur_mining = gfx.newImage("graphics/sulphur_mining_PD.jpg"), mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10, dialog_width = 0, dialog_height = 0, window_dragging = false}
+        State = { leaf = 1, old_leaf = 1, dialog_type = nil, dialog_param=nil, hoover = 0, logo = gfx.newImage("graphics/logo.png"), logo2 = gfx.newImage("graphics/logo2.png"), button_bg = nil, button_bg_quad = nil, button_bg_hover = nil, bg_tile = gfx.newImage("graphics/bg_tile.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), red_crystal = gfx.newImage("graphics/crystal.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = 0, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, lovepotion=gfx.newImage("graphics/potion.jpg"), sulphur_mining = gfx.newImage("graphics/sulphur_mining_PD.jpg"), mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10, dialog_width = 0, dialog_height = 0, window_dragging = false}
 
         local gradientData = love.image.newImageData(2, 1, 'rgba8', '\200\200\200' .. '\255' .. '\050\050\050' .. '\255')
         State.button_bg = gfx.newImage(gradientData)
@@ -571,7 +568,9 @@ do
 
         Hooveredx, Hooveredy = 0, 0
 
-        refresh_state()
+        load_options()
+        --Random
+        State.helppadding = ScreenWidth*0.2*0.1
     end
 
     function love.mousereleased(x, y, button, istouch, presses)
@@ -772,7 +771,7 @@ do
             gfx.print(GAMENAME, ScreenWidth/2.0 - SmallFont:getWidth(GAMENAME)/2.0, theheight/2.0-SmallFont:getHeight(GAMENAME)/2.0)
         end
 
-        print_to_debug(ScreenWidth.."x"..ScreenHeight..", vsync="..love.window.getVSync()..", fps="..love.timer.getFPS()..", mem="..string.format("%.3f", collectgarbage("count")/1000.0).."MB, randomseed="..randomgen:getSeed())
+        print_to_debug(ScreenWidth.."x"..ScreenHeight..", vsync="..love.window.getVSync()..", fps="..love.timer.getFPS()..", mem="..string.format("%.3f", collectgarbage("count")/1000.0).."MB")
 
         gfx.setCanvas()
         gfx.setColor(1, 1, 1, 1)
