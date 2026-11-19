@@ -1,6 +1,8 @@
 GAMENAME = "Thousand Oaks: The Mining Empire"
 
-MINIMUM_SCREEN_SCALE = 33
+MINIMUM_SCREEN_SCALE = 25
+SCREENRATIO = 16/9
+
 MINIFONT = 0.0075
 SMALLFONT = 0.0125
 BIGFONT = 0.02
@@ -389,10 +391,18 @@ do
         return t
     end
 
+    local function set_screen_dimension()
+        local x, y = love.window.getDesktopDimensions()
+        ScreenWidth, ScreenHeight = x*DEFSCREENSPACE/100, x/SCREENRATIO*DEFSCREENSPACE/100
+
+        if ScreenHeight > y*DEFSCREENSPACE/100 then
+            ScreenWidth, ScreenHeight = y*SCREENRATIO*DEFSCREENSPACE/100, y*DEFSCREENSPACE/100
+        end
+    end
+
     local function reset_options()
         DEFSCREENSPACE = 88
-        local x, y = love.window.getDesktopDimensions()
-        ScreenWidth, ScreenHeight = x*DEFSCREENSPACE/100, y*DEFSCREENSPACE/100
+        set_screen_dimension()
         ScreenX = (x-ScreenWidth)/2
         ScreenY = (y-ScreenHeight)/2
     end
@@ -405,8 +415,7 @@ do
         local contents, _ = love.filesystem.read(OPTIONSFILE)
         contents = split(contents, DELIMITER)
         DEFSCREENSPACE = tonumber(contents[1])
-        local x, y = love.window.getDesktopDimensions()
-        ScreenWidth, ScreenHeight = x*DEFSCREENSPACE/100, y*DEFSCREENSPACE/100
+        set_screen_dimension()
         ScreenX = tonumber(contents[2])
         ScreenY = tonumber(contents[3])
     end
