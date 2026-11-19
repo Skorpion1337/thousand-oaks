@@ -110,6 +110,8 @@ do
         State.dialog_param = params
         if type == "save" then
             DialogPrompt.text = "Give the save name, please."
+        elseif type == "change_window_scale" then
+            DialogPrompt.text = "Give the window scale percentage of the screen ["..MINIMUM_SCREEN_SCALE.."-100], please."
         end
         change_page(7, true)
     end
@@ -272,7 +274,6 @@ do
         return t
     end
 
-
     local function set_screen_dimension()
         local x, y = love.window.getDesktopDimensions()
         ScreenWidth, ScreenHeight = x*DEFSCREENSPACE/100, x/SCREENRATIO*DEFSCREENSPACE/100
@@ -358,7 +359,7 @@ do
     end
 
     local function menu_change_window_scale()
-
+        show_dialog("change_window_scale")
     end
 
     local function menu_change_window_x()
@@ -600,308 +601,182 @@ do
     end
 
     function love.update(dt)
-        if (State.leaf == 2 or State.leaf == 6) and MapGenerated then
-            State.watersparklecur = State.watersparklecur - dt
-            if State.watersparklecur <= 0 then
-                State.watersparklecur = WATERSPARKLESPEED
 
-                local value
-                local randomchoice
-                for x=math.max(State.xprefix-6,1),math.min(math.floor(State.xprefix+ScreenWidth/SQUARESIZE+6), MAP_SQUARE) do
-                    for y=math.max(State.yprefix-6,1),math.min(math.floor(State.yprefix+ScreenHeight/SQUARESIZE+6), MAP_SQUARE) do
-                        value = Save.map[x][y]
-                        if value == 11 or value == 12 or value == 13 then
-                            if randomgen:random(WATERANIMATIONSPEED) == 1 then
-                                randomchoice = randomgen:random(3)
-                                if randomchoice == 1 then
-                                    Save.map[x][y] = 11
-                                elseif  randomchoice == 2 then
-                                    Save.map[x][y] = 12
-                                else
-                                    Save.map[x][y] = 13
-                                end
-                            end
-                        end
-                    end
-                end
-            end
-        end
+    end
 
-        if State.hoover ~= -2 then
-            if State.leaf == 2 then
-                if love.keyboard.isDown('w') then
-                    State.yprefix = math.floor(State.yprefix - SCROLLLINESMAP)
-                    if State.yprefix < 0 then
-                        State.yprefix = 0
-                    end
-                end
-                if love.keyboard.isDown('s') then
-                    State.yprefix = math.floor(State.yprefix + SCROLLLINESMAP)
-                    local check = math.floor(#Save.map[1]-ScreenHeight/SQUARESIZE)
-                    if State.yprefix > check then
-                        State.yprefix = check
-                    end
-                end
-                if love.keyboard.isDown('a') then
-                    State.xprefix = math.floor(State.xprefix - SCROLLLINESMAP)
-                    if State.xprefix < 0 then
-                        State.xprefix = 0
-                    end
-                end
-                if love.keyboard.isDown('d') then
-                    State.xprefix = math.floor(State.xprefix + SCROLLLINESMAP)
-                    local check = math.floor(#Save.map-ScreenWidth/SQUARESIZE)
-                    if State.xprefix > check then
-                        State.xprefix = check
-                    end
-                end
-            elseif State.leaf == 6 then
-                State.walkingwait = State.walkingwait - dt
-                if State.walkingwait <= 0 then
-                    State.walkingwait = WALKSPEED
-                    local centerw = math.floor(ScreenWidth/SQUARESIZE/2)
-                    local centerh = math.floor(ScreenHeight/SQUARESIZE/2)
-                    local wentthrough = false
-                    if love.keyboard.isDown("w") and love.keyboard.isDown("d") then
-                        if Tiles[Save.map[math.min(State.xprefix+centerw+1, MAP_SQUARE)][math.max(State.yprefix+centerh-1, 1)]].obstacle == false then
-                            State.yprefix = math.max(State.yprefix - 1,-centerh+1)
-                            State.xprefix = math.min(State.xprefix + 1,MAP_SQUARE-centerw-1)
-                            State.charchosen = State.charright
-                            wentthrough = true
-                        end
-                    elseif love.keyboard.isDown("w") and love.keyboard.isDown("a") then
-                        if Tiles[Save.map[math.max(State.xprefix+centerw-1, 1)][math.max(State.yprefix+centerh-1, 1)]].obstacle == false then
-                            State.yprefix = math.max(State.yprefix - 1,-centerh+1)
-                            State.xprefix = math.max(State.xprefix - 1,-centerw+1)
-                            State.charchosen = State.charleft
-                            wentthrough = true
-                        end
-                    elseif love.keyboard.isDown("s") and love.keyboard.isDown("d") then
-                        if Tiles[Save.map[math.min(State.xprefix+centerw+1, MAP_SQUARE)][math.min(State.yprefix+centerh+1,MAP_SQUARE)]].obstacle == false then
-                            State.yprefix = math.min(State.yprefix + 1, MAP_SQUARE-centerh-1)
-                            State.xprefix = math.min(State.xprefix + 1,MAP_SQUARE-centerw-1)
-                            State.charchosen = State.charright
-                            wentthrough = true
-                        end
-                    elseif love.keyboard.isDown("s") and love.keyboard.isDown("a") then
-                        if Tiles[Save.map[math.max(State.xprefix+centerw-1, 1)][math.min(State.yprefix+centerh+1,MAP_SQUARE)]].obstacle == false then
-                            State.yprefix = math.min(State.yprefix + 1, MAP_SQUARE-centerh-1)
-                            State.xprefix = math.max(State.xprefix - 1,-centerw+1)
-                            State.charchosen = State.charleft
-                            wentthrough = true
-                        end
-                    end
-                    if wentthrough == false then
-                        if love.keyboard.isDown("w") then
-                            if Tiles[Save.map[State.xprefix+centerw][math.max(State.yprefix+centerh-1, 1)]].obstacle == false then
-                                State.yprefix = math.max(State.yprefix - 1,-centerh+1)
-                            end
-                        end
-                        if love.keyboard.isDown("s") then
-                            if Tiles[Save.map[State.xprefix+centerw][math.min(State.yprefix+centerh+1,MAP_SQUARE)]].obstacle == false then
-                                State.yprefix = math.min(State.yprefix + 1, MAP_SQUARE-centerh-1)
-                            end
-                        end
-                        if love.keyboard.isDown("a") then
-                            if Tiles[Save.map[math.max(State.xprefix+centerw-1, 1)][State.yprefix+centerh]].obstacle == false then
-                                State.xprefix = math.max(State.xprefix - 1,-centerw+1)
-                                State.charchosen = State.charleft
-                            end
-                        end
-                        if love.keyboard.isDown("d") then
-                            if Tiles[Save.map[math.min(State.xprefix+centerw+1, MAP_SQUARE)][State.yprefix+centerh]].obstacle == false then
-                                State.xprefix = math.min(State.xprefix + 1,MAP_SQUARE-centerw-1)
-                                State.charchosen = State.charright
-                            end
-                        end
-                    end
-                end
+    function love.draw()
+        gfx.setCanvas(Canvas)
 
-                State.shootwait = State.shootwait - dt
-                if State.shootwait <= 0 then
-                    State.shootwait = SHOOT_SPAWN
-
-                    if love.mouse.isDown(1) then
-
-                    end
-                end
-            end
-        end
-
-        function love.draw()
-            gfx.setCanvas(Canvas)
-
-            gfx.setColor(255, 255, 255, 255)
-            if State.leaf == 1 then
-                gfx.push()
-                local scale = ScreenWidth/NORMAL_SIZE_AT_PX
-                gfx.scale(scale, scale)
-                for x = 0, ScreenWidth/(State.bg_tile:getWidth()*scale) do
-                    for y = 0, ScreenHeight/(State.bg_tile:getHeight()*scale) do
-                        gfx.draw(State.bg_tile, x*State.bg_tile:getWidth(), y*State.bg_tile:getHeight())
-                    end
-                end
-                gfx.pop()
-
-                local iconsize, _ = translatexy(0.002, 0)
-                gfx.push()
-                gfx.scale(iconsize, iconsize)
-                for i=1,State.mainmenubgsamount do
-                    for j=1, State.mainmenurepeat do
-                        gfx.draw(State.mainmenubgs[i], State.mainmenubgslocation[j+(i-1)*State.mainmenurepeat][2]/iconsize, State.mainmenubgslocation[j+(i-1)*State.mainmenurepeat][3]/iconsize)
-                    end
-                end
-                gfx.pop()
-                gfx.push()
-                local padding, my = translatexy(0.007, 0.166)
-                local scalex = ScreenWidth*0.55/State.logo:getWidth()
-                gfx.scale(scalex, scalex)
-                gfx.draw(State.logo, ScreenWidth/scalex/2-State.logo:getWidth()/2,my/scalex-State.logo:getHeight()/2)
-                gfx.draw(State.logo2, ScreenWidth/scalex/2-State.logo2:getWidth()/2,my/scalex-State.logo2:getHeight()/2+State.logo:getHeight()+padding/scalex)
-                gfx.pop()
-            elseif State.leaf == 2 then
-                local xamount = ScreenWidth/SQUARESIZE
-                local yamount = ScreenHeight/SQUARESIZE
-                local squarerounded = math.floor(SQUARESIZE+0.5)
-                gfx.setColor(255, 255, 255, 255)
-                for i=1, math.floor(xamount+0.5)+2 do
-                    for j=1, math.floor(yamount+0.5)+2 do
-                        gfx.push()
-                        local imagefile = Tiles[Save.map[math.min(math.max(1,i+State.xprefix-1),MAP_SQUARE)][math.min(math.max(1,j+State.yprefix-1),MAP_SQUARE)]].file
-                        local scale = ScreenWidth/xamount/math.floor(imagefile:getWidth()+0.5)
-                        gfx.scale(scale, scale)
-                        gfx.draw(imagefile, (i-1)*squarerounded/scale, (j-1)*squarerounded/scale)
-                        gfx.pop()
-                    end
-                end
-                gfx.setFont(BigFont)
-                gfx.setColor(1,1,1)
-                local padx, pady = translatexy(0.02, 0.05)
-                for _ =0, 2 do
-                    gfx.print("Use W, S, A, D - Don't start on a lake", padx, pady)
-                end
-            elseif State.leaf == 3 then
-                gfx.setColor(0.1,0.45,0.1)
-                gfx.rectangle("fill", 0, 0, ScreenWidth, ScreenHeight)
-                gfx.setColor(255, 255, 255, 255)
-                gfx.push()
-                local imagefile = State.lovepotion
-                local scale = ScreenHeight/imagefile:getHeight()
-                gfx.scale(scale, scale)
-                gfx.draw(imagefile, ScreenWidth/scale-imagefile:getWidth(), 0)
-                gfx.pop()
-            elseif State.leaf == 4 then
-                gfx.setColor(0,0,0,1)
-                gfx.rectangle("fill", 0, 0, ScreenWidth, ScreenHeight)
-                gfx.setColor(0.7,0.1,0.1)
-                gfx.push()
-                local rotatefile = State.lovepotion
-                local rotatescale = ScreenHeight/rotatefile:getHeight()
-                gfx.scale(rotatescale, rotatescale)
-                gfx.draw(rotatefile, ScreenWidth/rotatescale-rotatefile:getWidth(), math.max(0,ScreenHeight/2-rotatefile:getHeight()/2))
-                gfx.pop()
-            elseif State.leaf == 5 then
-                gfx.setColor(255, 255, 255, 255)
-                gfx.push()
-                local scalex = ScreenWidth/State.helpbg:getWidth()
-                local scaley = ScreenHeight/State.helpbg:getHeight()
-                gfx.scale(scalex, scaley)
-                gfx.draw(State.helpbg, 0, 0)
-                gfx.pop()
-                gfx.setColor(0.72,0.59,0.33)
-                local beyondbuttonw, beyondbuttonh = translatexy(0.2, 0.2)
-                gfx.rectangle("fill", Buttons[State.leaf][2].x-beyondbuttonw, Buttons[State.leaf][2].y+Buttons[State.leaf][2].height, Buttons[State.leaf][2].width+ 2*beyondbuttonw, Buttons[State.leaf][3].y-(Buttons[State.leaf][2].y+Buttons[State.leaf][2].height))
-                gfx.setColor(1,1,1)
-                gfx.rectangle("line", Buttons[State.leaf][2].x-beyondbuttonw, Buttons[State.leaf][2].y+Buttons[State.leaf][2].height, Buttons[State.leaf][2].width+ 2*beyondbuttonw, Buttons[State.leaf][3].y-(Buttons[State.leaf][2].y+Buttons[State.leaf][2].height))
-                gfx.print(State.help_text, Buttons[State.leaf][2].x-beyondbuttonw+State.helppadding, Buttons[State.leaf][2].y+Buttons[State.leaf][2].height+State.helppadding)
-            elseif State.leaf == 6 then
-                gfx.push()
-                gfx.pop()
-            elseif State.leaf == 7 then
-                gfx.push()
-                gfx.setColor(0.72,0.59,0.33,1)
-                gfx.rectangle("fill", ScreenWidth/2-State.dialog_width/2, ScreenHeight/2-State.dialog_height/2, State.dialog_width, State.dialog_height)
-                gfx.setColor(255,255,255,255)
-                local iconsize, pos = translatexy(0.001, 0.1)
-                gfx.scale(iconsize, iconsize)
-                gfx.draw(State.red_crystal, (ScreenWidth/2-State.dialog_width/2.2)/iconsize, (ScreenHeight/2-State.dialog_height/2+pos)/iconsize)
-                gfx.pop()
-            elseif State.leaf == 8 then
-                gfx.push()
-                local scalex = ScreenWidth/State.sulphur_mining:getWidth()
-                local scaley = ScreenHeight/State.sulphur_mining:getHeight()
-                gfx.scale(scalex, scaley)
-                gfx.draw(State.sulphur_mining, 0, 0)
-                gfx.pop()
-            end
-
-            for i=1,#Buttons[State.leaf] do
-                local button = Buttons[State.leaf][i]
-                local width, height
-                if button.size == 1 then
-                    gfx.setFont(BigFont)
-                    width = BigFont:getWidth(button.text)
-                    height = BigFont:getHeight(button.text)
-                elseif button.size == 2 then
-                    gfx.setFont(SmallFont)
-                    width = SmallFont:getWidth(button.text)
-                    height = SmallFont:getHeight(button.text)
-                end
-                if State.hoover == i then
-                    gfx.setColor(255, 255, 255, 255)
-                    love.graphics.draw(State.button_bg_hover, State.button_bg_quad, button.x, button.y, math.rad(0), button.width, button.height, 0, 0)
-                    gfx.setColor(BUTTONNORMALCOLOR)
-                    gfx.rectangle("line", button.x, button.y, button.width, button.height)
-                    gfx.print(button.text, button.x+button.width/2.0-width/2.0, button.y+button.height/2.0-height/2.0)
-                else
-                    gfx.setColor(255, 255, 255, 255)
-                    love.graphics.draw(State.button_bg, State.button_bg_quad, button.x, button.y, math.rad(0), button.width, button.height, 0, 0)
-                    gfx.rectangle("line", button.x, button.y, button.width, button.height)
-                    gfx.setColor(BUTTONHOOVERCOLOR)
-                    gfx.print(button.text, button.x+button.width/2.0-width/2.0, button.y+button.height/2.0-height/2.0)
-                end
-            end
-
-            for i=1,#Labels[State.leaf] do
-                local label = Labels[State.leaf][i]
-                if label.size == 1 then
-                    gfx.setFont(BigFont)
-                elseif label.size == 2 then
-                    gfx.setFont(SmallFont)
-                elseif label.size == 3 then
-                    gfx.setFont(MiniFont)
-                end
-                gfx.setColor(label.color)
-                gfx.print(label.text, label.x, label.y)
-            end
-
-            --first after custom leaves is banner
-            gfx.setFont(SmallFont)
-            gfx.setColor(255, 255, 255, 255)
+        gfx.setColor(255, 255, 255, 255)
+        if State.leaf == 1 then
             gfx.push()
-            local theheight = ScreenHeight*BANNERH
-            local scale = theheight/State.banner:getHeight()
+            local scale = ScreenWidth/NORMAL_SIZE_AT_PX
             gfx.scale(scale, scale)
-            for i=0,ScreenWidth/scale/(State.banner:getWidth()) do
-                gfx.draw(State.banner, i*State.banner:getWidth(), 0)
+            for x = 0, ScreenWidth/(State.bg_tile:getWidth()*scale) do
+                for y = 0, ScreenHeight/(State.bg_tile:getHeight()*scale) do
+                    gfx.draw(State.bg_tile, x*State.bg_tile:getWidth(), y*State.bg_tile:getHeight())
+                end
+            end
+            gfx.pop()
+
+            local iconsize, _ = translatexy(0.002, 0)
+            gfx.push()
+            gfx.scale(iconsize, iconsize)
+            for i=1,State.mainmenubgsamount do
+                for j=1, State.mainmenurepeat do
+                    gfx.draw(State.mainmenubgs[i], State.mainmenubgslocation[j+(i-1)*State.mainmenurepeat][2]/iconsize, State.mainmenubgslocation[j+(i-1)*State.mainmenurepeat][3]/iconsize)
+                end
             end
             gfx.pop()
             gfx.push()
-            scale = theheight/State.bannerx:getHeight()
-            gfx.scale(scale, scale)
-            gfx.draw(State.bannerx, ScreenWidth/scale-State.bannerx:getWidth(), 0)
-            gfx.draw(State.bannerm, ScreenWidth/scale-2*State.bannerm:getWidth(), 0)
+            local padding, my = translatexy(0.007, 0.166)
+            local scalex = ScreenWidth*0.55/State.logo:getWidth()
+            gfx.scale(scalex, scalex)
+            gfx.draw(State.logo, ScreenWidth/scalex/2-State.logo:getWidth()/2,my/scalex-State.logo:getHeight()/2)
+            gfx.draw(State.logo2, ScreenWidth/scalex/2-State.logo2:getWidth()/2,my/scalex-State.logo2:getHeight()/2+State.logo:getHeight()+padding/scalex)
             gfx.pop()
+        elseif State.leaf == 2 then
+            local xamount = ScreenWidth/SQUARESIZE
+            local yamount = ScreenHeight/SQUARESIZE
+            local squarerounded = math.floor(SQUARESIZE+0.5)
+            gfx.setColor(255, 255, 255, 255)
+            for i=1, math.floor(xamount+0.5)+2 do
+                for j=1, math.floor(yamount+0.5)+2 do
+                    gfx.push()
+                    local imagefile = Tiles[Save.map[math.min(math.max(1,i+State.xprefix-1),MAP_SQUARE)][math.min(math.max(1,j+State.yprefix-1),MAP_SQUARE)]].file
+                    local scale = ScreenWidth/xamount/math.floor(imagefile:getWidth()+0.5)
+                    gfx.scale(scale, scale)
+                    gfx.draw(imagefile, (i-1)*squarerounded/scale, (j-1)*squarerounded/scale)
+                    gfx.pop()
+                end
+            end
+            gfx.setFont(BigFont)
             gfx.setColor(1,1,1)
-            for _ =1, SMALLFONTDRAWS do
-                gfx.print(GAMENAME, ScreenWidth/2.0 - SmallFont:getWidth(GAMENAME)/2.0, theheight/2.0-SmallFont:getHeight(GAMENAME)/2.0)
+            local padx, pady = translatexy(0.02, 0.05)
+            for _ =0, 2 do
+                gfx.print("Use W, S, A, D - Don't start on a lake", padx, pady)
             end
-
-            print_to_debug(ScreenWidth.."x"..ScreenHeight..", vsync="..love.window.getVSync()..", fps="..love.timer.getFPS()..", mem="..string.format("%.3f", collectgarbage("count")/1000.0).."MB, randomseed="..randomgen:getSeed())
-
-            gfx.setCanvas()
-            gfx.setColor(1, 1, 1, 1)
-            gfx.draw(Canvas, 0,0)
+        elseif State.leaf == 3 then
+            gfx.setColor(0.1,0.45,0.1)
+            gfx.rectangle("fill", 0, 0, ScreenWidth, ScreenHeight)
+            gfx.setColor(255, 255, 255, 255)
+            gfx.push()
+            local imagefile = State.lovepotion
+            local scale = ScreenHeight/imagefile:getHeight()
+            gfx.scale(scale, scale)
+            gfx.draw(imagefile, ScreenWidth/scale-imagefile:getWidth(), 0)
+            gfx.pop()
+        elseif State.leaf == 4 then
+            gfx.setColor(0,0,0,1)
+            gfx.rectangle("fill", 0, 0, ScreenWidth, ScreenHeight)
+            gfx.setColor(0.7,0.1,0.1)
+            gfx.push()
+            local rotatefile = State.lovepotion
+            local rotatescale = ScreenHeight/rotatefile:getHeight()
+            gfx.scale(rotatescale, rotatescale)
+            gfx.draw(rotatefile, ScreenWidth/rotatescale-rotatefile:getWidth(), math.max(0,ScreenHeight/2-rotatefile:getHeight()/2))
+            gfx.pop()
+        elseif State.leaf == 5 then
+            gfx.setColor(255, 255, 255, 255)
+            gfx.push()
+            local scalex = ScreenWidth/State.helpbg:getWidth()
+            local scaley = ScreenHeight/State.helpbg:getHeight()
+            gfx.scale(scalex, scaley)
+            gfx.draw(State.helpbg, 0, 0)
+            gfx.pop()
+            gfx.setColor(0.72,0.59,0.33)
+            local beyondbuttonw, beyondbuttonh = translatexy(0.2, 0.2)
+            gfx.rectangle("fill", Buttons[State.leaf][2].x-beyondbuttonw, Buttons[State.leaf][2].y+Buttons[State.leaf][2].height, Buttons[State.leaf][2].width+ 2*beyondbuttonw, Buttons[State.leaf][3].y-(Buttons[State.leaf][2].y+Buttons[State.leaf][2].height))
+            gfx.setColor(1,1,1)
+            gfx.rectangle("line", Buttons[State.leaf][2].x-beyondbuttonw, Buttons[State.leaf][2].y+Buttons[State.leaf][2].height, Buttons[State.leaf][2].width+ 2*beyondbuttonw, Buttons[State.leaf][3].y-(Buttons[State.leaf][2].y+Buttons[State.leaf][2].height))
+            gfx.print(State.help_text, Buttons[State.leaf][2].x-beyondbuttonw+State.helppadding, Buttons[State.leaf][2].y+Buttons[State.leaf][2].height+State.helppadding)
+        elseif State.leaf == 6 then
+            gfx.push()
+            gfx.pop()
+        elseif State.leaf == 7 then
+            gfx.push()
+            gfx.setColor(0.72,0.59,0.33,1)
+            gfx.rectangle("fill", ScreenWidth/2-State.dialog_width/2, ScreenHeight/2-State.dialog_height/2, State.dialog_width, State.dialog_height)
+            gfx.setColor(255,255,255,255)
+            local iconsize, pos = translatexy(0.001, 0.1)
+            gfx.scale(iconsize, iconsize)
+            gfx.draw(State.red_crystal, (ScreenWidth/2-State.dialog_width/2.2)/iconsize, (ScreenHeight/2-State.dialog_height/2+pos)/iconsize)
+            gfx.pop()
+        elseif State.leaf == 8 then
+            gfx.push()
+            local scalex = ScreenWidth/State.sulphur_mining:getWidth()
+            local scaley = ScreenHeight/State.sulphur_mining:getHeight()
+            gfx.scale(scalex, scaley)
+            gfx.draw(State.sulphur_mining, 0, 0)
+            gfx.pop()
         end
+
+        for i=1,#Buttons[State.leaf] do
+            local button = Buttons[State.leaf][i]
+            local width, height
+            if button.size == 1 then
+                gfx.setFont(BigFont)
+                width = BigFont:getWidth(button.text)
+                height = BigFont:getHeight(button.text)
+            elseif button.size == 2 then
+                gfx.setFont(SmallFont)
+                width = SmallFont:getWidth(button.text)
+                height = SmallFont:getHeight(button.text)
+            end
+            if State.hoover == i then
+                gfx.setColor(255, 255, 255, 255)
+                love.graphics.draw(State.button_bg_hover, State.button_bg_quad, button.x, button.y, math.rad(0), button.width, button.height, 0, 0)
+                gfx.setColor(BUTTONNORMALCOLOR)
+                gfx.rectangle("line", button.x, button.y, button.width, button.height)
+                gfx.print(button.text, button.x+button.width/2.0-width/2.0, button.y+button.height/2.0-height/2.0)
+            else
+                gfx.setColor(255, 255, 255, 255)
+                love.graphics.draw(State.button_bg, State.button_bg_quad, button.x, button.y, math.rad(0), button.width, button.height, 0, 0)
+                gfx.rectangle("line", button.x, button.y, button.width, button.height)
+                gfx.setColor(BUTTONHOOVERCOLOR)
+                gfx.print(button.text, button.x+button.width/2.0-width/2.0, button.y+button.height/2.0-height/2.0)
+            end
+        end
+
+        for i=1,#Labels[State.leaf] do
+            local label = Labels[State.leaf][i]
+            if label.size == 1 then
+                gfx.setFont(BigFont)
+            elseif label.size == 2 then
+                gfx.setFont(SmallFont)
+            elseif label.size == 3 then
+                gfx.setFont(MiniFont)
+            end
+            gfx.setColor(label.color)
+            gfx.print(label.text, label.x, label.y)
+        end
+
+        --first after custom leaves is banner
+        gfx.setFont(SmallFont)
+        gfx.setColor(255, 255, 255, 255)
+        gfx.push()
+        local theheight = ScreenHeight*BANNERH
+        local scale = theheight/State.banner:getHeight()
+        gfx.scale(scale, scale)
+        for i=0,ScreenWidth/scale/(State.banner:getWidth()) do
+            gfx.draw(State.banner, i*State.banner:getWidth(), 0)
+        end
+        gfx.pop()
+        gfx.push()
+        scale = theheight/State.bannerx:getHeight()
+        gfx.scale(scale, scale)
+        gfx.draw(State.bannerx, ScreenWidth/scale-State.bannerx:getWidth(), 0)
+        gfx.draw(State.bannerm, ScreenWidth/scale-2*State.bannerm:getWidth(), 0)
+        gfx.pop()
+        gfx.setColor(1,1,1)
+        for _ =1, SMALLFONTDRAWS do
+            gfx.print(GAMENAME, ScreenWidth/2.0 - SmallFont:getWidth(GAMENAME)/2.0, theheight/2.0-SmallFont:getHeight(GAMENAME)/2.0)
+        end
+
+        print_to_debug(ScreenWidth.."x"..ScreenHeight..", vsync="..love.window.getVSync()..", fps="..love.timer.getFPS()..", mem="..string.format("%.3f", collectgarbage("count")/1000.0).."MB, randomseed="..randomgen:getSeed())
+
+        gfx.setCanvas()
+        gfx.setColor(1, 1, 1, 1)
+        gfx.draw(Canvas, 0,0)
     end
 end
