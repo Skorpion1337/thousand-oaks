@@ -84,7 +84,7 @@ do
             State.old_leaf = State.leaf
         else
             State.dialog_leaf = State.leaf
-            Labels[7][2].text = ""
+            DialogEntry.text = ""
         end
         State.leaf = n
         State.hoover = 0
@@ -93,8 +93,8 @@ do
 
     local function save_n(n)
         savefile(n)
-        Buttons[3][n].text = Labels[7][2].text
-        Buttons[4][n].text = Labels[7][2].text
+        Buttons[3][n].text = DialogEntry.text
+        Buttons[4][n].text = DialogEntry.text
         local names = {}
         for i = 1, SAVEFILEAMOUNT do
             names[i] = Buttons[3][i].text
@@ -105,9 +105,9 @@ do
 
     local function show_dialog(type, params)
         State.dialog_type = type
+        State.dialog_param = params
         if type == "save" then
-            Labels[7][1].text = "Give the save name, please."
-            State.dialog_param = params
+            DialogPrompt.text = "Give the save name, please."
         end
         change_page(7, true)
     end
@@ -272,10 +272,13 @@ do
 
         Canvas = gfx.newCanvas(ScreenWidth, ScreenHeight)
 
-        local fontsize, _ = translatexy(SMALLFONT,0)
+        local fontsize, _ = translatexy(MINIFONT, 0)
+        MiniFont = gfx.newFont(fontsize)
+        fontsize, _ = translatexy(SMALLFONT,0)
         SmallFont = gfx.newFont(fontsize)
         fontsize, _ = translatexy(BIGFONT, 0)
         BigFont = gfx.newFont(fontsize)
+
 
         local newgamebuttonw, newgamebuttonh = translatexy(0.25, 0.07)
         local newbuttonstartw, newbuttonstarth = translatexy(0.5, 0.3)
@@ -331,6 +334,9 @@ do
         local padding, _ = translatexy(0.013, 0)
         Buttons[7] = {{size=2, text="OK", x = ScreenWidth/2+State.dialog_width/2-button_width, y = ScreenHeight/2+State.dialog_height/2-button_height, width = button_width, height=button_height, call = dialog_accept}, {size=2, text="CANCEL", x = ScreenWidth/2+State.dialog_width/2-button_width*2-padding, y = ScreenHeight/2+State.dialog_height/2-button_height, width = button_width, height=button_height, call = dialog_cancel},}
         Labels[7] ={{size=2, text="null dialog", color={0.5,0.25,0}, x = ScreenWidth/2-State.dialog_width/2+padding, y = ScreenHeight/2-State.dialog_height/2+padding}, {size=2, text="", color={0.5,0,0}, x = ScreenWidth/2-State.dialog_width/2+3*padding, y = ScreenHeight/2-padding}}
+
+        DialogEntry = Labels[7][2]
+        DialogPrompt = Labels[7][1]
 
 
         --[[for i = 1, #Labels do
@@ -429,17 +435,17 @@ do
 
     function love.textinput(key)
         if State.leaf == 7 then
-            Labels[7][2].text = Labels[7][2].text..key
+            DialogEntry.text = DialogEntry.text..key
         end
     end
 
     function love.keypressed(key)
         if State.leaf == 7 then
             if key == "backspace" then
-                local byteoffset = utf8.offset(Labels[7][2].text, -1)
+                local byteoffset = utf8.offset(DialogEntry.text, -1)
 
                 if byteoffset then
-                    Labels[7][2].text = string.sub(Labels[7][2].text, 1, byteoffset - 1)
+                    DialogEntry.text = string.sub(DialogEntry.text, 1, byteoffset - 1)
                 end
             end
         end
@@ -500,16 +506,7 @@ do
         refresh_state()
     end
 
-    function love.mousepressed(x, y, button)
-        if button == 1 and y > 0 and y < ScreenHeight*BANNERH then
-            State.window_dragging = true
-        end
-    end
-
     function love.mousereleased(x, y, button, istouch, presses)
-        if button == 1 and y > 0 and y < ScreenHeight*BANNERH then
-            State.window_dragging = false
-        end
         if button == 1 and State.hoover > 0 then
             if State.leaf == 3 or State.leaf == 4 then
                 Buttons[State.leaf][State.hoover].call(State.hoover)
@@ -792,6 +789,13 @@ do
 
             for i=1,#Labels[State.leaf] do
                 local label = Labels[State.leaf][i]
+                if label.size == 1 then
+                    gfx.setFont(BigFont)
+                elseif label.size == 2 then
+                    gfx.setFont(SmallFont)
+                elseif label.size == 3 then
+                    gfx.setFont(MiniFont)
+                end
                 gfx.setColor(label.color)
                 gfx.print(label.text, label.x, label.y)
             end
