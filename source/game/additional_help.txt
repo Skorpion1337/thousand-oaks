@@ -22,6 +22,10 @@ $XDG_DATA_HOME/love/ or ~/.local/share/love/
 love may be replaced by game name or simply "game"
 
 
+If you corrupt your settings and the game looks wonky, try deleting
+the "options" file so it is regenerated to its default values.
+
+
 AND NOW FOR LICENSES
 
 

@@ -23,7 +23,7 @@ SAVENAMEFILE = "savenames"
 OPTIONSFILE = "options"
 SAVEFILEAMOUNT = 11
 
-HELP_TEXT = 'REPORTING BUGS\n\n\nPlease report bugs at\n1. Github issues at https://github.com/Skorpion1337/thousand-oaks/issues\n2. Shoutbox at https://tinyurl.com/1000oakz\n\n\nSOMETHING ABOUT CLUTTER\n\n\nLook at folder %APPDATA%/LOVE to save some space! This folder is \nfor starting directly from code.\n \n\nAnd look at folder %APPDATA%/gamename or simply %APPDATA%/game. This folder is \nfor starting from the compiled executable.\n\n\nIn Linux look for these\n$XDG_DATA_HOME/love/ or ~/.local/share/love/\nlove may be replaced by game name or simply "game"\n\n\nAND NOW FOR LICENSES\n\n\nAdditional licenses not mentioned in the license file in the game folder \nand folder love in the source distribution\n\n\nThis game\nby Skorpion1337\ntinyurl.com/1000oakz\nGPLv3\nhttps://www.gnu.org/licenses/gpl-3.0.html\n\n\n----Libraries----\n\n\nlume\nA collection of functions for Lua, geared towards game development.\nUsing it for serializing data before compression.\nhttps://github.com/rxi/lume\nMIT \n--\n-- lume\n--\n-- Copyright (c) 2020 rxi\n--\n-- Permission is hereby granted, free of charge, to any person obtaining a copy of\n-- this software and associated documentation files (the "Software"), to deal in\n-- the Software without restriction, including without limitation the rights to\n-- use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\n-- of the Software, and to permit persons to whom the Software is furnished to do\n-- so, subject to the following conditions:\n--\n-- The above copyright notice and this permission notice shall be included in all\n-- copies or substantial portions of the Software.\n--\n-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n-- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n-- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n-- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n-- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n-- SOFTWARE.\n--\n\n\n----Graphics----\n\n\nBackground love potion - graphics/potion.jpg\nhttps://en.wikipedia.org/wiki/File:Filtre_d%27Amour.jpg\nFrom user https://commons.wikimedia.org/wiki/User:Arnaud_25 - Arnaud_25\nCreative Commons Attribution-Share Alike 4.0 International\nhttps://creativecommons.org/licenses/by-sa/4.0/deed.en'
+HELP_TEXT = 'REPORTING BUGS\n\n\nPlease report bugs at\n1. Github issues at https://github.com/Skorpion1337/thousand-oaks/issues\n2. Shoutbox at https://tinyurl.com/1000oakz\n\n\nSOMETHING ABOUT CLUTTER\n\n\nLook at folder %APPDATA%/LOVE to save some space! This folder is \nfor starting directly from code.\n \n\nAnd look at folder %APPDATA%/gamename or simply %APPDATA%/game. This folder is \nfor starting from the compiled executable.\n\n\nIn Linux look for these\n$XDG_DATA_HOME/love/ or ~/.local/share/love/\nlove may be replaced by game name or simply "game"\n\n\nIf you corrupt your settings and the game looks wonky, try deleting\nthe "options" file so it is regenerated to its default values.\n\n\nAND NOW FOR LICENSES\n\n\nAdditional licenses not mentioned in the license file in the game folder \nand folder love in the source distribution\n\n\nThis game\nby Skorpion1337\ntinyurl.com/1000oakz\nGPLv3\nhttps://www.gnu.org/licenses/gpl-3.0.html\n\n\n----Libraries----\n\n\nlume\nA collection of functions for Lua, geared towards game development.\nUsing it for serializing data before compression.\nhttps://github.com/rxi/lume\nMIT \n--\n-- lume\n--\n-- Copyright (c) 2020 rxi\n--\n-- Permission is hereby granted, free of charge, to any person obtaining a copy of\n-- this software and associated documentation files (the "Software"), to deal in\n-- the Software without restriction, including without limitation the rights to\n-- use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\n-- of the Software, and to permit persons to whom the Software is furnished to do\n-- so, subject to the following conditions:\n--\n-- The above copyright notice and this permission notice shall be included in all\n-- copies or substantial portions of the Software.\n--\n-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n-- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n-- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n-- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n-- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n-- SOFTWARE.\n--\n\n\n----Graphics----\n\n\nBackground love potion - graphics/potion.jpg\nhttps://en.wikipedia.org/wiki/File:Filtre_d%27Amour.jpg\nFrom user https://commons.wikimedia.org/wiki/User:Arnaud_25 - Arnaud_25\nCreative Commons Attribution-Share Alike 4.0 International\nhttps://creativecommons.org/licenses/by-sa/4.0/deed.en'
 
 do
     local love = require("love")
@@ -201,10 +201,6 @@ do
         State.help_text = load_help_text(State.savedhelpprefix)
     end
 
-    local function optionwindow()
-        change_page(5)
-    end
-
     local function quitgame()
         quitmessage()
     end
@@ -265,6 +261,112 @@ do
             end
         end
         return count
+    end
+
+    local function split(str, sep)
+        sep = sep or "%s"
+        local t = {}
+        for s in string.gmatch(str, "([^" .. sep .. "]+)") do
+            t[#t + 1] = s
+        end
+        return t
+    end
+
+
+    local function set_screen_dimension()
+        local x, y = love.window.getDesktopDimensions()
+        ScreenWidth, ScreenHeight = x*DEFSCREENSPACE/100, x/SCREENRATIO*DEFSCREENSPACE/100
+
+        if ScreenHeight > y*DEFSCREENSPACE/100 then
+            ScreenWidth, ScreenHeight = y*SCREENRATIO*DEFSCREENSPACE/100, y*DEFSCREENSPACE/100
+        end
+    end
+
+    local function reset_options()
+        DEFSCREENSPACE = 88
+        set_screen_dimension()
+        local x, y = love.window.getDesktopDimensions()
+        ScreenX = (x-ScreenWidth)/2
+        ScreenY = (y-ScreenHeight)/2
+    end
+
+    local function save_options()
+        love.filesystem.write(OPTIONSFILE, tostring(DEFSCREENSPACE)..DELIMITER..tostring(ScreenX)..DELIMITER..tostring(ScreenY))
+    end
+
+    local function load_option_values()
+        local contents, _ = love.filesystem.read(OPTIONSFILE)
+        contents = split(contents, DELIMITER)
+        DEFSCREENSPACE = tonumber(contents[1])
+        set_screen_dimension()
+        ScreenX = tonumber(contents[2])
+        ScreenY = tonumber(contents[3])
+    end
+
+    local function set_options()
+        love.window.setMode(ScreenWidth, ScreenHeight, {resizable = false, borderless = true, y=ScreenY, x=ScreenX})
+    end
+
+    local function load_options()
+        if love.filesystem.getInfo(OPTIONSFILE) == nil then
+            reset_options()
+            save_options()
+        else
+            load_option_values()
+        end
+        set_options()
+    end
+
+    local function open_options_page()
+        local words = split(WindowScaleButton.text, " ")
+        words[4] = tostring(DEFSCREENSPACE)
+        WindowScaleButton.text = table.concat(words," ")
+
+        local words = split(WindowXButton.text, " ")
+        words[4] = tostring(ScreenX)
+        WindowXButton.text = table.concat(words," ")
+
+        local words = split(WindowYButton.text, " ")
+        words[4] = tostring(ScreenY)
+        WindowYButton.text = table.concat(words," ")
+
+        change_page(8)
+    end
+
+    local function menu_cancel_options()
+        load_options()
+        backtomain()
+    end
+
+    local function menu_save_options()
+        save_options()
+        backtomain()
+    end
+
+    local function refresh_options_window()
+        set_options()
+        open_options_page()
+    end
+
+    local function menu_reset_options()
+        reset_options()
+        refresh_options_window()
+    end
+
+    local function optionwindow()
+        open_options_page()
+    end
+
+    local function menu_change_window_scale()
+
+    end
+
+    local function menu_change_window_x()
+
+    end
+
+    local function menu_change_window_y()
+
     end
 
     local function refresh_state()
@@ -340,6 +442,15 @@ do
         DialogEntry = Labels[7][2]
         DialogPrompt = Labels[7][1]
 
+        local button_width, button_height = translatexy(0.2, 0.1)
+        local padding, _ = translatexy(0.077, 0)
+        Buttons[8] = {{size=1, text="Cancel", x = padding, y = ScreenHeight-button_height*1.5, width = button_width, height = button_height, call=menu_cancel_options}, {size=1, text="Save", x = padding+1.1*button_width, y = ScreenHeight-button_height*1.5, width = button_width, height = button_height, call=menu_save_options}, {size=1, text="Reset", x = padding+2*1.1*button_width, y = ScreenHeight-button_height*1.5, width = button_width, height = button_height, call=menu_reset_options}, {size=2, text="Window Scale Percentage: 50", x = padding, y = button_height*5, width = button_width*1.1, height = button_height/2, call=menu_change_window_scale}, {size=2, text="Window X Position: 50", x = padding, y = button_height*6.2, width = button_width*1.1, height = button_height/2, call=menu_change_window_x}, {size=2, text="Window Y Position: 50", x = padding, y = button_height*7.4, width = button_width*1.1, height = button_height/2, call=menu_change_window_y}}
+        Labels[8] = {}
+
+        WindowScaleButton = Buttons[8][4]
+        WindowXButton = Buttons[8][5]
+        WindowYButton = Buttons[8][6]
+
 
         --[[for i = 1, #Labels do
             for j=1, #Labels[i] do
@@ -380,59 +491,6 @@ do
                 State.mainmenubgslocation[j+(i-1)*State.mainmenurepeat] = {i,randomgen:random(1,ScreenWidth-State.mainmenubgs[i]:getWidth()), randomgen:random(1,ScreenHeight-State.mainmenubgs[i]:getHeight())}
             end
         end
-    end
-
-    local function split(str, sep)
-        sep = sep or "%s"
-        local t = {}
-        for s in string.gmatch(str, "([^" .. sep .. "]+)") do
-            t[#t + 1] = s
-        end
-        return t
-    end
-
-    local function set_screen_dimension()
-        local x, y = love.window.getDesktopDimensions()
-        ScreenWidth, ScreenHeight = x*DEFSCREENSPACE/100, x/SCREENRATIO*DEFSCREENSPACE/100
-
-        if ScreenHeight > y*DEFSCREENSPACE/100 then
-            ScreenWidth, ScreenHeight = y*SCREENRATIO*DEFSCREENSPACE/100, y*DEFSCREENSPACE/100
-        end
-    end
-
-    local function reset_options()
-        DEFSCREENSPACE = 88
-        set_screen_dimension()
-        local x, y = love.window.getDesktopDimensions()
-        ScreenX = (x-ScreenWidth)/2
-        ScreenY = (y-ScreenHeight)/2
-    end
-
-    local function save_options()
-        love.filesystem.write(OPTIONSFILE, tostring(DEFSCREENSPACE)..DELIMITER..tostring(ScreenX)..DELIMITER..tostring(ScreenY))
-    end
-
-    local function load_option_values()
-        local contents, _ = love.filesystem.read(OPTIONSFILE)
-        contents = split(contents, DELIMITER)
-        DEFSCREENSPACE = tonumber(contents[1])
-        set_screen_dimension()
-        ScreenX = tonumber(contents[2])
-        ScreenY = tonumber(contents[3])
-    end
-
-    local function set_options()
-        love.window.setMode(ScreenWidth, ScreenHeight, {resizable = false, borderless = true, y=ScreenY, x=ScreenX})
-    end
-
-    local function load_options()
-        if love.filesystem.getInfo(OPTIONSFILE) == nil then
-            reset_options()
-            save_options()
-        else
-            load_option_values()
-        end
-        set_options()
     end
 
     local function separate_spaces(s)
@@ -495,7 +553,7 @@ do
 
         Scaling_Down = 0
 
-        State = { leaf = 1, old_leaf = 1, dialog_type = nil, dialog_param=nil, hoover = 0, logo = gfx.newImage("graphics/logo.png"), logo2 = gfx.newImage("graphics/logo2.png"), button_bg = nil, button_bg_quad = nil, button_bg_hover = nil, bg_tile = gfx.newImage("graphics/bg_tile.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), red_crystal = gfx.newImage("graphics/crystal.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = ScreenWidth*0.2*0.1, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, lovepotion=gfx.newImage("graphics/potion.jpg"), mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10, dialog_width = 0, dialog_height = 0, window_dragging = false}
+        State = { leaf = 1, old_leaf = 1, dialog_type = nil, dialog_param=nil, hoover = 0, logo = gfx.newImage("graphics/logo.png"), logo2 = gfx.newImage("graphics/logo2.png"), button_bg = nil, button_bg_quad = nil, button_bg_hover = nil, bg_tile = gfx.newImage("graphics/bg_tile.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), red_crystal = gfx.newImage("graphics/crystal.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = ScreenWidth*0.2*0.1, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, lovepotion=gfx.newImage("graphics/potion.jpg"), sulphur_mining = gfx.newImage("graphics/sulphur_mining_PD.jpg"), mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10, dialog_width = 0, dialog_height = 0, window_dragging = false}
 
         local gradientData = love.image.newImageData(2, 1, 'rgba8', '\200\200\200' .. '\255' .. '\050\050\050' .. '\255')
         State.button_bg = gfx.newImage(gradientData)
@@ -767,6 +825,13 @@ do
                 local iconsize, pos = translatexy(0.001, 0.1)
                 gfx.scale(iconsize, iconsize)
                 gfx.draw(State.red_crystal, (ScreenWidth/2-State.dialog_width/2.2)/iconsize, (ScreenHeight/2-State.dialog_height/2+pos)/iconsize)
+                gfx.pop()
+            elseif State.leaf == 8 then
+                gfx.push()
+                local scalex = ScreenWidth/State.sulphur_mining:getWidth()
+                local scaley = ScreenHeight/State.sulphur_mining:getHeight()
+                gfx.scale(scalex, scaley)
+                gfx.draw(State.sulphur_mining, 0, 0)
                 gfx.pop()
             end
 
