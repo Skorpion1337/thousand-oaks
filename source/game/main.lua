@@ -403,6 +403,7 @@ do
     local function reset_options()
         DEFSCREENSPACE = 88
         set_screen_dimension()
+        local x, y = love.window.getDesktopDimensions()
         ScreenX = (x-ScreenWidth)/2
         ScreenY = (y-ScreenHeight)/2
     end
