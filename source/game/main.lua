@@ -3,11 +3,27 @@ GAMENAME = "Thousand Oaks: The Mining Empire"
 MINIMUM_SCREEN_SCALE = 25
 SCREENRATIO = 16/9
 
-MINIFONT = 0.0089
+MINIFONT = 0.0095
 SMALLFONT = 0.0125
 BIGFONT = 0.02
 BANNERH = 0.045
 NORMAL_SIZE_AT_PX = 1689.6
+
+PLANET_AMOUNT = 20
+local attributes = {
+    { name="Solar System", levels={} },
+    { name="Planet", levels={} },
+    { name="", levels={} },
+    { name="Temperature", levels={"Subzero", "Freezing", "Cold", "Temperate", "Warm", "Hot", "Infernal"} },
+    { name="Water", levels={"Barren", "Dry", "Damp", "Wet", "Swampy", "Waterlogged", "Flooded"} },
+    { name="Radiation", levels={"Zero", "Negligible", "Ambient", "Moderate", "Toxic", "Hazardous", "Lethal"} },
+    { name="Volcanism", levels={"Barren", "Dry", "Damp", "Wet", "Swampy", "Waterlogged", "Flooded"} },
+    { name="Biodiversity", levels={"Lifeless", "Barren", "Sparse", "Balanced", "Vibrant", "Hyperdiverse", "Primordial"} },
+    { name="Vegetation", levels={"Cleared", "Scrubland", "Patchy", "Balanced", "Dense", "Jungle", "Choking"} },
+    { name="Mineral Richness", levels={"Depleted", "Trace", "Lean", "Standard", "Rich", "Abundant", "Motherlode"} },
+    { name="Storm Activity", levels={"Calm", "Mild", "Variable", "Active", "Violent", "Furious", "Apocalyptic"} }
+}
+---remember to color code
 
 DELIMITER = "+"
 
@@ -33,6 +49,7 @@ do
     local gfx = love.graphics
 
     Loaded = false
+    MapGenerated = false
 
     local randomgen = love.math.newRandomGenerator()
     randomgen:setSeed(os.time())
@@ -208,17 +225,113 @@ do
         end
     end
 
-    local function init_save()
-        --initialize savedata
-        MapGenerated = false
-        local map = {}
-        Save = {map=map, npcs={}, positionx = 1, positiony = 1}
+    -- Encapsulate data and functions inside a single table
+    local StarGen = {
+        prefixes = {"Alpha", "Beta", "Gamma", "Delta", "Epsilon", "Zeta", "Nova", "Sol", "Kepler", "Orion", "Vega", "Rigel", "Sirius", "Polaris"},
+        roots = {"Prime", "Centauri", "Majoris", "Minor", "Draconis", "Cygni", "Eridani", "Persei", "Tauri", "System"},
+        numerals = {"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"},
+        consonants = {"b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "r", "s", "t", "v", "w", "x", "z"},
+        vowels = {"a", "e", "i", "o", "u", "ae", "oo", "ou"}
+    }
+
+    -- Helper function stored in the namespace
+    function StarGen.randomChoice(t)
+        return t[math.random(#t)]
+    end
+
+    -- Generates a pronounceable alien-sounding word
+    function StarGen.generateAlienName()
+        local name = ""
+        local syllableCount = math.random(2, 3)
+        for i = 1, syllableCount do
+            local part = StarGen.randomChoice(StarGen.consonants):upper() .. StarGen.randomChoice(StarGen.vowels)
+            if math.random() > 0.4 then
+                part = part .. StarGen.randomChoice(StarGen.consonants)
+            end
+            name = name .. part
+        end
+        return name
+    end
+
+    -- Main function to generate a star system name
+    function StarGen.generateSystemName()
+        local style = math.random(1, 3)
+
+        if style == 1 then
+            return StarGen.randomChoice(StarGen.prefixes) .. " " .. StarGen.randomChoice(StarGen.roots) .. " " .. StarGen.randomChoice(StarGen.numerals)
+        elseif style == 2 then
+            local letters = StarGen.randomChoice(StarGen.consonants):upper() .. StarGen.randomChoice(StarGen.consonants):upper()
+            local numbers = math.random(100, 999)
+            return "Sector " .. letters .. "-" .. numbers
+        else
+            return StarGen.generateAlienName() .. "-" .. math.random(1, 99)
+        end
+    end
+
+    -- Encapsulate planet data and generator functions inside a single table
+    local PlanetGen = {
+        catalogs = {"Kepler", "HD", "GJ", "TRAPPIST", "HIP", "WASP"},
+        prefixes = {"Terra", "Aethel", "Xylos", "Valen", "Orion", "Chronos", "Ares", "Helios"},
+        adjectives = {"New", "Greater", "Outer", "Inner", "Prime", "Deep"},
+        romanNumerals = {"I", "II", "III", "IV", "V", "VI", "VII"},
+        exoplanetSuffixes = {"b", "c", "d", "e", "f"},
+        consonants = {"b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "r", "s", "t", "v", "w", "x", "z"},
+        vowels = {"a", "e", "i", "o", "u", "ae", "oo", "ou"}
+    }
+
+    -- Helper function stored in the namespace
+    function PlanetGen.randomChoice(t)
+        return t[math.random(#t)]
+    end
+
+    -- Generates a pronounceable alien-sounding base word
+    function PlanetGen.generateAlienWord()
+        local name = ""
+        local syllableCount = math.random(2, 3)
+        for i = 1, syllableCount do
+            local part = PlanetGen.randomChoice(PlanetGen.consonants):upper() .. PlanetGen.randomChoice(PlanetGen.vowels)
+            if math.random() > 0.4 then
+                part = part .. PlanetGen.randomChoice(PlanetGen.consonants)
+            end
+            name = name .. part
+        end
+        return name
+    end
+
+    -- Main function to generate a planet name
+    function PlanetGen.generateName()
+        local style = math.random(1, 3)
+
+        if style == 1 then
+            -- Style 1: Scientific / Exoplanet Designation (e.g., Kepler-452b)
+            local catalog = PlanetGen.randomChoice(PlanetGen.catalogs)
+            local number = math.random(10, 999)
+            local suffix = PlanetGen.randomChoice(PlanetGen.exoplanetSuffixes)
+            return catalog .. "-" .. number .. suffix
+        elseif style == 2 then
+            -- Style 2: Colonized / Descriptive Name (e.g., New Terra IV or Aethel Prime)
+            if math.random() > 0.5 then
+                return PlanetGen.randomChoice(PlanetGen.adjectives) .. " " .. PlanetGen.randomChoice(PlanetGen.prefixes) .. " " .. PlanetGen.randomChoice(PlanetGen.romanNumerals)
+            else
+                return PlanetGen.randomChoice(PlanetGen.prefixes) .. " Prime"
+            end
+        else
+            -- Style 3: Procedural Alien Planet (e.g., Xylos-III)
+            return PlanetGen.generateAlienWord() .. "-" .. PlanetGen.randomChoice(PlanetGen.romanNumerals)
+        end
+    end
+
+    local function generate_planets()
+        local planets = {}
+        for i=1,PLANET_AMOUNT do
+
+        end
     end
 
     local function newgame()
         local pressedbutton = love.window.showMessageBox("Remember to save map first", "Generating a new game formats the current one in memory. Want to continue?", {"OK", "No!", enterbutton = 2}, "warning", true)
         if pressedbutton == 1 then
-            init_save()
+            generate_planets()
             change_page(2)
         end
 
@@ -232,6 +345,12 @@ do
         if Loaded == true then
             change_page(6)
         end
+    end
+
+    local function create_map()
+        MapGenerated = true
+        Loaded = true
+        continuegame()
     end
 
     local function explode(inputstr, sep)
@@ -603,8 +722,6 @@ do
     end
 
     function love.load()
-        init_save()
-
         State = { leaf = 1, old_leaf = 1, dialog_type = nil, dialog_param=nil, hoover = 0, logo = gfx.newImage("graphics/logo.png"), logo2 = gfx.newImage("graphics/logo2.png"), button_bg = nil, button_bg_quad = nil, button_bg_hover = nil, bg_tile = gfx.newImage("graphics/bg_tile.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), red_crystal = gfx.newImage("graphics/crystal.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = 0, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, lovepotion=gfx.newImage("graphics/potion.jpg"), sulphur_mining = gfx.newImage("graphics/sulphur_mining_PD.jpg"), horsehead_nebula = gfx.newImage("graphics/horsehead_PD.jpg"), mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10, dialog_width = 0, dialog_height = 0, window_dragging = false}
 
         local gradientData = love.image.newImageData(2, 1, 'rgba8', '\200\200\200' .. '\255' .. '\050\050\050' .. '\255')
@@ -701,7 +818,7 @@ do
             gfx.rectangle("fill", 0, ScreenHeight/3, Buttons[2][1].width, ScreenHeight-ScreenHeight/3-SmallFont:getHeight("text"), round, round)
             gfx.setFont(MiniFont)
             gfx.setColor(0.8,0,0)
-            gfx.print("Planet name: TRAPPIST-91e\nSolar System: Xylar-42\nTemperature: hot", round, ScreenHeight/3+round)
+            gfx.print("Solar System: Xylar-42\nPlanet: TRAPPIST-91e\n\nTemperature: Critical\nWater: Low\n", round, ScreenHeight/3+round)
             gfx.pop()
         elseif State.leaf == 3 then
             gfx.setColor(0.1,0.45,0.1)
