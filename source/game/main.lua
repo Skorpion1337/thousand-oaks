@@ -10,20 +10,28 @@ BANNERH = 0.045
 NORMAL_SIZE_AT_PX = 1689.6
 
 PLANET_AMOUNT = 20
-local attributes = {
+attributes = {
     { name="Solar System", levels={} },
     { name="Planet", levels={} },
     { name="", levels={} },
     { name="Temperature", levels={"Subzero", "Freezing", "Cold", "Temperate", "Warm", "Hot", "Infernal"} },
     { name="Water", levels={"Barren", "Dry", "Damp", "Wet", "Swampy", "Waterlogged", "Flooded"} },
     { name="Radiation", levels={"Zero", "Negligible", "Ambient", "Moderate", "Toxic", "Hazardous", "Lethal"} },
-    { name="Volcanism", levels={"Barren", "Dry", "Damp", "Wet", "Swampy", "Waterlogged", "Flooded"} },
+    { name="Volcanism", levels={"Dormant", "Cool", "Stable", "Active", "Unstable", "Magmatic", "Apocalyptic"} },
     { name="Biodiversity", levels={"Lifeless", "Barren", "Sparse", "Balanced", "Vibrant", "Hyperdiverse", "Primordial"} },
     { name="Vegetation", levels={"Cleared", "Scrubland", "Patchy", "Balanced", "Dense", "Jungle", "Choking"} },
     { name="Mineral Richness", levels={"Depleted", "Trace", "Lean", "Standard", "Rich", "Abundant", "Motherlode"} },
     { name="Storm Activity", levels={"Calm", "Mild", "Variable", "Active", "Violent", "Furious", "Apocalyptic"} }
 }
----remember to color code
+severity_colors = {
+    { 0.478, 0.545, 0.600, 1.0 }, -- None: Slate Gray (#7A8B99)
+    { 0.306, 0.659, 0.871, 1.0 }, -- Minimal: Sky Blue (#4EA8DE)
+    { 0.322, 0.718, 0.533, 1.0 }, -- Low: Sage Green (#52B788)
+    { 0.914, 0.769, 0.416, 1.0 }, -- Medium: Warm Sand (#E9C46A)
+    { 0.957, 0.635, 0.380, 1.0 }, -- High: Amber Orange (#F4A261)
+    { 0.906, 0.435, 0.318, 1.0 }, -- Extreme: Burnt Coral (#E76F51)
+    { 0.839, 0.157, 0.157, 1.0 }, -- Critical: Crimson Red (#D62828)
+}
 
 DELIMITER = "+"
 
