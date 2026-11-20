@@ -1,21 +1,30 @@
 body {
     color: white;
     background: url("bg_tile.png");
+    width:890px;
 }
 
 a:link, a:visited {
-  color: pink;
+  color: rgb(255, 0, 43);
   background-color: transparent;
   text-decoration: none;
 }
 
 .flex { display: flex; align-items: center;}
 
-.bigfont {
-    font-size: 20px;
+
+.bigfontbox, .smallfontbox {
+    background-color:rgb(0, 247, 255);
+    border: thick inset black;
+    color: black;
 }
 
-.smallfont {
+.bigfont, .bigfontbox {
+    font-size: 20px;
+  
+}
+
+.smallfont, .smallfontbox {
     font-size: 17px;
 }
 
