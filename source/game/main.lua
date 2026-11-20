@@ -576,10 +576,10 @@ do
 
     function love.keyreleased(key, scancode, isrepeat)
         if key == "escape" then
-            if State.leaf == 1 and State.old_leaf == 1 then
+            if State.leaf == 1 then
                 quitmessage()
             else
-                change_page(State.old_leaf)
+                backtomain()
             end
         end
     end
