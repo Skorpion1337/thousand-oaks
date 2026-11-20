@@ -3,7 +3,7 @@ GAMENAME = "Thousand Oaks: The Mining Empire"
 MINIMUM_SCREEN_SCALE = 25
 SCREENRATIO = 16/9
 
-MINIFONT = 0.0075
+MINIFONT = 0.0089
 SMALLFONT = 0.0125
 BIGFONT = 0.02
 BANNERH = 0.045
@@ -449,11 +449,12 @@ do
         Buttons[1] = {{size=1, text="Continue", x = ScreenWidth/2.0-newgamebuttonw/2.0, y = newbuttonstarth, width = newgamebuttonw, height=newgamebuttonh, call = continuegame}, {size=1, text="New Game", x = ScreenWidth/2.0-newgamebuttonw/2.0, y = newbuttonstarth+newgamebuttonh+newgamebuttonpadding, width = newgamebuttonw, height=newgamebuttonh, call = newgame},{size=1, text="Save Game", x = ScreenWidth/2.0-newgamebuttonw/2.0, y =  newbuttonstarth+2*newgamebuttonh+2*newgamebuttonpadding, width = newgamebuttonw, height=newgamebuttonh, call = save_game}, {size=1, text="Load Game", x = ScreenWidth/2.0-newgamebuttonw/2.0, y = newbuttonstarth+3*newgamebuttonh+3*newgamebuttonpadding, width = newgamebuttonw, height=newgamebuttonh, call = loadgame}, {size=1, text="Options", x = ScreenWidth/2.0-newgamebuttonw/2.0, y = newbuttonstarth+4*newgamebuttonh+4*newgamebuttonpadding, width = newgamebuttonw, height=newgamebuttonh, call = optionwindow}, {size=1, text="Help", x = ScreenWidth/2.0-newgamebuttonw/2.0, y = newbuttonstarth+5*newgamebuttonh+5*newgamebuttonpadding, width = newgamebuttonw, height=newgamebuttonh, call = helpwindow}, {size=1, text="Quit", x = ScreenWidth/2.0-newgamebuttonw/2.0, y = newbuttonstarth+6*newgamebuttonh+6*newgamebuttonpadding, width = newgamebuttonw, height=newgamebuttonh, call = quitgame}}
         Labels[1] ={}
 
-        local newbuttonwidth, newbuttonheight = translatexy(0.2,0.05)
+        local newbuttonwidth, newbuttonheight = translatexy(0.23,0.05)
         local paddingx, paddingy = translatexy(0.01,0.01)
         local startpaddingx, startpaddingy = translatexy(0.1,0.1)
         Buttons[2] = {
-            {size=1, text="Generate map", x = 0, y = startpaddingy, width = newbuttonwidth, height=newbuttonheight, call = generate_map},
+            {size=1, text="Generate Star Map", x = 0, y = startpaddingy, width = newbuttonwidth, height=newbuttonheight, call = generate_map},
+            {size=1, text="Start Mining on Planet", x = 0, y = 1*newbuttonheight+1*paddingy+startpaddingy, width = newbuttonwidth, height=newbuttonheight, call = continuegame()},
             {size=1, text="Back to Main", x = 0, y = 2*newbuttonheight+2*paddingy+startpaddingy, width = newbuttonwidth, height=newbuttonheight, call = backtomain},
         }
         Labels[2] ={}
@@ -604,7 +605,7 @@ do
     function love.load()
         init_save()
 
-        State = { leaf = 1, old_leaf = 1, dialog_type = nil, dialog_param=nil, hoover = 0, logo = gfx.newImage("graphics/logo.png"), logo2 = gfx.newImage("graphics/logo2.png"), button_bg = nil, button_bg_quad = nil, button_bg_hover = nil, bg_tile = gfx.newImage("graphics/bg_tile.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), red_crystal = gfx.newImage("graphics/crystal.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = 0, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, lovepotion=gfx.newImage("graphics/potion.jpg"), sulphur_mining = gfx.newImage("graphics/sulphur_mining_PD.jpg"), mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10, dialog_width = 0, dialog_height = 0, window_dragging = false}
+        State = { leaf = 1, old_leaf = 1, dialog_type = nil, dialog_param=nil, hoover = 0, logo = gfx.newImage("graphics/logo.png"), logo2 = gfx.newImage("graphics/logo2.png"), button_bg = nil, button_bg_quad = nil, button_bg_hover = nil, bg_tile = gfx.newImage("graphics/bg_tile.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), red_crystal = gfx.newImage("graphics/crystal.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = 0, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, lovepotion=gfx.newImage("graphics/potion.jpg"), sulphur_mining = gfx.newImage("graphics/sulphur_mining_PD.jpg"), horsehead_nebula = gfx.newImage("graphics/horsehead_PD.jpg"), mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10, dialog_width = 0, dialog_height = 0, window_dragging = false}
 
         local gradientData = love.image.newImageData(2, 1, 'rgba8', '\200\200\200' .. '\255' .. '\050\050\050' .. '\255')
         State.button_bg = gfx.newImage(gradientData)
@@ -659,7 +660,7 @@ do
     function love.draw()
         gfx.setCanvas(Canvas)
 
-        gfx.setColor(255, 255, 255, 255)
+        gfx.setColor(1, 1, 1, 1)
         if State.leaf == 1 then
             gfx.push()
             local scale = ScreenWidth/NORMAL_SIZE_AT_PX
@@ -689,19 +690,23 @@ do
             gfx.pop()
         elseif State.leaf == 2 then
             gfx.push()
-            gfx.setColor(0, 224, 230, 255)
-            gfx.rectangle("fill", 0, 0, ScreenWidth, ScreenHeight)
-            gfx.setColor(255, 255, 255, 255)
-            gfx.setFont(BigFont)
-            local padx, pady = translatexy(0.02, 0.05)
-            for _ =0, 2 do
-                gfx.print("Use W, S, A, D ", padx, pady)
-            end
+            scalex = ScreenWidth/State.horsehead_nebula:getWidth()
+            scaley = ScreenHeight/State.horsehead_nebula:getHeight()
+            gfx.scale(scalex, scaley)
+            gfx.draw(State.horsehead_nebula, 0, 0)
+            gfx.pop()
+            gfx.push()
+            gfx.setColor(1, 1, 1, 0.33)
+            local round, _ = translatexy(0.01,0)
+            gfx.rectangle("fill", 0, ScreenHeight/3, Buttons[2][1].width, ScreenHeight-ScreenHeight/3-SmallFont:getHeight("text"), round, round)
+            gfx.setFont(MiniFont)
+            gfx.setColor(0.8,0,0)
+            gfx.print("Planet name: TRAPPIST-91e\nSolar System: Xylar-42\nTemperature: hot", round, ScreenHeight/3+round)
             gfx.pop()
         elseif State.leaf == 3 then
             gfx.setColor(0.1,0.45,0.1)
             gfx.rectangle("fill", 0, 0, ScreenWidth, ScreenHeight)
-            gfx.setColor(255, 255, 255, 255)
+            gfx.setColor(1, 1, 1, 1)
             gfx.push()
             local imagefile = State.lovepotion
             local scale = ScreenHeight/imagefile:getHeight()
@@ -719,7 +724,7 @@ do
             gfx.draw(rotatefile, ScreenWidth/rotatescale-rotatefile:getWidth(), math.max(0,ScreenHeight/2-rotatefile:getHeight()/2))
             gfx.pop()
         elseif State.leaf == 5 then
-            gfx.setColor(255, 255, 255, 255)
+            gfx.setColor(1, 1, 1, 1)
             gfx.push()
             local scalex = ScreenWidth/State.helpbg:getWidth()
             local scaley = ScreenHeight/State.helpbg:getHeight()
@@ -739,7 +744,7 @@ do
             gfx.push()
             gfx.setColor(0.72,0.59,0.33,1)
             gfx.rectangle("fill", ScreenWidth/2-State.dialog_width/2, ScreenHeight/2-State.dialog_height/2, State.dialog_width, State.dialog_height)
-            gfx.setColor(255,255,255,255)
+            gfx.setColor(1,1,1,1)
             local iconsize, pos = translatexy(0.001, 0.1)
             gfx.scale(iconsize, iconsize)
             gfx.draw(State.red_crystal, (ScreenWidth/2-State.dialog_width/2.2)/iconsize, (ScreenHeight/2-State.dialog_height/2+pos)/iconsize)
@@ -766,13 +771,13 @@ do
                 height = SmallFont:getHeight(button.text)
             end
             if State.hoover == i then
-                gfx.setColor(255, 255, 255, 255)
+                gfx.setColor(1, 1, 1, 1)
                 love.graphics.draw(State.button_bg_hover, State.button_bg_quad, button.x, button.y, math.rad(0), button.width, button.height, 0, 0)
                 gfx.setColor(BUTTONNORMALCOLOR)
                 gfx.rectangle("line", button.x, button.y, button.width, button.height)
                 gfx.print(button.text, button.x+button.width/2.0-width/2.0, button.y+button.height/2.0-height/2.0)
             else
-                gfx.setColor(255, 255, 255, 255)
+                gfx.setColor(1, 1, 1, 1)
                 love.graphics.draw(State.button_bg, State.button_bg_quad, button.x, button.y, math.rad(0), button.width, button.height, 0, 0)
                 gfx.rectangle("line", button.x, button.y, button.width, button.height)
                 gfx.setColor(BUTTONHOOVERCOLOR)
@@ -795,7 +800,7 @@ do
 
         --first after custom leaves is banner
         gfx.setFont(SmallFont)
-        gfx.setColor(255, 255, 255, 255)
+        gfx.setColor(1, 1, 1, 1)
         gfx.push()
         local theheight = ScreenHeight*BANNERH
         local scale = theheight/State.banner:getHeight()
