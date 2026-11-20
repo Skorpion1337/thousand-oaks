@@ -30,10 +30,9 @@ do
     local lume = require("lib.lume")
     local utf8 = require("utf8")
 
-    love.window.setIcon(love.image.newImageData("graphics/large_purple.png"))
-    love.keyboard.setKeyRepeat(true)
-
     local gfx = love.graphics
+
+    Loaded = false
 
     local randomgen = love.math.newRandomGenerator()
     randomgen:setSeed(os.time())
@@ -217,7 +216,7 @@ do
     end
 
     local function newgame()
-        local pressedbutton = love.window.showMessageBox("Remember to save map first", "Entering new game formats the current map in memory. Want to continue?", {"OK", "No!", enterbutton = 2}, "warning", true)
+        local pressedbutton = love.window.showMessageBox("Remember to save map first", "Generating a new game formats the current one in memory. Want to continue?", {"OK", "No!", enterbutton = 2}, "warning", true)
         if pressedbutton == 1 then
             init_save()
             change_page(2)
@@ -230,7 +229,9 @@ do
     end
 
     local function continuegame()
-        change_page(6)
+        if Loaded == true then
+            change_page(6)
+        end
     end
 
     local function explode(inputstr, sep)
@@ -272,6 +273,7 @@ do
             if pressedbutton == 1 then
                 load_file(n)
                 MapGenerated = true
+                Loaded = True
                 change_page(6)
             end
         end
@@ -426,6 +428,7 @@ do
         love.window.setTitle(GAMENAME)
         love.window.setVSync(2)
         love.keyboard.setKeyRepeat(true)
+        love.window.setIcon(love.image.newImageData("graphics/large_purple.png"))
 
         Canvas = gfx.newCanvas(ScreenWidth, ScreenHeight)
 
@@ -450,8 +453,7 @@ do
         local paddingx, paddingy = translatexy(0.01,0.01)
         local startpaddingx, startpaddingy = translatexy(0.1,0.1)
         Buttons[2] = {
-            {size=1, text="Generate MAP", x = 0, y = startpaddingy, width = newbuttonwidth, height=newbuttonheight, call = generate_map},
-            {size=1, text="Save MAP", x = 0, y = newbuttonheight+paddingy+startpaddingy, width = newbuttonwidth, height=newbuttonheight, call = save_game},
+            {size=1, text="Generate map", x = 0, y = startpaddingy, width = newbuttonwidth, height=newbuttonheight, call = generate_map},
             {size=1, text="Back to Main", x = 0, y = 2*newbuttonheight+2*paddingy+startpaddingy, width = newbuttonwidth, height=newbuttonheight, call = backtomain},
         }
         Labels[2] ={}
@@ -686,26 +688,16 @@ do
             gfx.draw(State.logo2, ScreenWidth/scalex/2-State.logo2:getWidth()/2,my/scalex-State.logo2:getHeight()/2+State.logo:getHeight()+padding/scalex)
             gfx.pop()
         elseif State.leaf == 2 then
-            local xamount = ScreenWidth/SQUARESIZE
-            local yamount = ScreenHeight/SQUARESIZE
-            local squarerounded = math.floor(SQUARESIZE+0.5)
+            gfx.push()
+            gfx.setColor(0, 224, 230, 255)
+            gfx.rectangle("fill", 0, 0, ScreenWidth, ScreenHeight)
             gfx.setColor(255, 255, 255, 255)
-            for i=1, math.floor(xamount+0.5)+2 do
-                for j=1, math.floor(yamount+0.5)+2 do
-                    gfx.push()
-                    local imagefile = Tiles[Save.map[math.min(math.max(1,i+State.xprefix-1),MAP_SQUARE)][math.min(math.max(1,j+State.yprefix-1),MAP_SQUARE)]].file
-                    local scale = ScreenWidth/xamount/math.floor(imagefile:getWidth()+0.5)
-                    gfx.scale(scale, scale)
-                    gfx.draw(imagefile, (i-1)*squarerounded/scale, (j-1)*squarerounded/scale)
-                    gfx.pop()
-                end
-            end
             gfx.setFont(BigFont)
-            gfx.setColor(1,1,1)
             local padx, pady = translatexy(0.02, 0.05)
             for _ =0, 2 do
-                gfx.print("Use W, S, A, D - Don't start on a lake", padx, pady)
+                gfx.print("Use W, S, A, D ", padx, pady)
             end
+            gfx.pop()
         elseif State.leaf == 3 then
             gfx.setColor(0.1,0.45,0.1)
             gfx.rectangle("fill", 0, 0, ScreenWidth, ScreenHeight)
