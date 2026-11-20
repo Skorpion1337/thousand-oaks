@@ -105,11 +105,30 @@ do
         debugbox("Saved slot "..n.."!")
     end
 
+    local function set_screen_dimension()
+        local x, y = love.window.getDesktopDimensions()
+        ScreenWidth, ScreenHeight = x*DEFSCREENSPACE/100, x/SCREENRATIO*DEFSCREENSPACE/100
+
+        if ScreenHeight > y*DEFSCREENSPACE/100 then
+            ScreenWidth, ScreenHeight = y*SCREENRATIO*DEFSCREENSPACE/100, y*DEFSCREENSPACE/100
+        end
+    end
+
     local function show_dialog(type, params)
         State.dialog_type = type
         State.dialog_param = params
         if type == "save" then
             DialogPrompt.text = "Give the save name, please."
+        elseif type == "change_window_scale" then
+            DialogPrompt.text = "Give the window scale percentage from the screen ["..MINIMUM_SCREEN_SCALE.."-100], please."
+        elseif type == "change_window_x" then
+            local x, _ = love.window.getDesktopDimensions()
+            local max = x-ScreenWidth
+            DialogPrompt.text = "Give the window X position on the screen [0-"..max.."], please."
+        elseif type == "change_window_y" then
+            local _, y = love.window.getDesktopDimensions()
+            local max = y-ScreenHeight
+            DialogPrompt.text = "Give the window Y position on the screen [0-"..max.."], please."
         end
         change_page(7, true)
     end
@@ -117,6 +136,50 @@ do
     local function process_dialog()
         if State.dialog_type == "save" then
             save_n(State.dialog_param.number)
+        elseif State.dialog_type == "change_window_scale" then
+            local number = tonumber(DialogEntry.text)
+            if type(number) == "number" then
+                if number < MINIMUM_SCREEN_SCALE then
+                    number = MINIMUM_SCREEN_SCALE
+                elseif number > 100 then
+                    number = 100
+                end
+                DEFSCREENSPACE = number
+
+                set_screen_dimension()
+                local x, y = love.window.getDesktopDimensions()
+                if x-ScreenWidth < ScreenX then
+                    ScreenX = x-ScreenWidth
+                end
+                if y-ScreenHeight < ScreenY then
+                    ScreenY = y-ScreenHeight
+                end
+                refresh_options_window()
+            end
+        elseif State.dialog_type == "change_window_x" then
+            local number = tonumber(DialogEntry.text)
+            if type(number) == "number" then
+                local x, _ = love.window.getDesktopDimensions()
+                if number < 0 then
+                    number = 0
+                elseif number > x-ScreenWidth then
+                    number = x-ScreenWidth
+                end
+                ScreenX = number
+                refresh_options_window()
+            end
+        elseif State.dialog_type == "change_window_y" then
+            local number = tonumber(DialogEntry.text)
+            if type(number) == "number" then
+                local _, y = love.window.getDesktopDimensions()
+                if number < 0 then
+                    number = 0
+                elseif number > y-ScreenHeight then
+                    number = y-ScreenHeight
+                end
+                ScreenY = number
+                refresh_options_window()
+            end
         end
     end
 
@@ -178,10 +241,6 @@ do
             if s=="" then return t
             end
         end
-    end
-
-    local function debugbox(value)
-        love.window.showMessageBox("Debug Info", value, {"OK"}, "info", true)
     end
 
     local function load_help_text(prefix)
@@ -272,15 +331,6 @@ do
         return t
     end
 
-    local function set_screen_dimension()
-        local x, y = love.window.getDesktopDimensions()
-        ScreenWidth, ScreenHeight = x*DEFSCREENSPACE/100, x/SCREENRATIO*DEFSCREENSPACE/100
-
-        if ScreenHeight > y*DEFSCREENSPACE/100 then
-            ScreenWidth, ScreenHeight = y*SCREENRATIO*DEFSCREENSPACE/100, y*DEFSCREENSPACE/100
-        end
-    end
-
     local function reset_options()
         DEFSCREENSPACE = 88
         set_screen_dimension()
@@ -303,6 +353,7 @@ do
     end
 
     local function set_options()
+        set_screen_dimension()
         refresh_state()
     end
 
@@ -321,11 +372,11 @@ do
         words[4] = tostring(DEFSCREENSPACE)
         WindowScaleButton.text = table.concat(words," ")
 
-        local words = split(WindowXButton.text, " ")
+        words = split(WindowXButton.text, " ")
         words[4] = tostring(ScreenX)
         WindowXButton.text = table.concat(words," ")
 
-        local words = split(WindowYButton.text, " ")
+        words = split(WindowYButton.text, " ")
         words[4] = tostring(ScreenY)
         WindowYButton.text = table.concat(words," ")
 
@@ -342,7 +393,7 @@ do
         backtomain()
     end
 
-    local function refresh_options_window()
+    refresh_options_window = function()
         set_options()
         open_options_page()
     end
@@ -357,14 +408,15 @@ do
     end
 
     local function menu_change_window_scale()
-
+        show_dialog("change_window_scale")
     end
 
     local function menu_change_window_x()
-
+        show_dialog("change_window_x")
     end
 
     local function menu_change_window_y()
+        show_dialog("change_window_y")
 
     end
 
