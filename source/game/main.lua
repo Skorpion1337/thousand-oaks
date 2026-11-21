@@ -61,6 +61,7 @@ do
 
     local randomgen = love.math.newRandomGenerator()
     randomgen:setSeed(os.time())
+    math.randomseed(os.time())
 
     local function savefile(save_number)
         local compressed = love.data.compress("string", COMPRESSION, lume.serialize(Save), 9)
@@ -348,8 +349,10 @@ do
                     planet[j].level = severity_level
                 end
             end
-            planet.x = math.random(Buttons[2][1].width,ScreenWidth)
-            planet.y = math.random(0, ScreenHeight)
+            planet.x = math.random()
+            planet.y = math.random()
+            ---planet.x = math.random(Buttons[2][1].width,ScreenWidth-State.star_of_dawn_scale*State.star_of_dawn:getWidth())
+            --planet.y = math.random(0, ScreenHeight-State.star_of_dawn_scale*State.star_of_dawn:getHeight())
             Save.planets[i] = planet
         end
         PlanetChoice = 1
@@ -358,7 +361,6 @@ do
     local function newgame()
         local pressedbutton = love.window.showMessageBox("Remember to save map first", "Generating a new game formats the current one in memory. Want to continue?", {"OK", "No!", enterbutton = 2}, "warning", true)
         if pressedbutton == 1 then
-            generate_planets()
             change_page(2)
         end
 
@@ -604,6 +606,7 @@ do
             {size=1, text="Back to Main", x = 0, y = 2*newbuttonheight+2*paddingy+startpaddingy, width = newbuttonwidth, height=newbuttonheight, call = backtomain},
         }
         Labels[2] ={}
+        State.star_of_dawn_scale = ScreenWidth/State.star_of_dawn:getWidth()*0.05
 
         Buttons[3] = {{}}
         local buttonwidth, buttonheight = translatexy(0.33, 0.05)
@@ -750,7 +753,8 @@ do
 
     function love.load()
         Save = {}
-        State = { leaf = 1, old_leaf = 1, dialog_type = nil, dialog_param=nil, hoover = 0, logo = gfx.newImage("graphics/logo.png"), logo2 = gfx.newImage("graphics/logo2.png"), button_bg = nil, button_bg_quad = nil, button_bg_hover = nil, bg_tile = gfx.newImage("graphics/bg_tile.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), red_crystal = gfx.newImage("graphics/crystal.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = 0, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, lovepotion=gfx.newImage("graphics/potion.jpg"), sulphur_mining = gfx.newImage("graphics/sulphur_mining_PD.jpg"), horsehead_nebula = gfx.newImage("graphics/horsehead_PD.jpg"), new_machine = gfx.newImage("graphics/new_machine.png"), mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10, dialog_width = 0, dialog_height = 0, window_dragging = false}
+        Save.planets = {}
+        State = { leaf = 1, old_leaf = 1, dialog_type = nil, dialog_param=nil, hoover = 0, logo = gfx.newImage("graphics/logo.png"), logo2 = gfx.newImage("graphics/logo2.png"), button_bg = nil, button_bg_quad = nil, button_bg_hover = nil, bg_tile = gfx.newImage("graphics/bg_tile.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), red_crystal = gfx.newImage("graphics/crystal.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = 0, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, lovepotion=gfx.newImage("graphics/potion.jpg"), sulphur_mining = gfx.newImage("graphics/sulphur_mining_PD.jpg"), horsehead_nebula = gfx.newImage("graphics/horsehead_PD.jpg"), new_machine = gfx.newImage("graphics/new_machine.png"), star_of_dawn = gfx.newImage("graphics/star_of_dawn.png"), star_of_dawn_scale = 0, aim = gfx.newImage("graphics/aim.png"), mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10, dialog_width = 0, dialog_height = 0, window_dragging = false}
 
         local gradientData = love.image.newImageData(2, 1, 'rgba8', '\200\200\200' .. '\255' .. '\050\050\050' .. '\255')
         State.button_bg = gfx.newImage(gradientData)
@@ -845,19 +849,47 @@ do
             local round, _ = translatexy(0.01,0)
             gfx.rectangle("fill", 0, ScreenHeight/3, Buttons[2][1].width, ScreenHeight-ScreenHeight/3-SmallFont:getHeight("text"), round, round)
             gfx.setFont(MiniFont)
-            local planet = Save.planets[PlanetChoice]
-            local xstart, ypad = translatexy(0.015, 0.03)
-            local ypadcollect = 0
-            for i = 1, #planet do
-                gfx.setColor(0.8,0,0)
-                gfx.print(planet[i].name..":", xstart, ScreenHeight/3+round+ypadcollect)
-                ypadcollect = ypadcollect + ypad
-            end
-            local scale = ScreenWidth/State.new_machine:getWidth()*0.2
-            gfx.setColor(1, 1, 1, 1)
-            gfx.scale(scale, scale)
-            gfx.draw(State.new_machine, xstart/scale, (ScreenHeight/3+round*2+ypadcollect)/scale)
             gfx.pop()
+            if #Save.planets ~= 0 then
+                gfx.push()
+                local planet = Save.planets[PlanetChoice]
+                local xstart, ypad = translatexy(0.015, 0.03)
+                local ypadcollect = 0
+                for i = 1, #planet do
+                    gfx.setColor(0.8,0,0)
+                    if planet[i].name ~= "" then
+                        gfx.print(planet[i].name..":", xstart, ScreenHeight/3+round+ypadcollect)
+                    end
+                    if planet[i].name == "Solar System" then
+                        gfx.setColor(0.8,0.6,0)
+                        gfx.print(planet[i].level_name, xstart+MiniFont:getWidth(planet[i].name..": "), ScreenHeight/3+round+ypadcollect)
+                    elseif planet[i].name == "Planet" then
+                        gfx.setColor(0.8,0.6,0)
+                        gfx.print(planet[i].level_name, xstart+MiniFont:getWidth(planet[i].name..": "), ScreenHeight/3+round+ypadcollect)
+                    end
+                    ypadcollect = ypadcollect + ypad
+                end
+                local scale = ScreenWidth/State.new_machine:getWidth()*0.2
+                gfx.setColor(1, 1, 1, 1)
+                gfx.scale(scale, scale)
+                gfx.draw(State.new_machine, xstart/scale, (ScreenHeight/3+round*2+ypadcollect)/scale)
+                gfx.pop()
+                gfx.push()
+                local scale = State.star_of_dawn_scale
+                gfx.scale(scale,scale)
+                for i=1, PLANET_AMOUNT do
+                    local planet = Save.planets[i]
+                    gfx.draw(State.star_of_dawn,
+                            Buttons[2][1].width/scale+planet.x*(ScreenWidth/scale-Buttons[2][1].width/scale-State.star_of_dawn:getWidth()),
+                            planet.y*(ScreenHeight/scale-State.star_of_dawn:getHeight()) )
+                end
+                gfx.pop()
+                gfx.push()
+                local scale = ScreenWidth/State.aim:getWidth()*0.05
+                gfx.scale(scale, scale)
+                gfx.draw(State.aim, Save.planets[PlanetChoice].x/scale, Save.planets[PlanetChoice].y/scale)
+                gfx.pop()
+            end
         elseif State.leaf == 3 then
             gfx.setColor(0.1,0.45,0.1)
             gfx.rectangle("fill", 0, 0, ScreenWidth, ScreenHeight)
