@@ -896,6 +896,8 @@ do
                         gfx.setColor(0.8,0.6,0)
                         gfx.print(planet[i].level_name, xstart+MiniFont:getWidth(planet[i].name..": "), ScreenHeight/3+round+ypadcollect)
                     elseif planet[i].name ~= "" then
+                        gfx.setColor(0, 0, 0, 1)
+                        gfx.print(planet[i].level_name, xstart+MiniFont:getWidth(planet[i].name..": ")+1, ScreenHeight/3+round+ypadcollect+1)
                         gfx.setColor(severity_colors[planet[i].level])
                         gfx.print(planet[i].level_name, xstart+MiniFont:getWidth(planet[i].name..": "), ScreenHeight/3+round+ypadcollect)
                     end
