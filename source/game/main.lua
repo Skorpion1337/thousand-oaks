@@ -24,7 +24,7 @@ planet_properties = {
     { name="Storm Activity", levels={"Calm", "Mild", "Variable", "Active", "Violent", "Furious", "Apocalyptic"} }
 }
 temperature_location = 4
---temperature decides terrain and vegetation type, subzero temperature = no vegetation and no biodiversity
+--temperature decides terrain&water and vegetation type, subzero temperature = no vegetation and no biodiversity
 --radiation decides biodiversity type
 severity_colors = {
     { 0.478, 0.545, 0.600, 1.0 }, -- None: Slate Gray (#7A8B99)
@@ -386,12 +386,6 @@ do
         end
     end
 
-    local function create_map()
-        MapGenerated = true
-        Loaded = true
-        continuegame()
-    end
-
     local function explode(inputstr, sep)
         sep=sep or '%s'
         local t={}
@@ -432,7 +426,7 @@ do
                 load_file(n)
                 MapGenerated = true
                 Loaded = True
-                change_page(6)
+                continuegame()
             end
         end
     end
@@ -580,6 +574,17 @@ do
 
     end
 
+    local function generate_map()
+        
+    end
+
+    local function start_game()
+        generate_map()
+        MapGenerated = true
+        Loaded = true
+        continuegame()
+    end
+
     local function calculate_planet_pos(i, x, y, scale)
         posx = (Buttons[2][1].width/scale+Save.planets[i].x*(ScreenWidth/scale-Buttons[2][1].width/scale-x))/ScreenWidth
         posy = (Save.planets[i].y*(ScreenHeight/scale-y))/ScreenHeight
@@ -618,7 +623,7 @@ do
         local startpaddingx, startpaddingy = translatexy(0.1,0.1)
         Buttons[2] = {
             {size=1, text="Generate Star Map", x = 0, y = startpaddingy, width = newbuttonwidth, height=newbuttonheight, call = generate_planets},
-            {size=1, text="Start Mining on Planet", x = 0, y = 1*newbuttonheight+1*paddingy+startpaddingy, width = newbuttonwidth, height=newbuttonheight, call = continuegame()},
+            {size=1, text="Start Mining on Planet", x = 0, y = 1*newbuttonheight+1*paddingy+startpaddingy, width = newbuttonwidth, height=newbuttonheight, call = start_game},
             {size=1, text="Back to Main", x = 0, y = 2*newbuttonheight+2*paddingy+startpaddingy, width = newbuttonwidth, height=newbuttonheight, call = backtomain},
         }
         Labels[2] ={}
