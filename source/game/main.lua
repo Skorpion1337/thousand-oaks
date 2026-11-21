@@ -23,6 +23,8 @@ planet_properties = {
     { name="Mineral Richness", levels={"Depleted", "Trace", "Lean", "Standard", "Rich", "Abundant", "Motherlode"} },
     { name="Storm Activity", levels={"Calm", "Mild", "Variable", "Active", "Violent", "Furious", "Apocalyptic"} }
 }
+--temperature decides terrain and vegetation type, subzero temperature = no vegetation and no biodiversity
+--radiation decides biodiversity type
 severity_colors = {
     { 0.478, 0.545, 0.600, 1.0 }, -- None: Slate Gray (#7A8B99)
     { 0.306, 0.659, 0.871, 1.0 }, -- Minimal: Sky Blue (#4EA8DE)
@@ -31,6 +33,15 @@ severity_colors = {
     { 0.957, 0.635, 0.380, 1.0 }, -- High: Amber Orange (#F4A261)
     { 0.906, 0.435, 0.318, 1.0 }, -- Extreme: Burnt Coral (#E76F51)
     { 0.839, 0.157, 0.157, 1.0 }, -- Critical: Crimson Red (#D62828)
+}
+temperature_colors= {
+    {0.0, 0.2, 1.0}, -- 1. Blue
+    {0.0, 0.7, 0.6}, -- 2. Teal
+    {0.1, 0.8, 0.2}, -- 3. Green
+    {0.6, 0.8, 0.0}, -- 4. Lime / Yellow-Green
+    {0.9, 0.5, 0.0}, -- 5. Amber / Orange
+    {1.0, 0.2, 0.0}, -- 6. Red-Orange
+    {1.0, 0.0, 0.0}  -- 7. Bright Red
 }
 
 DELIMITER = "+"
@@ -866,6 +877,9 @@ do
                     elseif planet[i].name == "Planet" then
                         gfx.setColor(0.8,0.6,0)
                         gfx.print(planet[i].level_name, xstart+MiniFont:getWidth(planet[i].name..": "), ScreenHeight/3+round+ypadcollect)
+                    elseif planet[i].name ~= "" then
+                        gfx.setColor(severity_colors[planet[i].level])
+                        gfx.print(planet[i].level_name, xstart+MiniFont:getWidth(planet[i].name..": "), ScreenHeight/3+round+ypadcollect)
                     end
                     ypadcollect = ypadcollect + ypad
                 end
@@ -879,6 +893,7 @@ do
                 gfx.scale(scale,scale)
                 for i=1, PLANET_AMOUNT do
                     local planet = Save.planets[i]
+                    gfx.setColor(temperature_colors[planet[4].level])
                     gfx.draw(State.star_of_dawn,
                             Buttons[2][1].width/scale+planet.x*(ScreenWidth/scale-Buttons[2][1].width/scale-State.star_of_dawn:getWidth()),
                             planet.y*(ScreenHeight/scale-State.star_of_dawn:getHeight()) )
@@ -887,7 +902,12 @@ do
                 gfx.push()
                 local scale = ScreenWidth/State.aim:getWidth()*0.05
                 gfx.scale(scale, scale)
-                gfx.draw(State.aim, Save.planets[PlanetChoice].x/scale, Save.planets[PlanetChoice].y/scale)
+                gfx.setColor(1, 1, 1)
+                local planet = Save.planets[PlanetChoice]
+                local offsetx, offsety = translatexy(0.0025,0.03)
+                gfx.draw(State.aim,
+                        Buttons[2][1].width/scale-offsetx/scale+planet.x*(ScreenWidth/scale-Buttons[2][1].width/scale-offsetx/scale-State.aim:getWidth()),
+                        planet.y*(ScreenHeight/scale-offsety/scale-State.aim:getHeight()) )
                 gfx.pop()
             end
         elseif State.leaf == 3 then
