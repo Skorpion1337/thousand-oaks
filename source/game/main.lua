@@ -23,6 +23,7 @@ planet_properties = {
     { name="Mineral Richness", levels={"Depleted", "Trace", "Lean", "Standard", "Rich", "Abundant", "Motherlode"} },
     { name="Storm Activity", levels={"Calm", "Mild", "Variable", "Active", "Violent", "Furious", "Apocalyptic"} }
 }
+temperature_location = 4
 --temperature decides terrain and vegetation type, subzero temperature = no vegetation and no biodiversity
 --radiation decides biodiversity type
 severity_colors = {
@@ -362,8 +363,6 @@ do
             end
             planet.x = math.random()
             planet.y = math.random()
-            ---planet.x = math.random(Buttons[2][1].width,ScreenWidth-State.star_of_dawn_scale*State.star_of_dawn:getWidth())
-            --planet.y = math.random(0, ScreenHeight-State.star_of_dawn_scale*State.star_of_dawn:getHeight())
             Save.planets[i] = planet
         end
         PlanetChoice = 1
@@ -581,6 +580,12 @@ do
 
     end
 
+    local function calculate_planet_pos(i, x, y, scale)
+        posx = (Buttons[2][1].width/scale+Save.planets[i].x*(ScreenWidth/scale-Buttons[2][1].width/scale-x))/ScreenWidth
+        posy = (Save.planets[i].y*(ScreenHeight/scale-y))/ScreenHeight
+        return posx, posy
+    end
+
     refresh_state = function()
         love.window.setMode(ScreenWidth, ScreenHeight, {resizable = false, borderless = true, y=ScreenY, x=ScreenX})
 
@@ -788,6 +793,19 @@ do
         State.helppadding = ScreenWidth*0.2*0.1
     end
 
+    function love.mousepressed(x, y, button, istouch, presses)
+        if State.leaf == 2 then
+            for i=1, #Save.planets do
+                xpos, ypos = calculate_planet_pos(i, State.star_of_dawn:getWidth(), State.star_of_dawn:getHeight(), State.star_of_dawn_scale)
+                xpos, ypos = xpos*State.star_of_dawn_scale, ypos*State.star_of_dawn_scale
+                if x > xpos*ScreenWidth and x < xpos*ScreenWidth+State.star_of_dawn_scale*State.star_of_dawn:getWidth() and y > ypos*ScreenHeight and y < ypos*ScreenHeight+State.star_of_dawn_scale*State.star_of_dawn:getHeight() then
+                    PlanetChoice = i
+                    break
+                end
+            end
+        end
+    end
+
     function love.mousereleased(x, y, button, istouch, presses)
         if button == 1 and State.hoover > 0 then
             if State.leaf == 3 or State.leaf == 4 then
@@ -893,10 +911,9 @@ do
                 gfx.scale(scale,scale)
                 for i=1, PLANET_AMOUNT do
                     local planet = Save.planets[i]
-                    gfx.setColor(temperature_colors[planet[4].level])
-                    gfx.draw(State.star_of_dawn,
-                            Buttons[2][1].width/scale+planet.x*(ScreenWidth/scale-Buttons[2][1].width/scale-State.star_of_dawn:getWidth()),
-                            planet.y*(ScreenHeight/scale-State.star_of_dawn:getHeight()) )
+                    local x, y = calculate_planet_pos(i, State.star_of_dawn:getWidth(), State.star_of_dawn:getHeight(), scale)
+                    gfx.setColor(temperature_colors[planet[temperature_location].level])
+                    gfx.draw(State.star_of_dawn, x*ScreenWidth, y*ScreenHeight)
                 end
                 gfx.pop()
                 gfx.push()
