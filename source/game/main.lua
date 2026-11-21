@@ -896,10 +896,12 @@ do
                         gfx.setColor(0.8,0.6,0)
                         gfx.print(planet[i].level_name, xstart+MiniFont:getWidth(planet[i].name..": "), ScreenHeight/3+round+ypadcollect)
                     elseif planet[i].name ~= "" then
+                        local shade, _ = translatexy(0.0005, 0)
                         gfx.setColor(0, 0, 0, 1)
-                        gfx.print(planet[i].level_name, xstart+MiniFont:getWidth(planet[i].name..": ")+1, ScreenHeight/3+round+ypadcollect+1)
+                        local textsize = MiniFont:getWidth(planet[i].name..": ")
+                        gfx.print(planet[i].level_name, xstart+textsize+shade, ScreenHeight/3+round+ypadcollect+shade)
                         gfx.setColor(severity_colors[planet[i].level])
-                        gfx.print(planet[i].level_name, xstart+MiniFont:getWidth(planet[i].name..": "), ScreenHeight/3+round+ypadcollect)
+                        gfx.print(planet[i].level_name, xstart+textsize, ScreenHeight/3+round+ypadcollect)
                     end
                     ypadcollect = ypadcollect + ypad
                 end
