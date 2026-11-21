@@ -10,7 +10,7 @@ BANNERH = 0.045
 NORMAL_SIZE_AT_PX = 1689.6
 
 PLANET_AMOUNT = 20
-attributes = {
+planet_properties = {
     { name="Solar System", levels={} },
     { name="Planet", levels={} },
     { name="", levels={} },
@@ -47,7 +47,7 @@ SAVENAMEFILE = "savenames"
 OPTIONSFILE = "options"
 SAVEFILEAMOUNT = 11
 
-HELP_TEXT = 'REPORTING BUGS\n\n\nPlease report bugs at\n1. Github issues at https://github.com/Skorpion1337/thousand-oaks/issues\n2. Shoutbox at https://tinyurl.com/1000oakz\n\n\nSOMETHING ABOUT CLUTTER\n\n\nLook at folder %APPDATA%/LOVE to save some space! This folder is \nfor starting directly from code.\n \n\nAnd look at folder %APPDATA%/gamename or simply %APPDATA%/game. This folder is \nfor starting from the compiled executable.\n\n\nIn Linux look for these\n$XDG_DATA_HOME/love/ or ~/.local/share/love/\nlove may be replaced by game name or simply "game"\n\n\nIf you corrupt your settings and the game looks wonky, try deleting\nthe "options" file so it is regenerated to its default values.\n\n\nAND NOW FOR LICENSES\n\n\nAdditional licenses not mentioned in the license file in the game folder \nand folder love in the source distribution\n\n\nThis game\nby Skorpion1337\ntinyurl.com/1000oakz\nGPLv3\nhttps://www.gnu.org/licenses/gpl-3.0.html\n\n\n----Libraries----\n\n\nlume\nA collection of functions for Lua, geared towards game development.\nUsing it for serializing data before compression.\nhttps://github.com/rxi/lume\nMIT \n--\n-- lume\n--\n-- Copyright (c) 2020 rxi\n--\n-- Permission is hereby granted, free of charge, to any person obtaining a copy of\n-- this software and associated documentation files (the "Software"), to deal in\n-- the Software without restriction, including without limitation the rights to\n-- use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\n-- of the Software, and to permit persons to whom the Software is furnished to do\n-- so, subject to the following conditions:\n--\n-- The above copyright notice and this permission notice shall be included in all\n-- copies or substantial portions of the Software.\n--\n-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n-- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n-- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n-- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n-- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n-- SOFTWARE.\n--\n\n\n----Graphics----\n\n\nBackground love potion - graphics/potion.jpg\nhttps://en.wikipedia.org/wiki/File:Filtre_d%27Amour.jpg\nFrom user https://commons.wikimedia.org/wiki/User:Arnaud_25 - Arnaud_25\nCreative Commons Attribution-Share Alike 4.0 International\nhttps://creativecommons.org/licenses/by-sa/4.0/deed.en'
+HELP_TEXT = 'REPORTING BUGS\n\n\nPlease report bugs at\n1. Github issues at https://github.com/Skorpion1337/thousand-oaks/issues\n2. Shoutbox at https://tinyurl.com/1000oakz\n\n\nSOMETHING ABOUT CLUTTER\n\n\nLook at folder %APPDATA%/LOVE to save some space! This folder is \nfor starting directly from code.\n \n\nAnd look at folder %APPDATA%/gamename or simply %APPDATA%/game. This folder is \nfor starting from the compiled executable.\n\n\nIn Linux look for these\n$XDG_DATA_HOME/love/ or ~/.local/share/love/\nlove may be replaced by game name or simply "game"\n\n\nIf you corrupt your settings and the game looks wonky, try deleting\nthe "options" file so it is regenerated to its default values.\n\n\nAND NOW FOR LICENSES\n\n\nAdditional licenses not mentioned in the license file in the game folder \nand folder love in the source distribution\n\n\nThis game\nby Skorpion1337\ntinyurl.com/1000oakz\nGPLv3\nhttps://www.gnu.org/licenses/gpl-3.0.html\n\n\n----Libraries----\n\n\nlume\nA collection of functions for Lua, geared towards game development.\nUsing it for serializing data before compression.\nhttps://github.com/rxi/lume\nMIT \n--\n-- lume\n--\n-- Copyright (c) 2020 rxi\n--\n-- Permission is hereby granted, free of charge, to any person obtaining a copy of\n-- this software and associated documentation files (the "Software"), to deal in\n-- the Software without restriction, including without limitation the rights to\n-- use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\n-- of the Software, and to permit persons to whom the Software is furnished to do\n-- so, subject to the following conditions:\n--\n-- The above copyright notice and this permission notice shall be included in all\n-- copies or substantial portions of the Software.\n--\n-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n-- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n-- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n-- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n-- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n-- SOFTWARE.\n--\n\n\n----Graphics----\n\n\nBackground love potion - graphics/potion.jpg\nhttps://en.wikipedia.org/wiki/File:Filtre_d%27Amour.jpg\nFrom user https://commons.wikimedia.org/wiki/User:Arnaud_25 - Arnaud_25\nCreative Commons Attribution-Share Alike 4.0 International\nhttps://creativecommons.org/licenses/by-sa/4.0/deed.en\n\n\nMachine image in New Game - graphics/new_machine.png\nhttps://opengameart.org/content/the-great-machine\nFrom user https://opengameart.org/users/buch - Buch\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/deed.en'
 
 do
     local love = require("love")
@@ -330,10 +330,29 @@ do
     end
 
     local function generate_planets()
-        local planets = {}
+        Save.planets = {}
         for i=1,PLANET_AMOUNT do
-
+            local planet = {}
+            for j=1,#planet_properties do
+                planet[j] = {}
+                planet[j].name = planet_properties[j].name
+                if planet_properties[j].name == "Solar System" then
+                    planet[j].level_name = StarGen.generateSystemName()
+                elseif planet_properties[j].name == "Planet" then
+                    planet[j].level_name = PlanetGen.generateName()
+                elseif planet_properties[j].name == "" then
+                    planet[j].level_name = ""
+                else
+                    local severity_level = math.random(#planet_properties[j].levels)
+                    planet[j].level_name=planet_properties[j].levels[severity_level]
+                    planet[j].level = severity_level
+                end
+            end
+            planet.x = math.random(Buttons[2][1].width,ScreenWidth)
+            planet.y = math.random(0, ScreenHeight)
+            Save.planets[i] = planet
         end
+        PlanetChoice = 1
     end
 
     local function newgame()
@@ -580,7 +599,7 @@ do
         local paddingx, paddingy = translatexy(0.01,0.01)
         local startpaddingx, startpaddingy = translatexy(0.1,0.1)
         Buttons[2] = {
-            {size=1, text="Generate Star Map", x = 0, y = startpaddingy, width = newbuttonwidth, height=newbuttonheight, call = generate_map},
+            {size=1, text="Generate Star Map", x = 0, y = startpaddingy, width = newbuttonwidth, height=newbuttonheight, call = generate_planets},
             {size=1, text="Start Mining on Planet", x = 0, y = 1*newbuttonheight+1*paddingy+startpaddingy, width = newbuttonwidth, height=newbuttonheight, call = continuegame()},
             {size=1, text="Back to Main", x = 0, y = 2*newbuttonheight+2*paddingy+startpaddingy, width = newbuttonwidth, height=newbuttonheight, call = backtomain},
         }
@@ -730,7 +749,8 @@ do
     end
 
     function love.load()
-        State = { leaf = 1, old_leaf = 1, dialog_type = nil, dialog_param=nil, hoover = 0, logo = gfx.newImage("graphics/logo.png"), logo2 = gfx.newImage("graphics/logo2.png"), button_bg = nil, button_bg_quad = nil, button_bg_hover = nil, bg_tile = gfx.newImage("graphics/bg_tile.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), red_crystal = gfx.newImage("graphics/crystal.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = 0, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, lovepotion=gfx.newImage("graphics/potion.jpg"), sulphur_mining = gfx.newImage("graphics/sulphur_mining_PD.jpg"), horsehead_nebula = gfx.newImage("graphics/horsehead_PD.jpg"), mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10, dialog_width = 0, dialog_height = 0, window_dragging = false}
+        Save = {}
+        State = { leaf = 1, old_leaf = 1, dialog_type = nil, dialog_param=nil, hoover = 0, logo = gfx.newImage("graphics/logo.png"), logo2 = gfx.newImage("graphics/logo2.png"), button_bg = nil, button_bg_quad = nil, button_bg_hover = nil, bg_tile = gfx.newImage("graphics/bg_tile.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), red_crystal = gfx.newImage("graphics/crystal.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = 0, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, lovepotion=gfx.newImage("graphics/potion.jpg"), sulphur_mining = gfx.newImage("graphics/sulphur_mining_PD.jpg"), horsehead_nebula = gfx.newImage("graphics/horsehead_PD.jpg"), new_machine = gfx.newImage("graphics/new_machine.png"), mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10, dialog_width = 0, dialog_height = 0, window_dragging = false}
 
         local gradientData = love.image.newImageData(2, 1, 'rgba8', '\200\200\200' .. '\255' .. '\050\050\050' .. '\255')
         State.button_bg = gfx.newImage(gradientData)
@@ -797,7 +817,7 @@ do
             end
             gfx.pop()
 
-            local iconsize, _ = translatexy(0.002, 0)
+            local iconsize = ScreenWidth/State.mainmenubgs[1]:getWidth()*0.033
             gfx.push()
             gfx.scale(iconsize, iconsize)
             for i=1,State.mainmenubgsamount do
@@ -825,8 +845,18 @@ do
             local round, _ = translatexy(0.01,0)
             gfx.rectangle("fill", 0, ScreenHeight/3, Buttons[2][1].width, ScreenHeight-ScreenHeight/3-SmallFont:getHeight("text"), round, round)
             gfx.setFont(MiniFont)
-            gfx.setColor(0.8,0,0)
-            gfx.print("Solar System: Xylar-42\nPlanet: TRAPPIST-91e\n\nTemperature: Critical\nWater: Low\n", round, ScreenHeight/3+round)
+            local planet = Save.planets[PlanetChoice]
+            local xstart, ypad = translatexy(0.015, 0.03)
+            local ypadcollect = 0
+            for i = 1, #planet do
+                gfx.setColor(0.8,0,0)
+                gfx.print(planet[i].name..":", xstart, ScreenHeight/3+round+ypadcollect)
+                ypadcollect = ypadcollect + ypad
+            end
+            local scale = ScreenWidth/State.new_machine:getWidth()*0.2
+            gfx.setColor(1, 1, 1, 1)
+            gfx.scale(scale, scale)
+            gfx.draw(State.new_machine, xstart/scale, (ScreenHeight/3+round*2+ypadcollect)/scale)
             gfx.pop()
         elseif State.leaf == 3 then
             gfx.setColor(0.1,0.45,0.1)
@@ -870,7 +900,8 @@ do
             gfx.setColor(0.72,0.59,0.33,1)
             gfx.rectangle("fill", ScreenWidth/2-State.dialog_width/2, ScreenHeight/2-State.dialog_height/2, State.dialog_width, State.dialog_height)
             gfx.setColor(1,1,1,1)
-            local iconsize, pos = translatexy(0.001, 0.1)
+            local _, pos = translatexy(0, 0.1)
+            local iconsize = ScreenWidth/State.red_crystal:getWidth()*0.03
             gfx.scale(iconsize, iconsize)
             gfx.draw(State.red_crystal, (ScreenWidth/2-State.dialog_width/2.2)/iconsize, (ScreenHeight/2-State.dialog_height/2+pos)/iconsize)
             gfx.pop()
