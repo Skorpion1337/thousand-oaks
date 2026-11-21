@@ -795,7 +795,7 @@ do
 
     function love.mousepressed(x, y, button, istouch, presses)
         if State.leaf == 2 then
-            for i=1, #Save.planets do
+            for i=#Save.planets, 1, -1 do
                 xpos, ypos = calculate_planet_pos(i, State.star_of_dawn:getWidth(), State.star_of_dawn:getHeight(), State.star_of_dawn_scale)
                 xpos, ypos = xpos*State.star_of_dawn_scale, ypos*State.star_of_dawn_scale
                 if x > xpos*ScreenWidth and x < xpos*ScreenWidth+State.star_of_dawn_scale*State.star_of_dawn:getWidth() and y > ypos*ScreenHeight and y < ypos*ScreenHeight+State.star_of_dawn_scale*State.star_of_dawn:getHeight() then
