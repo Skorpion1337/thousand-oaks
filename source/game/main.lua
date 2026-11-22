@@ -1,4 +1,5 @@
-GAMENAME = "Thousand Oaks: The Mining Empire"
+Save = {}
+Save.gamename = "Thousand Oaks: The Mining Empire"
 
 MINIMUM_SCREEN_SCALE = 25
 SCREENRATIO = 16/9
@@ -39,6 +40,13 @@ water_location=1
 for i=1, #planet_properties do
     if planet_properties[i].name == "Water" then
         water_location=i
+        break
+    end
+end
+planet_name_location=1
+for i=1, #planet_properties do
+    if planet_properties[i].name == "Planet" then
+        planet_name_location=i
         break
     end
 end
@@ -385,7 +393,7 @@ local function generate_planets()
         planet.y = math.random()
         Save.planets[i] = planet
     end
-    PlanetChoice = 1
+    Save.PlanetChoice = 1
     PlanetsGenerated = true
 end
 
@@ -446,7 +454,7 @@ local function load_n(n)
         if pressedbutton == 1 then
             load_file(n)
             MapGenerated = true
-            Loaded = True
+            Loaded = true
             continuegame()
         end
     end
@@ -596,10 +604,12 @@ local function menu_change_window_y()
 end
 
 local function calculate_properties_ratio(prop_loc)
-   return (Save.planets[PlanetChoice][prop_loc].level-1)/(stat_max-1)
+   return (Save.planets[Save.PlanetChoice][prop_loc].level-1)/(stat_max-1)
 end
 
 local function generate_map()
+    Save.gamename = Save.planets[Save.PlanetChoice][planet_name_location].level_name
+
     local y_slice={}
     Save.map={}
     for x=1, MAP_SIZE do
@@ -630,7 +640,7 @@ end
 refresh_state = function()
     love.window.setMode(ScreenWidth, ScreenHeight, {resizable = false, borderless = true, y=ScreenY, x=ScreenX})
 
-    love.window.setTitle(GAMENAME)
+    love.window.setTitle(Save.gamename)
     love.window.setVSync(2)
     love.keyboard.setKeyRepeat(true)
     love.window.setIcon(love.image.newImageData("graphics/large_purple.png"))
@@ -809,7 +819,6 @@ function love.mousemoved(x, y, dx, dy, istouch )
 end
 
 function love.load()
-    Save = {}
     Save.planets = {}
     State = { leaf = 1, old_leaf = 1, dialog_type = nil, dialog_param=nil, hoover = 0, mapx = 1, mapy = 1,logo = gfx.newImage("graphics/logo.png"), logo2 = gfx.newImage("graphics/logo2.png"), button_bg = nil, button_bg_quad = nil, button_bg_hover = nil, bg_tile = gfx.newImage("graphics/bg_tile.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), red_crystal = gfx.newImage("graphics/crystal.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = 0, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, lovepotion=gfx.newImage("graphics/potion.jpg"), sulphur_mining = gfx.newImage("graphics/sulphur_mining_PD.jpg"), horsehead_nebula = gfx.newImage("graphics/horsehead_PD.jpg"), new_machine = gfx.newImage("graphics/new_machine.png"), star_of_dawn = gfx.newImage("graphics/star_of_dawn.png"), star_of_dawn_scale = 0, aim = gfx.newImage("graphics/aim.png"), mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10, dialog_width = 0, dialog_height = 0}
 
@@ -846,7 +855,7 @@ function love.mousepressed(x, y, button, istouch, presses)
             xpos, ypos = calculate_planet_pos(i, State.star_of_dawn:getWidth(), State.star_of_dawn:getHeight(), State.star_of_dawn_scale)
             xpos, ypos = xpos*State.star_of_dawn_scale, ypos*State.star_of_dawn_scale
             if x > xpos*ScreenWidth and x < xpos*ScreenWidth+State.star_of_dawn_scale*State.star_of_dawn:getWidth() and y > ypos*ScreenHeight and y < ypos*ScreenHeight+State.star_of_dawn_scale*State.star_of_dawn:getHeight() then
-                PlanetChoice = i
+                Save.PlanetChoice = i
                 break
             end
         end
@@ -928,7 +937,7 @@ function love.draw()
         gfx.pop()
         if #Save.planets ~= 0 then
             gfx.push()
-            local planet = Save.planets[PlanetChoice]
+            local planet = Save.planets[Save.PlanetChoice]
             local xstart, ypad = translatexy(0.015, 0.03)
             local ypadcollect = 0
             for i = 1, #planet do
@@ -971,7 +980,7 @@ function love.draw()
             local scale = ScreenWidth/State.aim:getWidth()*0.05
             gfx.scale(scale, scale)
             gfx.setColor(1, 1, 1)
-            local planet = Save.planets[PlanetChoice]
+            local planet = Save.planets[Save.PlanetChoice]
             local offsetx, offsety = translatexy(0.0025,0.03)
             gfx.draw(State.aim,
                     Buttons[2][1].width/scale-offsetx/scale+planet.x*(ScreenWidth/scale-Buttons[2][1].width/scale-offsetx/scale-State.aim:getWidth()),
@@ -1014,10 +1023,10 @@ function love.draw()
         gfx.print(State.help_text, Buttons[State.leaf][2].x-beyondbuttonw+State.helppadding, Buttons[State.leaf][2].y+Buttons[State.leaf][2].height+State.helppadding/3)
     elseif State.leaf == 6 then
         gfx.push()
-        for x=State.mapx,ScreenWidth/(TILERATIO*ScreenWidth)+1 do
-            for y=State.mapy,ScreenHeight/(TILERATIO*ScreenWidth)+1 do
+        for x=State.mapx,State.mapx+ScreenWidth/(TILERATIO*ScreenWidth)+1 do
+            for y=State.mapy,State.mapy+ScreenHeight/(TILERATIO*ScreenWidth)+1 do
                 gfx.push()
-                local tile = Tiles[Save.map[x][y]][Save.planets[PlanetChoice][temperature_location].level]
+                local tile = Tiles[Save.map[x][y]][Save.planets[Save.PlanetChoice][temperature_location].level]
                 local scale = ScreenWidth/tile:getWidth()*TILERATIO
                 gfx.scale(scale, scale)
                 gfx.draw(tile, (x-1)*ScreenWidth*TILERATIO/scale, (y-1)*ScreenWidth*TILERATIO/scale)
@@ -1103,7 +1112,7 @@ function love.draw()
     gfx.pop()
     gfx.setColor(1,1,1)
     for _ =1, SMALLFONTDRAWS do
-        gfx.print(GAMENAME, ScreenWidth/2.0 - SmallFont:getWidth(GAMENAME)/2.0, theheight/2.0-SmallFont:getHeight(GAMENAME)/2.0)
+        gfx.print(Save.gamename, ScreenWidth/2.0 - SmallFont:getWidth(Save.gamename)/2.0, theheight/2.0-SmallFont:getHeight(Save.gamename)/2.0)
     end
 
     print_to_debug(ScreenWidth.."x"..ScreenHeight..", vsync="..love.window.getVSync()..", fps="..love.timer.getFPS()..", mem="..string.format("%.3f", collectgarbage("count")/1000.0).."MB, check="..check)
