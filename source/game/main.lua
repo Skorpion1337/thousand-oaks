@@ -91,9 +91,9 @@ HELP_TEXT = 'REPORTING BUGS\n\n\nPlease report bugs at\n1. Github issues at http
 check1 = ""
 check2 = ""
 check3 = ""
-PlanetsGenerated = false
-Loaded = false
-MapGenerated = false
+Save.PlanetsGenerated = false
+Save.Loaded = false
+Save.MapGenerated = false
 
 local love = require("love")
 local lume = require("lib.lume")
@@ -270,9 +270,11 @@ local function save_game()
 end
 
 local function save_file(i)
-    local pressedbutton = love.window.showMessageBox("Want to save slot "..i.."?", "Old data will be lost.", {"OK", "No!", enterbutton = 2}, "warning", true)
-    if pressedbutton == 1 then
-        show_dialog("save", {number=i})
+    if Save.PlanetsGenerated == true then
+        local pressedbutton = love.window.showMessageBox("Want to save slot "..i.."?", "Old data will be lost.", {"OK", "No!", enterbutton = 2}, "warning", true)
+        if pressedbutton == 1 then
+            show_dialog("save", {number=i})
+        end
     end
 end
 
@@ -396,7 +398,7 @@ local function generate_planets()
         Save.planets[i] = planet
     end
     Save.PlanetChoice = 1
-    PlanetsGenerated = true
+    Save.PlanetsGenerated = true
 end
 
 local function newgame()
@@ -412,7 +414,7 @@ local function loadgame()
 end
 
 local function continuegame()
-    if Loaded == true then
+    if Save.Loaded == true then
         change_page(6)
     end
 end
@@ -455,9 +457,13 @@ local function load_n(n)
         local pressedbutton = love.window.showMessageBox("Lose all data when loading", "Loading a game formats the current memory. Want to continue?", {"OK", "No!", enterbutton = 2}, "warning", true)
         if pressedbutton == 1 then
             load_file(n)
-            MapGenerated = true
-            Loaded = true
-            continuegame()
+            if Save.map ~= nil then
+                Save.MapGenerated = true
+                Save.Loaded = true
+                continuegame()
+            else
+                change_page(2)
+            end
         end
     end
 end
@@ -625,10 +631,10 @@ local function generate_map()
 end
 
 local function start_game()
-    if PlanetsGenerated == true then
+    if Save.PlanetsGenerated == true then
         generate_map()
-        MapGenerated = true
-        Loaded = true
+        Save.MapGenerated = true
+        Save.Loaded = true
         continuegame()
     end
 end
