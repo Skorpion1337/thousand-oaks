@@ -88,3 +88,21 @@ https://opengameart.org/content/the-great-machine
 From user https://opengameart.org/users/buch - Buch
 CC-BY 3.0
 https://creativecommons.org/licenses/by/3.0/deed.en
+
+
+Frozen Lake winter terrain and water tiles - eg. graphics/terrain/1
+Some of them have been touched to with different temperature states
+https://opengameart.org/content/frozen-lake-lpc
+From user https://opengameart.org/users/zapaper - Peter
+Credits to http://www.buko-studios.com/ Commissioned by PlayCraft: www.playcraftapp.com
+CC-BY 3.0
+https://creativecommons.org/licenses/by/3.0/deed.en
+
+
+16x16 Overworld Tiles used to create volcano - terrain/volcano.png
+And also mountain - terrain/mountain.png
+And also forest tiles - eg. graphics/terrain/1
+https://opengameart.org/content/16x16-overworld-tiles
+From user https://opengameart.org/users/sharm - Lanea Zimmerman
+CC-BY 4.0
+https://creativecommons.org/licenses/by/4.0/deed.en
