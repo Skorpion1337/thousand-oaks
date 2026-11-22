@@ -1,0 +1,2 @@
+Use W, S, A, D to move around in the map.
+
