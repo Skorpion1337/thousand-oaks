@@ -14,7 +14,7 @@ planet_properties = {
     { name="Solar System", levels={} },
     { name="Planet", levels={} },
     { name="", levels={} },
-    { name="Temperature", levels={"Subzero", "Freezing", "Cold", "Temperate", "Warm", "Hot", "Infernal"} },
+    { name="Temperature", levels={"Glacial", "Freezing", "Cold", "Temperate", "Warm", "Hot", "Infernal"} },
     { name="Water", levels={"Barren", "Dry", "Damp", "Wet", "Swampy", "Waterlogged", "Flooded"} },
     { name="Radiation", levels={"Zero", "Negligible", "Ambient", "Moderate", "Toxic", "Hazardous", "Lethal"} },
     { name="Volcanism", levels={"Dormant", "Cool", "Stable", "Active", "Unstable", "Magmatic", "Apocalyptic"} },
@@ -24,7 +24,7 @@ planet_properties = {
     { name="Storm Activity", levels={"Calm", "Mild", "Variable", "Active", "Violent", "Furious", "Apocalyptic"} }
 }
 temperature_location = 4
---temperature decides terrain&water and vegetation type, subzero temperature = no vegetation and no biodiversity
+--temperature decides terrain&water and vegetation type
 --radiation decides biodiversity type
 severity_colors = {
     { 0.478, 0.545, 0.600, 1.0 }, -- None: Slate Gray (#7A8B99)
@@ -575,7 +575,7 @@ do
     end
 
     local function generate_map()
-        
+
     end
 
     local function start_game()
