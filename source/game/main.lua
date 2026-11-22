@@ -10,6 +10,10 @@ BIGFONT = 0.02
 BANNERH = 0.045
 NORMAL_SIZE_AT_PX = 1689.6
 
+MAX_WATER = 0.95
+
+MAP_SIZE = 1000
+
 PLANET_AMOUNT = 20
 planet_properties = {
     { name="Solar System", levels={} },
@@ -77,15 +81,15 @@ SAVEFILEAMOUNT = 11
 HELP_TEXT = 'REPORTING BUGS\n\n\nPlease report bugs at\n1. Github issues at https://github.com/Skorpion1337/thousand-oaks/issues\n2. Shoutbox at https://tinyurl.com/1000oakz\n\n\nSOMETHING ABOUT CLUTTER\n\n\nLook at folder %APPDATA%/LOVE to save some space! This folder is \nfor starting directly from code.\n \n\nAnd look at folder %APPDATA%/gamename or simply %APPDATA%/game. This folder is \nfor starting from the compiled executable.\n\n\nIn Linux look for these\n$XDG_DATA_HOME/love/ or ~/.local/share/love/\nlove may be replaced by game name or simply "game"\n\n\nIf you corrupt your settings and the game looks wonky, try deleting\nthe "options" file so it is regenerated to its default values.\n\n\nAND NOW FOR LICENSES\n\n\nAdditional licenses not mentioned in the license file in the game folder \nand folder love in the source distribution\n\n\nThis game\nby Skorpion1337\ntinyurl.com/1000oakz\nGPLv3\nhttps://www.gnu.org/licenses/gpl-3.0.html\n\n\n----Libraries----\n\n\nlume\nA collection of functions for Lua, geared towards game development.\nUsing it for serializing data before compression.\nhttps://github.com/rxi/lume\nMIT \n--\n-- lume\n--\n-- Copyright (c) 2020 rxi\n--\n-- Permission is hereby granted, free of charge, to any person obtaining a copy of\n-- this software and associated documentation files (the "Software"), to deal in\n-- the Software without restriction, including without limitation the rights to\n-- use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\n-- of the Software, and to permit persons to whom the Software is furnished to do\n-- so, subject to the following conditions:\n--\n-- The above copyright notice and this permission notice shall be included in all\n-- copies or substantial portions of the Software.\n--\n-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n-- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n-- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n-- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n-- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n-- SOFTWARE.\n--\n\n\n----Graphics----\n\n\nBackground love potion - graphics/potion.jpg\nhttps://en.wikipedia.org/wiki/File:Filtre_d%27Amour.jpg\nFrom user https://commons.wikimedia.org/wiki/User:Arnaud_25 - Arnaud_25\nCreative Commons Attribution-Share Alike 4.0 International\nhttps://creativecommons.org/licenses/by-sa/4.0/deed.en\n\n\nFrozen Lake winter terrain and water tiles - eg. graphics/terrain/1\nSome of them have been touched to fit different temperature states\nhttps://opengameart.org/content/frozen-lake-lpc\nFrom user https://opengameart.org/users/zapaper - Peter\nCredits to http://www.buko-studios.com/ Commissioned by PlayCraft: www.playcraftapp.com\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/deed.en\n\n\n16x16 Overworld Tiles used to create volcano - graphics/terrain/volcano.png\nAnd also mountain - terrain/mountain.png\nAnd also forest tiles - eg. graphics/terrain/1\nhttps://opengameart.org/content/16x16-overworld-tiles\nFrom user https://opengameart.org/users/sharm - Lanea Zimmerman\nCC-BY 4.0\nhttps://creativecommons.org/licenses/by/4.0/deed.en\n\n\nWhispers of Avalon: Desert Tileset  - eg. graphics/terrain/6\nAlso touched to create more desert tiles\nhttps://opengameart.org/content/whispers-of-avalon-desert-tileset\nFrom user https://opengameart.org/users/leonard-pabin - Leonard pabin, Ali-G\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/deed.en\n\n\nWhispers of Avalon: Grassland Tileset - graphics/terrain/5/ground1.png\nhttps://opengameart.org/content/whispers-of-avalon-grassland-tileset\nFrom user https://opengameart.org/users/leonard-pabin - Leonard pabin\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/deed.en\n\n\n17 Grass Tiles - graphics/terrain/ various\nhttps://opengameart.org/content/17-grass-tiles\nFrom user https://opengameart.org/users/hawkadium - Hawkadium\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/deed.en\n\n\n32x32 (and 16x16) RPG Tiles--Forest and some Interior Tiles - graphics/ various forests\nhttps://opengameart.org/content/32x32-and-16x16-rpg-tiles-forest-and-some-interior-tiles\nStephen Challener and the Open Surge team ( http://opensnc.sourceforge.net),\nhosted by OpenGameArt.org\nhttps://opengameart.org/users/redshrike\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/deed.en'
 
 check = ""
+PlanetsGenerated = false
+Loaded = false
+MapGenerated = false
 
 local love = require("love")
 local lume = require("lib.lume")
 local utf8 = require("utf8")
 
 local gfx = love.graphics
-
-Loaded = false
-MapGenerated = false
 
 local randomgen = love.math.newRandomGenerator()
 randomgen:setSeed(os.time())
@@ -382,6 +386,7 @@ local function generate_planets()
         Save.planets[i] = planet
     end
     PlanetChoice = 1
+    PlanetsGenerated = true
 end
 
 local function newgame()
@@ -595,14 +600,25 @@ local function calculate_properties_ratio(prop_loc)
 end
 
 local function generate_map()
+    local y_slice={}
+    Save.map={}
+    for x=1, MAP_SIZE do
+        Save.map[x] = {}
+        for y=1, MAP_SIZE do
+            Save.map[x][y] = math.random(2)
+        end
+    end
+
     local water_ratio = calculate_properties_ratio(water_location)
 end
 
 local function start_game()
-    generate_map()
-    MapGenerated = true
-    Loaded = true
-    continuegame()
+    if PlanetsGenerated == true then
+        generate_map()
+        MapGenerated = true
+        Loaded = true
+        continuegame()
+    end
 end
 
 local function calculate_planet_pos(i, x, y, scale)
@@ -795,7 +811,7 @@ end
 function love.load()
     Save = {}
     Save.planets = {}
-    State = { leaf = 1, old_leaf = 1, dialog_type = nil, dialog_param=nil, hoover = 0, logo = gfx.newImage("graphics/logo.png"), logo2 = gfx.newImage("graphics/logo2.png"), button_bg = nil, button_bg_quad = nil, button_bg_hover = nil, bg_tile = gfx.newImage("graphics/bg_tile.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), red_crystal = gfx.newImage("graphics/crystal.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = 0, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, lovepotion=gfx.newImage("graphics/potion.jpg"), sulphur_mining = gfx.newImage("graphics/sulphur_mining_PD.jpg"), horsehead_nebula = gfx.newImage("graphics/horsehead_PD.jpg"), new_machine = gfx.newImage("graphics/new_machine.png"), star_of_dawn = gfx.newImage("graphics/star_of_dawn.png"), star_of_dawn_scale = 0, aim = gfx.newImage("graphics/aim.png"), mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10, dialog_width = 0, dialog_height = 0}
+    State = { leaf = 1, old_leaf = 1, dialog_type = nil, dialog_param=nil, hoover = 0, mapx = 1, mapy = 1,logo = gfx.newImage("graphics/logo.png"), logo2 = gfx.newImage("graphics/logo2.png"), button_bg = nil, button_bg_quad = nil, button_bg_hover = nil, bg_tile = gfx.newImage("graphics/bg_tile.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), red_crystal = gfx.newImage("graphics/crystal.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = 0, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, lovepotion=gfx.newImage("graphics/potion.jpg"), sulphur_mining = gfx.newImage("graphics/sulphur_mining_PD.jpg"), horsehead_nebula = gfx.newImage("graphics/horsehead_PD.jpg"), new_machine = gfx.newImage("graphics/new_machine.png"), star_of_dawn = gfx.newImage("graphics/star_of_dawn.png"), star_of_dawn_scale = 0, aim = gfx.newImage("graphics/aim.png"), mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10, dialog_width = 0, dialog_height = 0}
 
     local gradientData = love.image.newImageData(2, 1, 'rgba8', '\200\200\200' .. '\255' .. '\050\050\050' .. '\255')
     State.button_bg = gfx.newImage(gradientData)
@@ -807,9 +823,15 @@ function love.load()
 
     State.button_bg_quad = gfx.newQuad(0.5, 0, 1, 1, 2, 1)
 
-    Tiles={
-        {i = 1, name="", file = gfx.newImage("graphics/logo.png"), obstacle = false},
-    }
+    Tiles = {}
+    Tiles[1]={i = 1, name="ground1", obstacle = false}
+    for i = 1, stat_max do
+        Tiles[1][i] = gfx.newImage("graphics/terrain/"..i.."/ground1.png")
+    end
+    Tiles[2]={i = 2, name="ground2", obstacle = false}
+    for i = 1, stat_max do
+        Tiles[2][i] = gfx.newImage("graphics/terrain/"..i.."/ground2.png")
+    end
 
     Hooveredx, Hooveredy = 0, 0
 
@@ -992,6 +1014,16 @@ function love.draw()
         gfx.print(State.help_text, Buttons[State.leaf][2].x-beyondbuttonw+State.helppadding, Buttons[State.leaf][2].y+Buttons[State.leaf][2].height+State.helppadding/3)
     elseif State.leaf == 6 then
         gfx.push()
+        for x=State.mapx,ScreenWidth/(TILERATIO*ScreenWidth)+1 do
+            for y=State.mapy,ScreenHeight/(TILERATIO*ScreenWidth)+1 do
+                gfx.push()
+                local tile = Tiles[Save.map[x][y]][Save.planets[PlanetChoice][temperature_location].level]
+                local scale = ScreenWidth/tile:getWidth()*TILERATIO
+                gfx.scale(scale, scale)
+                gfx.draw(tile, (x-1)*ScreenWidth*TILERATIO/scale, (y-1)*ScreenWidth*TILERATIO/scale)
+                gfx.pop()
+            end
+        end
         gfx.pop()
     elseif State.leaf == 7 then
         gfx.push()
