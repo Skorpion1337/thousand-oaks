@@ -31,6 +31,13 @@ for i=1, #planet_properties do
         break
     end
 end
+water_location=1
+for i=1, #planet_properties do
+    if planet_properties[i].name == "Water" then
+        water_location=i
+        break
+    end
+end
 --temperature decides terrain&water and vegetation type
 --radiation decides biodiversity type
 severity_colors = {
@@ -42,6 +49,7 @@ severity_colors = {
     { 0.906, 0.435, 0.318, 1.0 }, -- Extreme: Burnt Coral (#E76F51)
     { 0.839, 0.157, 0.157, 1.0 }, -- Critical: Crimson Red (#D62828)
 }
+stat_max = #severity_colors
 temperature_colors= {
     {0.0, 0.2, 1.0}, -- 1. Blue
     {0.0, 0.7, 0.6}, -- 2. Teal
@@ -68,6 +76,7 @@ SAVEFILEAMOUNT = 11
 
 HELP_TEXT = 'REPORTING BUGS\n\n\nPlease report bugs at\n1. Github issues at https://github.com/Skorpion1337/thousand-oaks/issues\n2. Shoutbox at https://tinyurl.com/1000oakz\n\n\nSOMETHING ABOUT CLUTTER\n\n\nLook at folder %APPDATA%/LOVE to save some space! This folder is \nfor starting directly from code.\n \n\nAnd look at folder %APPDATA%/gamename or simply %APPDATA%/game. This folder is \nfor starting from the compiled executable.\n\n\nIn Linux look for these\n$XDG_DATA_HOME/love/ or ~/.local/share/love/\nlove may be replaced by game name or simply "game"\n\n\nIf you corrupt your settings and the game looks wonky, try deleting\nthe "options" file so it is regenerated to its default values.\n\n\nAND NOW FOR LICENSES\n\n\nAdditional licenses not mentioned in the license file in the game folder \nand folder love in the source distribution\n\n\nThis game\nby Skorpion1337\ntinyurl.com/1000oakz\nGPLv3\nhttps://www.gnu.org/licenses/gpl-3.0.html\n\n\n----Libraries----\n\n\nlume\nA collection of functions for Lua, geared towards game development.\nUsing it for serializing data before compression.\nhttps://github.com/rxi/lume\nMIT \n--\n-- lume\n--\n-- Copyright (c) 2020 rxi\n--\n-- Permission is hereby granted, free of charge, to any person obtaining a copy of\n-- this software and associated documentation files (the "Software"), to deal in\n-- the Software without restriction, including without limitation the rights to\n-- use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\n-- of the Software, and to permit persons to whom the Software is furnished to do\n-- so, subject to the following conditions:\n--\n-- The above copyright notice and this permission notice shall be included in all\n-- copies or substantial portions of the Software.\n--\n-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n-- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n-- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n-- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n-- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n-- SOFTWARE.\n--\n\n\n----Graphics----\n\n\nBackground love potion - graphics/potion.jpg\nhttps://en.wikipedia.org/wiki/File:Filtre_d%27Amour.jpg\nFrom user https://commons.wikimedia.org/wiki/User:Arnaud_25 - Arnaud_25\nCreative Commons Attribution-Share Alike 4.0 International\nhttps://creativecommons.org/licenses/by-sa/4.0/deed.en\n\n\nMachine image in New Game - graphics/new_machine.png\nhttps://opengameart.org/content/the-great-machine\nFrom user https://opengameart.org/users/buch - Buch\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/deed.en'
 
+check = ""
 
 local love = require("love")
 local lume = require("lib.lume")
@@ -581,8 +590,12 @@ local function menu_change_window_y()
 
 end
 
-local function generate_map()
+local function calculate_properties_ratio(prop_loc)
+   return (Save.planets[PlanetChoice][prop_loc].level-1)/(stat_max-1)
+end
 
+local function generate_map()
+    local water_ratio = calculate_properties_ratio(water_location)
 end
 
 local function start_game()
@@ -1061,7 +1074,7 @@ function love.draw()
         gfx.print(GAMENAME, ScreenWidth/2.0 - SmallFont:getWidth(GAMENAME)/2.0, theheight/2.0-SmallFont:getHeight(GAMENAME)/2.0)
     end
 
-    print_to_debug(ScreenWidth.."x"..ScreenHeight..", vsync="..love.window.getVSync()..", fps="..love.timer.getFPS()..", mem="..string.format("%.3f", collectgarbage("count")/1000.0).."MB")
+    print_to_debug(ScreenWidth.."x"..ScreenHeight..", vsync="..love.window.getVSync()..", fps="..love.timer.getFPS()..", mem="..string.format("%.3f", collectgarbage("count")/1000.0).."MB, check="..check)
 
     gfx.setCanvas()
     gfx.setColor(1, 1, 1, 1)

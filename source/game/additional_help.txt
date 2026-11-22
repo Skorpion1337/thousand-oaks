@@ -128,3 +128,11 @@ https://opengameart.org/content/17-grass-tiles
 From user https://opengameart.org/users/hawkadium - Hawkadium
 CC-BY 3.0
 https://creativecommons.org/licenses/by/3.0/deed.en
+
+
+32x32 (and 16x16) RPG Tiles--Forest and some Interior Tiles - graphics/ various forests
+https://opengameart.org/content/32x32-and-16x16-rpg-tiles-forest-and-some-interior-tiles
+Stephen Challener and the Open Surge team ( http://opensnc.sourceforge.net), hosted by OpenGameArt.org
+https://opengameart.org/users/redshrike
+CC-BY 3.0
+https://creativecommons.org/licenses/by/3.0/deed.en
