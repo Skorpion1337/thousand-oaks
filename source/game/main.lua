@@ -24,7 +24,13 @@ planet_properties = {
     { name="Mineral Richness", levels={"Depleted", "Trace", "Lean", "Standard", "Rich", "Abundant", "Motherlode"} },
     { name="Storm Activity", levels={"Calm", "Mild", "Variable", "Active", "Violent", "Furious", "Apocalyptic"} }
 }
-temperature_location = 4
+temperature_location=1
+for i=1, #planet_properties do
+    if planet_properties[i].name == "Temperature" then
+        temperature_location=i
+        break
+    end
+end
 --temperature decides terrain&water and vegetation type
 --radiation decides biodiversity type
 severity_colors = {
