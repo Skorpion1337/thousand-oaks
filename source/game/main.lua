@@ -11,10 +11,10 @@ BIGFONT = 0.02
 BANNERH = 0.045
 NORMAL_SIZE_AT_PX = 1689.6
 
-MAX_WATER = 0.95
-MAP_SIZE = 1000
-MAX_LAKE_SIZE = 0.005
-MIN_LAKE_SIZE = 0.01
+MAX_WATER = 0.80
+MAP_SIZE = 200
+MAX_LAKE_SIZE = 0.1*200/MAP_SIZE
+MIN_LAKE_SIZE = 0.2*200/MAP_SIZE
 MAPSPEEDSEC = 0.03
 
 DELIMITER = "+"
@@ -639,16 +639,35 @@ function random_float(min, max)
     return min + math.random() * (max - min)
 end
 
-local function generate_lake(x,y,width,height,limit,visited,tile_n,draw_tiles)
-    limit = limit + 1
-    check1 = limit
-    local tile = draw_tiles[math.random(#draw_tiles)]
+local function generate_lake(start_x, start_y, width,height,limit,visited,tile_n,draw_tiles)
+    local cx = start_x + width / 2
+    local cy = start_y + height / 2
+    local rx = width / 2
+    local ry = height / 2
 
-    if limit >= tile_n then
-        return nil, nil, true
-    else
-        return limit, visited, false
+    for x = start_x, start_x + width - 1 do
+        for y = start_y, start_y + height - 1 do
+            if visited[x][y] == false then
+                -- Normalized distance from center (-1 to 1 range roughly)
+                local dx = (x - cx) / rx
+                local dy = (y - cy) / ry
+
+                -- Add minor sine/cosine variation for an organic, wavy shoreline
+                local noise = math.sin(x * 0.7) * math.cos(y * 0.7) * 0.15
+                local distance = (dx * dx) + (dy * dy) + noise
+
+                if distance <= 1.0 then
+                    Save.map[x][y] = draw_tiles[math.random(#draw_tiles)]
+                    visited[x][y] = true
+                    limit = limit + 1
+                    if limit >= tile_n then
+                        return nil, nil, true
+                    end
+                end
+            end
+        end
     end
+    return limit, visited, false
 end
 
 local function generate_map()
@@ -908,6 +927,14 @@ function love.load()
     for i = 1, stat_max do
         Tiles[#Tiles][i] = gfx.newImage("graphics/terrain/"..i.."/ground2.png")
     end
+    Tiles[#Tiles+1]={i = #Tiles+1, name="water1", obstacle = false}
+    for i = 1, stat_max do
+        Tiles[#Tiles][i] = gfx.newImage("graphics/terrain/"..i.."/water1.png")
+    end
+    Tiles[#Tiles+1]={i = #Tiles+1, name="water2", obstacle = false}
+    for i = 1, stat_max do
+        Tiles[#Tiles][i] = gfx.newImage("graphics/terrain/"..i.."/water2.png")
+    end
 
     Hooveredx, Hooveredy = 0, 0
 
@@ -1110,8 +1137,8 @@ function love.draw()
         for x=Save.mapx,Save.mapx+ScreenWidth/(TILERATIO*ScreenWidth)+1 do
             for y=Save.mapy,Save.mapy+ScreenHeight/(TILERATIO*ScreenWidth)+1 do
                 gfx.push()
-                local tile = 1
-                tile = Tiles[Save.map[x][y]][property_level("Temperature")]
+                
+                local tile = Tiles[Save.map[x][y]][property_level("Temperature")]
                 local scale = ScreenWidth/tile:getWidth()*TILERATIO
                 gfx.scale(scale, scale)
                 gfx.draw(tile, (x-Save.mapx)*ScreenWidth*TILERATIO/scale, (y-Save.mapy)*ScreenWidth*TILERATIO/scale)
