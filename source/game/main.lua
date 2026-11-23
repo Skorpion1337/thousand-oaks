@@ -29,26 +29,31 @@ planet_properties = {
     { name="Mineral Richness", levels={"Depleted", "Trace", "Lean", "Standard", "Rich", "Abundant", "Motherlode"} },
     { name="Storm Activity", levels={"Calm", "Mild", "Variable", "Active", "Violent", "Furious", "Apocalyptic"} }
 }
-temperature_location=1
-for i=1, #planet_properties do
-    if planet_properties[i].name == "Temperature" then
-        temperature_location=i
-        break
+local function property_level(name, planet)
+    level=nil
+    if planet == nil then
+        planet = Save.PlanetChoice
     end
+    for i=1, #planet_properties do
+        if planet_properties[i].name == name then
+            level = Save.planets[planet][i].level
+            break
+        end
+    end
+    return level
 end
-water_location=1
-for i=1, #planet_properties do
-    if planet_properties[i].name == "Water" then
-        water_location=i
-        break
+local function get_planet_name(planet)
+    if planet == nil then
+        planet = Save.PlanetChoice
     end
-end
-planet_name_location=1
-for i=1, #planet_properties do
-    if planet_properties[i].name == "Planet" then
-        planet_name_location=i
-        break
+    name = ""
+    for i=1, #planet_properties do
+        if planet_properties[i].name == "Planet" then
+            level_name = Save.planets[planet][i].level_name
+            break
+        end
     end
+    return level_name
 end
 --temperature decides terrain&water and vegetation type
 --radiation decides biodiversity type
@@ -611,12 +616,14 @@ local function menu_change_window_y()
 
 end
 
-local function calculate_properties_ratio(prop_loc)
-   return (Save.planets[Save.PlanetChoice][prop_loc].level-1)/(stat_max-1)
+local function calculate_property_ratio(name, planet)
+    planet = planet or Save.PlanetChoice
+
+   return (property_level(name, planet)-1)/(stat_max-1)
 end
 
 local function generate_map()
-    Save.gamename = Save.planets[Save.PlanetChoice][planet_name_location].level_name
+    Save.gamename = get_planet_name()
 
     local y_slice={}
     Save.map={}
@@ -627,7 +634,7 @@ local function generate_map()
         end
     end
 
-    local water_ratio = calculate_properties_ratio(water_location)
+    local water_ratio = calculate_property_ratio("Water")
 end
 
 local function start_game()
@@ -980,7 +987,7 @@ function love.draw()
             for i=1, PLANET_AMOUNT do
                 local planet = Save.planets[i]
                 local x, y = calculate_planet_pos(i, State.star_of_dawn:getWidth(), State.star_of_dawn:getHeight(), scale)
-                gfx.setColor(temperature_colors[planet[temperature_location].level])
+                gfx.setColor(temperature_colors[property_level("Temperature",i)])
                 gfx.draw(State.star_of_dawn, x*ScreenWidth, y*ScreenHeight)
             end
             gfx.pop()
@@ -1034,7 +1041,8 @@ function love.draw()
         for x=State.mapx,State.mapx+ScreenWidth/(TILERATIO*ScreenWidth)+1 do
             for y=State.mapy,State.mapy+ScreenHeight/(TILERATIO*ScreenWidth)+1 do
                 gfx.push()
-                local tile = Tiles[Save.map[x][y]][Save.planets[Save.PlanetChoice][temperature_location].level]
+                local tile = 1
+                tile = Tiles[Save.map[x][y]][property_level("Temperature")]
                 local scale = ScreenWidth/tile:getWidth()*TILERATIO
                 gfx.scale(scale, scale)
                 gfx.draw(tile, (x-1)*ScreenWidth*TILERATIO/scale, (y-1)*ScreenWidth*TILERATIO/scale)
