@@ -639,9 +639,11 @@ function random_float(min, max)
     return min + math.random() * (max - min)
 end
 
-local function generate_lake(x,y,width,height,limit,visited,tile_n)
+local function generate_lake(x,y,width,height,limit,visited,tile_n,draw_tiles)
     limit = limit + 1
     check1 = limit
+    local tile = draw_tiles[math.random(#draw_tiles)]
+
     if limit >= tile_n then
         return nil, nil, true
     else
@@ -676,8 +678,11 @@ local function generate_map()
         end
         local tiles = 0
         local breakout_limit = false
+        local draw_tiles = tiles_with_prefix("water")
         repeat
-            tiles, visited, breakout_limit = generate_lake(math.random(MAP_SIZE),math.random(MAP_SIZE),MAP_SIZE^2*random_float(MIN_LAKE_SIZE, MAX_LAKE_SIZE),MAP_SIZE^2*random_float(MIN_LAKE_SIZE, MAX_LAKE_SIZE), tiles, visited, water_tile_n)
+            local width = MAP_SIZE*random_float(MIN_LAKE_SIZE, MAX_LAKE_SIZE)
+            local height = MAP_SIZE*random_float(MIN_LAKE_SIZE, MAX_LAKE_SIZE)
+            tiles, visited, breakout_limit = generate_lake(math.random(MAP_SIZE-width),math.random(MAP_SIZE-height), width, height, tiles, visited, water_tile_n, draw_tiles)
         until breakout_limit
     end
 end
