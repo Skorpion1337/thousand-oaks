@@ -12,8 +12,22 @@ BANNERH = 0.045
 NORMAL_SIZE_AT_PX = 1689.6
 
 MAX_WATER = 0.95
-
 MAP_SIZE = 1000
+MAPSPEEDSEC = 0.03
+
+DELIMITER = "+"
+
+SMALLFONTDRAWS = 3
+SCROLLLINES = 8
+
+BUTTONHOOVERCOLOR = {0.5,0,0}
+BUTTONNORMALCOLOR = {0.5,0.5,0.5}
+
+SAVEFILE = "savefile" -- +n
+COMPRESSION = "zlib"
+SAVENAMEFILE = "savenames"
+OPTIONSFILE = "options"
+SAVEFILEAMOUNT = 11
 
 PLANET_AMOUNT = 20
 planet_properties = {
@@ -77,25 +91,12 @@ temperature_colors= {
     {1.0, 0.0, 0.0}  -- 7. Bright Red
 }
 
-DELIMITER = "+"
-
-SMALLFONTDRAWS = 3
-SCROLLLINES = 8
-
-BUTTONHOOVERCOLOR = {0.5,0,0}
-BUTTONNORMALCOLOR = {0.5,0.5,0.5}
-
-SAVEFILE = "savefile" -- +n
-COMPRESSION = "zlib"
-SAVENAMEFILE = "savenames"
-OPTIONSFILE = "options"
-SAVEFILEAMOUNT = 11
-
 HELP_TEXT = 'REPORTING BUGS\n\n\nPlease report bugs at\n1. Github issues at https://github.com/Skorpion1337/thousand-oaks/issues\n2. Shoutbox at https://tinyurl.com/1000oakz\n\n\nSOMETHING ABOUT CLUTTER\n\n\nLook at folder %APPDATA%/LOVE to save some space! This folder is \nfor starting directly from code.\n \n\nAnd look at folder %APPDATA%/gamename or simply %APPDATA%/game. This folder is \nfor starting from the compiled executable.\n\n\nIn Linux look for these\n$XDG_DATA_HOME/love/ or ~/.local/share/love/\nlove may be replaced by game name or simply "game"\n\n\nIf you corrupt your settings and the game looks wonky, try deleting\nthe "options" file so it is regenerated to its default values.\n\n\nAND NOW FOR LICENSES\n\n\nAdditional licenses not mentioned in the license file in the game folder \nand folder love in the source distribution\n\n\nThis game\nby Skorpion1337\ntinyurl.com/1000oakz\nGPLv3\nhttps://www.gnu.org/licenses/gpl-3.0.html\n\n\n----Libraries----\n\n\nlume\nA collection of functions for Lua, geared towards game development.\nUsing it for serializing data before compression.\nhttps://github.com/rxi/lume\nMIT \n--\n-- lume\n--\n-- Copyright (c) 2020 rxi\n--\n-- Permission is hereby granted, free of charge, to any person obtaining a copy of\n-- this software and associated documentation files (the "Software"), to deal in\n-- the Software without restriction, including without limitation the rights to\n-- use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\n-- of the Software, and to permit persons to whom the Software is furnished to do\n-- so, subject to the following conditions:\n--\n-- The above copyright notice and this permission notice shall be included in all\n-- copies or substantial portions of the Software.\n--\n-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n-- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n-- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n-- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n-- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n-- SOFTWARE.\n--\n\n\n----Graphics----\n\n\nBackground love potion - graphics/potion.jpg\nhttps://en.wikipedia.org/wiki/File:Filtre_d%27Amour.jpg\nFrom user https://commons.wikimedia.org/wiki/User:Arnaud_25 - Arnaud_25\nCreative Commons Attribution-Share Alike 4.0 International\nhttps://creativecommons.org/licenses/by-sa/4.0/deed.en\n\n\nFrozen Lake winter terrain and water tiles - eg. graphics/terrain/1\nSome of them have been touched to fit different temperature states\nhttps://opengameart.org/content/frozen-lake-lpc\nFrom user https://opengameart.org/users/zapaper - Peter\nCredits to http://www.buko-studios.com/ Commissioned by PlayCraft: www.playcraftapp.com\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/deed.en\n\n\n16x16 Overworld Tiles used to create volcano - graphics/terrain/volcano.png\nAnd also mountain - terrain/mountain.png\nAnd also forest tiles - eg. graphics/terrain/1\nhttps://opengameart.org/content/16x16-overworld-tiles\nFrom user https://opengameart.org/users/sharm - Lanea Zimmerman\nCC-BY 4.0\nhttps://creativecommons.org/licenses/by/4.0/deed.en\n\n\nWhispers of Avalon: Desert Tileset  - eg. graphics/terrain/6\nAlso touched to create more desert tiles\nhttps://opengameart.org/content/whispers-of-avalon-desert-tileset\nFrom user https://opengameart.org/users/leonard-pabin - Leonard pabin, Ali-G\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/deed.en\n\n\nWhispers of Avalon: Grassland Tileset - graphics/terrain/5/ground1.png\nhttps://opengameart.org/content/whispers-of-avalon-grassland-tileset\nFrom user https://opengameart.org/users/leonard-pabin - Leonard pabin\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/deed.en\n\n\n17 Grass Tiles - graphics/terrain/ various\nhttps://opengameart.org/content/17-grass-tiles\nFrom user https://opengameart.org/users/hawkadium - Hawkadium\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/deed.en\n\n\n32x32 (and 16x16) RPG Tiles--Forest and some Interior Tiles - graphics/ various forests\nhttps://opengameart.org/content/32x32-and-16x16-rpg-tiles-forest-and-some-interior-tiles\nStephen Challener and the Open Surge team ( http://opensnc.sourceforge.net),\nhosted by OpenGameArt.org\nhttps://opengameart.org/users/redshrike\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/deed.en'
 
 check1 = ""
 check2 = ""
 check3 = ""
+check4 = ""
 Save.PlanetsGenerated = false
 Save.Loaded = false
 Save.MapGenerated = false
@@ -634,7 +635,7 @@ local function generate_map()
         end
     end
 
-    local water_ratio = calculate_property_ratio("Water")
+    local water_ratio = calculate_property_ratio("Water")*MAX_WATER
 end
 
 local function start_game()
@@ -836,6 +837,7 @@ end
 function love.load()
     Save.planets = {}
     State = { leaf = 1, old_leaf = 1, dialog_type = nil, dialog_param=nil, hoover = 0, mapx = 1, mapy = 1,logo = gfx.newImage("graphics/logo.png"), logo2 = gfx.newImage("graphics/logo2.png"), button_bg = nil, button_bg_quad = nil, button_bg_hover = nil, bg_tile = gfx.newImage("graphics/bg_tile.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), red_crystal = gfx.newImage("graphics/crystal.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = 0, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, lovepotion=gfx.newImage("graphics/potion.jpg"), sulphur_mining = gfx.newImage("graphics/sulphur_mining_PD.jpg"), horsehead_nebula = gfx.newImage("graphics/horsehead_PD.jpg"), new_machine = gfx.newImage("graphics/new_machine.png"), star_of_dawn = gfx.newImage("graphics/star_of_dawn.png"), star_of_dawn_scale = 0, aim = gfx.newImage("graphics/aim.png"), mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10, dialog_width = 0, dialog_height = 0}
+    Timers = {map=MAPSPEEDSEC}
 
     local gradientData = love.image.newImageData(2, 1, 'rgba8', '\200\200\200' .. '\255' .. '\050\050\050' .. '\255')
     State.button_bg = gfx.newImage(gradientData)
@@ -903,7 +905,26 @@ function love.mousereleased(x, y, button, istouch, presses)
 end
 
 function love.update(dt)
-
+    Timers.map = Timers.map - dt
+    if Timers.map < 0 then
+        Timers.map = MAPSPEEDSEC
+        if love.keyboard.isDown('w') then
+            check1="hit up"
+            check2 = State.mapy
+            State.mapy = math.max(1,State.mapy-1)
+        end
+        if love.keyboard.isDown('s') then
+            check1="hit down"
+            check2 = State.mapy
+            State.mapy = math.min(MAP_SIZE-ScreenHeight/(TILERATIO*ScreenWidth)-1,State.mapy+1)
+        end
+        if love.keyboard.isDown('a') then
+            State.mapx = math.max(1,State.mapx-1)
+        end
+        if love.keyboard.isDown('d') then
+            State.mapx = math.min(MAP_SIZE-ScreenWidth/(TILERATIO*ScreenWidth)-1,State.mapx+1)
+        end
+    end
 end
 
 function love.draw()
@@ -1040,12 +1061,14 @@ function love.draw()
         gfx.push()
         for x=State.mapx,State.mapx+ScreenWidth/(TILERATIO*ScreenWidth)+1 do
             for y=State.mapy,State.mapy+ScreenHeight/(TILERATIO*ScreenWidth)+1 do
+                check3 = State.mapy
+                check4 = State.mapy+ScreenHeight/(TILERATIO*ScreenWidth)+1
                 gfx.push()
                 local tile = 1
                 tile = Tiles[Save.map[x][y]][property_level("Temperature")]
                 local scale = ScreenWidth/tile:getWidth()*TILERATIO
                 gfx.scale(scale, scale)
-                gfx.draw(tile, (x-1)*ScreenWidth*TILERATIO/scale, (y-1)*ScreenWidth*TILERATIO/scale)
+                gfx.draw(tile, (x-State.mapx)*ScreenWidth*TILERATIO/scale, (y-State.mapy)*ScreenWidth*TILERATIO/scale)
                 gfx.pop()
             end
         end
@@ -1131,7 +1154,7 @@ function love.draw()
         gfx.print(Save.gamename, ScreenWidth/2.0 - SmallFont:getWidth(Save.gamename)/2.0, theheight/2.0-SmallFont:getHeight(Save.gamename)/2.0)
     end
 
-    print_to_debug(ScreenWidth.."x"..ScreenHeight..", vsync="..love.window.getVSync()..", fps="..love.timer.getFPS()..", mem="..string.format("%.3f", collectgarbage("count")/1000.0).."MB, check1="..check1..", check2="..check2..", check3="..check3)
+    print_to_debug(ScreenWidth.."x"..ScreenHeight..", vsync="..love.window.getVSync()..", fps="..love.timer.getFPS()..", mem="..string.format("%.3f", collectgarbage("count")/1000.0).."MB, check1="..check1..", check2="..check2..", check3="..check3..", check4="..check4)
 
     gfx.setCanvas()
     gfx.setColor(1, 1, 1, 1)
