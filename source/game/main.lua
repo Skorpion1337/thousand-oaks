@@ -11,6 +11,7 @@ BIGFONT = 0.02
 BANNERH = 0.045
 NORMAL_SIZE_AT_PX = 1689.6
 
+--remember to fix sizes to current map size eg. CURRENT_MAP_SIZE(200)/MAP_SIZE
 MAX_WATER = 0.80
 MAP_SIZE = 300
 MAX_LAKE_SIZE = 0.1*200/MAP_SIZE
@@ -934,6 +935,30 @@ function love.load()
     Tiles[#Tiles+1]={i = #Tiles+1, name="water2", obstacle = false}
     for i = 1, stat_max do
         Tiles[#Tiles][i] = gfx.newImage("graphics/terrain/"..i.."/water2.png")
+    end
+    Tiles[#Tiles+1]={i = #Tiles+1, name="forest1", obstacle = true}
+    for i = 1, stat_max do
+        Tiles[#Tiles][i] = gfx.newImage("graphics/terrain/"..i.."/forest1.png")
+    end
+    Tiles[#Tiles+1]={i = #Tiles+1, name="forest2", obstacle = true}
+    for i = 1, stat_max do
+        Tiles[#Tiles][i] = gfx.newImage("graphics/terrain/"..i.."/forest2.png")
+    end
+    Tiles[#Tiles+1]={i = #Tiles+1, name="tree1", obstacle = true}
+    for i = 1, stat_max do
+        Tiles[#Tiles][i] = gfx.newImage("graphics/terrain/"..i.."/tree1.png")
+    end
+    Tiles[#Tiles+1]={i = #Tiles+1, name="tree2", obstacle = true}
+    for i = 1, stat_max do
+        Tiles[#Tiles][i] = gfx.newImage("graphics/terrain/"..i.."/tree2.png")
+    end
+    Tiles[#Tiles+1]={i = #Tiles+1, name="mountain1", obstacle = true}
+    for i = 1, stat_max do
+        Tiles[#Tiles][i] = gfx.newImage("graphics/terrain/mountain1.png")
+    end
+    Tiles[#Tiles+1]={i = #Tiles+1, name="volcano1", obstacle = true}
+    for i = 1, stat_max do
+        Tiles[#Tiles][i] = gfx.newImage("graphics/terrain/volcano1.png")
     end
 
     Hooveredx, Hooveredy = 0, 0
