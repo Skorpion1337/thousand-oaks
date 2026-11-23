@@ -626,6 +626,9 @@ end
 local function generate_map()
     Save.gamename = get_planet_name()
 
+    Save.mapx = 1
+    Save.mapy = 1
+
     local y_slice={}
     Save.map={}
     for x=1, MAP_SIZE do
@@ -836,7 +839,8 @@ end
 
 function love.load()
     Save.planets = {}
-    State = { leaf = 1, old_leaf = 1, dialog_type = nil, dialog_param=nil, hoover = 0, mapx = 1, mapy = 1,logo = gfx.newImage("graphics/logo.png"), logo2 = gfx.newImage("graphics/logo2.png"), button_bg = nil, button_bg_quad = nil, button_bg_hover = nil, bg_tile = gfx.newImage("graphics/bg_tile.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), red_crystal = gfx.newImage("graphics/crystal.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = 0, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, lovepotion=gfx.newImage("graphics/potion.jpg"), sulphur_mining = gfx.newImage("graphics/sulphur_mining_PD.jpg"), horsehead_nebula = gfx.newImage("graphics/horsehead_PD.jpg"), new_machine = gfx.newImage("graphics/new_machine.png"), star_of_dawn = gfx.newImage("graphics/star_of_dawn.png"), star_of_dawn_scale = 0, aim = gfx.newImage("graphics/aim.png"), mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10, dialog_width = 0, dialog_height = 0}
+
+    State = { leaf = 1, old_leaf = 1, dialog_type = nil, dialog_param=nil, hoover = 0, logo = gfx.newImage("graphics/logo.png"), logo2 = gfx.newImage("graphics/logo2.png"), button_bg = nil, button_bg_quad = nil, button_bg_hover = nil, bg_tile = gfx.newImage("graphics/bg_tile.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), red_crystal = gfx.newImage("graphics/crystal.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = 0, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, lovepotion=gfx.newImage("graphics/potion.jpg"), sulphur_mining = gfx.newImage("graphics/sulphur_mining_PD.jpg"), horsehead_nebula = gfx.newImage("graphics/horsehead_PD.jpg"), new_machine = gfx.newImage("graphics/new_machine.png"), star_of_dawn = gfx.newImage("graphics/star_of_dawn.png"), star_of_dawn_scale = 0, aim = gfx.newImage("graphics/aim.png"), mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10, dialog_width = 0, dialog_height = 0}
     Timers = {map=MAPSPEEDSEC}
 
     local gradientData = love.image.newImageData(2, 1, 'rgba8', '\200\200\200' .. '\255' .. '\050\050\050' .. '\255')
@@ -905,24 +909,22 @@ function love.mousereleased(x, y, button, istouch, presses)
 end
 
 function love.update(dt)
-    Timers.map = Timers.map - dt
-    if Timers.map < 0 then
-        Timers.map = MAPSPEEDSEC
-        if love.keyboard.isDown('w') then
-            check1="hit up"
-            check2 = State.mapy
-            State.mapy = math.max(1,State.mapy-1)
-        end
-        if love.keyboard.isDown('s') then
-            check1="hit down"
-            check2 = State.mapy
-            State.mapy = math.min(MAP_SIZE-ScreenHeight/(TILERATIO*ScreenWidth)-1,State.mapy+1)
-        end
-        if love.keyboard.isDown('a') then
-            State.mapx = math.max(1,State.mapx-1)
-        end
-        if love.keyboard.isDown('d') then
-            State.mapx = math.min(MAP_SIZE-ScreenWidth/(TILERATIO*ScreenWidth)-1,State.mapx+1)
+    if State.leaf == 6 then
+        Timers.map = Timers.map - dt
+        if Timers.map < 0 then
+            Timers.map = MAPSPEEDSEC
+            if love.keyboard.isDown('w') then
+                Save.mapy = math.max(1,Save.mapy-1)
+            end
+            if love.keyboard.isDown('s') then
+                Save.mapy = math.min(MAP_SIZE-ScreenHeight/(TILERATIO*ScreenWidth)-1,Save.mapy+1)
+            end
+            if love.keyboard.isDown('a') then
+                Save.mapx = math.max(1,Save.mapx-1)
+            end
+            if love.keyboard.isDown('d') then
+                Save.mapx = math.min(MAP_SIZE-ScreenWidth/(TILERATIO*ScreenWidth)-1,Save.mapx+1)
+            end
         end
     end
 end
@@ -1059,16 +1061,14 @@ function love.draw()
         gfx.print(State.help_text, Buttons[State.leaf][2].x-beyondbuttonw+State.helppadding, Buttons[State.leaf][2].y+Buttons[State.leaf][2].height+State.helppadding/3)
     elseif State.leaf == 6 then
         gfx.push()
-        for x=State.mapx,State.mapx+ScreenWidth/(TILERATIO*ScreenWidth)+1 do
-            for y=State.mapy,State.mapy+ScreenHeight/(TILERATIO*ScreenWidth)+1 do
-                check3 = State.mapy
-                check4 = State.mapy+ScreenHeight/(TILERATIO*ScreenWidth)+1
+        for x=Save.mapx,Save.mapx+ScreenWidth/(TILERATIO*ScreenWidth)+1 do
+            for y=Save.mapy,Save.mapy+ScreenHeight/(TILERATIO*ScreenWidth)+1 do
                 gfx.push()
                 local tile = 1
                 tile = Tiles[Save.map[x][y]][property_level("Temperature")]
                 local scale = ScreenWidth/tile:getWidth()*TILERATIO
                 gfx.scale(scale, scale)
-                gfx.draw(tile, (x-State.mapx)*ScreenWidth*TILERATIO/scale, (y-State.mapy)*ScreenWidth*TILERATIO/scale)
+                gfx.draw(tile, (x-Save.mapx)*ScreenWidth*TILERATIO/scale, (y-Save.mapy)*ScreenWidth*TILERATIO/scale)
                 gfx.pop()
             end
         end
