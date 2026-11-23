@@ -990,7 +990,7 @@ function love.update(dt)
                 Save.mapy = math.max(1,Save.mapy-1)
             end
             if love.keyboard.isDown('s') then
-                Save.mapy = math.min(MAP_SIZE-ScreenHeight/(TILERATIO*ScreenWidth)-1,Save.mapy+1)
+                Save.mapy = math.min(MAP_SIZE-ScreenHeight/(TILERATIO*ScreenHeight)-1,Save.mapy+1)
             end
             if love.keyboard.isDown('a') then
                 Save.mapx = math.max(1,Save.mapx-1)
@@ -1135,9 +1135,8 @@ function love.draw()
     elseif State.leaf == 6 then
         gfx.push()
         for x=Save.mapx,Save.mapx+ScreenWidth/(TILERATIO*ScreenWidth)+1 do
-            for y=Save.mapy,Save.mapy+ScreenHeight/(TILERATIO*ScreenWidth)+1 do
+            for y=Save.mapy,Save.mapy+ScreenHeight/(TILERATIO*ScreenHeight)+1 do
                 gfx.push()
-                
                 local tile = Tiles[Save.map[x][y]][property_level("Temperature")]
                 local scale = ScreenWidth/tile:getWidth()*TILERATIO
                 gfx.scale(scale, scale)
