@@ -17,6 +17,8 @@ MAP_SIZE = 300
 MAX_LAKE_SIZE = 0.1*200/MAP_SIZE
 MIN_LAKE_SIZE = 0.2*200/MAP_SIZE
 MAPSPEEDSEC = 0.01
+MAX_VOLCANO = 0.8
+VOLCANISM = 1/7
 
 DELIMITER = "+"
 
@@ -93,6 +95,23 @@ temperature_colors= {
     {1.0, 0.2, 0.0}, -- 6. Red-Orange
     {1.0, 0.0, 0.0}  -- 7. Bright Red
 }
+
+pieces = {
+    {name="volcano1", size_max = 8, size_min = 2}, -- keep same
+    {name="mountain1", size_max = 8, size_min = 2}, -- keep same
+    {name="tree1", size_max = 3, size_min = 1},
+    {name="tree2", size_max = 3, size_min = 1},
+    {name="forest1", size_max = 4, size_min = 1},
+    {name="forest2", size_max = 4, size_min = 1},
+}
+
+local function find_pieces(name)
+    for i=1, #pieces do
+        if pieces[i].name == name then
+            return pieces[i]
+        end
+    end
+end
 
 HELP_TEXT = 'REPORTING BUGS\n\n\nPlease report bugs at\n1. Github issues at https://github.com/Skorpion1337/thousand-oaks/issues\n2. Shoutbox at https://tinyurl.com/1000oakz\n\n\nSOMETHING ABOUT CLUTTER\n\n\nLook at folder %APPDATA%/LOVE to save some space! This folder is \nfor starting directly from code.\n \n\nAnd look at folder %APPDATA%/gamename or simply %APPDATA%/game. This folder is \nfor starting from the compiled executable.\n\n\nIn Linux look for these\n$XDG_DATA_HOME/love/ or ~/.local/share/love/\nlove may be replaced by game name or simply "game"\n\n\nIf you corrupt your settings and the game looks wonky, try deleting\nthe "options" file so it is regenerated to its default values.\n\n\nAND NOW FOR LICENSES\n\n\nAdditional licenses not mentioned in the license file in the game folder \nand folder love in the source distribution\n\n\nThis game\nby Skorpion1337\ntinyurl.com/1000oakz\nGPLv3\nhttps://www.gnu.org/licenses/gpl-3.0.html\n\n\n----Libraries----\n\n\nlume\nA collection of functions for Lua, geared towards game development.\nUsing it for serializing data before compression.\nhttps://github.com/rxi/lume\nMIT \n--\n-- lume\n--\n-- Copyright (c) 2020 rxi\n--\n-- Permission is hereby granted, free of charge, to any person obtaining a copy of\n-- this software and associated documentation files (the "Software"), to deal in\n-- the Software without restriction, including without limitation the rights to\n-- use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\n-- of the Software, and to permit persons to whom the Software is furnished to do\n-- so, subject to the following conditions:\n--\n-- The above copyright notice and this permission notice shall be included in all\n-- copies or substantial portions of the Software.\n--\n-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n-- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n-- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n-- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n-- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n-- SOFTWARE.\n--\n\n\n----Graphics----\n\n\nBackground love potion - graphics/potion.jpg\nhttps://en.wikipedia.org/wiki/File:Filtre_d%27Amour.jpg\nFrom user https://commons.wikimedia.org/wiki/User:Arnaud_25 - Arnaud_25\nCreative Commons Attribution-Share Alike 4.0 International\nhttps://creativecommons.org/licenses/by-sa/4.0/deed.en\n\n\nFrozen Lake winter terrain and water tiles - eg. graphics/terrain/1\nSome of them have been touched to fit different temperature states\nhttps://opengameart.org/content/frozen-lake-lpc\nFrom user https://opengameart.org/users/zapaper - Peter\nCredits to http://www.buko-studios.com/ Commissioned by PlayCraft: www.playcraftapp.com\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/deed.en\n\n\n16x16 Overworld Tiles used to create volcano - graphics/terrain/volcano.png\nAnd also mountain - terrain/mountain.png\nAnd also forest tiles - eg. graphics/terrain/1\nhttps://opengameart.org/content/16x16-overworld-tiles\nFrom user https://opengameart.org/users/sharm - Lanea Zimmerman\nCC-BY 4.0\nhttps://creativecommons.org/licenses/by/4.0/deed.en\n\n\nWhispers of Avalon: Desert Tileset  - eg. graphics/terrain/6\nAlso touched to create more desert tiles\nhttps://opengameart.org/content/whispers-of-avalon-desert-tileset\nFrom user https://opengameart.org/users/leonard-pabin - Leonard pabin, Ali-G\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/deed.en\n\n\nWhispers of Avalon: Grassland Tileset - graphics/terrain/5/ground1.png\nhttps://opengameart.org/content/whispers-of-avalon-grassland-tileset\nFrom user https://opengameart.org/users/leonard-pabin - Leonard pabin\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/deed.en\n\n\n17 Grass Tiles - graphics/terrain/ various\nhttps://opengameart.org/content/17-grass-tiles\nFrom user https://opengameart.org/users/hawkadium - Hawkadium\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/deed.en\n\n\n32x32 (and 16x16) RPG Tiles--Forest and some Interior Tiles - graphics/ various forests\nhttps://opengameart.org/content/32x32-and-16x16-rpg-tiles-forest-and-some-interior-tiles\nStephen Challener and the Open Surge team ( http://opensnc.sourceforge.net),\nhosted by OpenGameArt.org\nhttps://opengameart.org/users/redshrike\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/deed.en'
 
@@ -705,6 +724,51 @@ local function generate_map()
             tiles, visited, breakout_limit = generate_lake(math.random(MAP_SIZE-width),math.random(MAP_SIZE-height), width, height, tiles, visited, water_tile_n, draw_tiles)
         until breakout_limit
     end
+
+    local free_area = {}
+    local free_tiles = 0
+    for x = 1, MAP_SIZE do
+        free_area[x] = {}
+        for y = 1, MAP_SIZE do
+            if has_value(ground_tiles, Save.map[x][y]) then
+                free_area[x][y] = true
+                free_tiles = free_tiles + 1
+            else
+                free_area[x][y] = false
+            end
+        end
+    end
+
+    local mountain_ratio = calculate_property_ratio("Volcanism")*MAX_VOLCANO
+    local volcano1 = find_pieces("volcano1")
+    local amount_of_mountains = mountain_ratio*free_tiles/( (volcano1.size_min+volcano1.size_max)/2 )
+
+    Save.structures = {}
+    if amount_of_mountains > 0 then
+        local fully_generated_mountains = 0
+        repeat
+            local mountain = {}
+            local x = math.random(MAP_SIZE)
+            local y = math.random(MAP_SIZE)
+            if free_area[x][y] == true then
+                fully_generated_mountains = fully_generated_mountains + 1
+                free_area[x][y] = false
+                free_tiles = free_tiles - 1
+
+                local each = 1/VOLCANISM
+                local mountainfull = math.random(each)
+                if mountainfull == 1 then
+                    mountain.name = "volcano1"
+                else
+                    mountain.name = "mountain1"
+                end
+                mountain.x = x
+                mountain.y = y
+                mountain.size = math.random(volcano1.size_min,volcano1.size_max)
+            end
+            Save.structures[#Save.structures] = mountain
+        until fully_generated_mountains >= amount_of_mountains
+    end
 end
 
 local function start_game()
@@ -807,21 +871,6 @@ refresh_state = function()
     WindowScaleButton = Buttons[8][4]
     WindowXButton = Buttons[8][5]
     WindowYButton = Buttons[8][6]
-
-
-    --[[for i = 1, #Labels do
-        for j=1, #Labels[i] do
-            label = Labels[i][j]
-            if label.size == 1 then
-                label.width = BigFont:getWidth(label.text)
-                label.width = BigFont:getHeight(label.text)
-            elseif label.size == 2 then
-                label.width = SmallFont:getWidth(label.text)
-                label.width = SmallFont:getHeight(label.text)
-            end
-        end
-    end]]--
-
 
     if love.filesystem.getInfo(SAVENAMEFILE) == nil then
         local names = {}
