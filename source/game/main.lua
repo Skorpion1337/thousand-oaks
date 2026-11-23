@@ -725,6 +725,7 @@ local function generate_map()
         until breakout_limit
     end
 
+    local free_lookup = {}
     local free_area = {}
     local free_tiles = 0
     for x = 1, MAP_SIZE do
@@ -732,6 +733,7 @@ local function generate_map()
         for y = 1, MAP_SIZE do
             if has_value(ground_tiles, Save.map[x][y]) then
                 free_area[x][y] = true
+                free_lookup[#free_lookup+1] = {x=x,y=y}
                 free_tiles = free_tiles + 1
             else
                 free_area[x][y] = false
@@ -745,30 +747,28 @@ local function generate_map()
 
     Save.structures = {}
     if amount_of_mountains > 0 then
-        local fully_generated_mountains = 0
-        repeat
+        for i = 1, amount_of_mountains do
             local mountain = {}
-            local x = math.random(MAP_SIZE)
-            local y = math.random(MAP_SIZE)
-            if free_area[x][y] == true then
-                fully_generated_mountains = fully_generated_mountains + 1
-                free_area[x][y] = false
-                free_tiles = free_tiles - 1
+            local pos = math.random(#free_lookup)
+            local free = free_lookup[pos]
+            table.remove(free_lookup, pos)
 
-                local each = 1/VOLCANISM
-                local mountainfull = math.random(each)
-                if mountainfull == 1 then
-                    mountain.name = "volcano1"
-                else
-                    mountain.name = "mountain1"
-                end
-                mountain.tile = Tiles[tiles_with_prefix(mountain.name)[1]]
-                mountain.x = x
-                mountain.y = y
-                mountain.size = math.random(volcano1.size_min,volcano1.size_max)
+            free_area[free.x][free.y] = false
+            free_tiles = free_tiles - 1
+
+            local each = 1/VOLCANISM
+            local mountainfull = math.random(each)
+            if mountainfull == 1 then
+                mountain.name = "volcano1"
+            else
+                mountain.name = "mountain1"
             end
+            mountain.tile = Tiles[tiles_with_prefix(mountain.name)[1]]
+            mountain.x = x
+            mountain.y = y
+            mountain.size = math.random(volcano1.size_min,volcano1.size_max)
             Save.structures[#Save.structures] = mountain
-        until fully_generated_mountains >= amount_of_mountains
+        end
     end
 end
 
