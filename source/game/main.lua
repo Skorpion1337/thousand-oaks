@@ -865,13 +865,13 @@ function love.load()
     State.button_bg_quad = gfx.newQuad(0.5, 0, 1, 1, 2, 1)
 
     Tiles = {}
-    Tiles[1]={i = 1, name="ground1", obstacle = false}
+    Tiles[#Tiles+1]={i = #Tiles+1, name="ground1", obstacle = false}
     for i = 1, stat_max do
-        Tiles[1][i] = gfx.newImage("graphics/terrain/"..i.."/ground1.png")
+        Tiles[#Tiles][i] = gfx.newImage("graphics/terrain/"..i.."/ground1.png")
     end
-    Tiles[2]={i = 2, name="ground2", obstacle = false}
+    Tiles[#Tiles+1]={i = #Tiles+1, name="ground2", obstacle = false}
     for i = 1, stat_max do
-        Tiles[2][i] = gfx.newImage("graphics/terrain/"..i.."/ground2.png")
+        Tiles[#Tiles][i] = gfx.newImage("graphics/terrain/"..i.."/ground2.png")
     end
 
     Hooveredx, Hooveredy = 0, 0
