@@ -762,6 +762,7 @@ local function generate_map()
                 else
                     mountain.name = "mountain1"
                 end
+                mountain.tile = Tiles[tiles_with_prefix(mountain.name)[1]]
                 mountain.x = x
                 mountain.y = y
                 mountain.size = math.random(volcano1.size_min,volcano1.size_max)
