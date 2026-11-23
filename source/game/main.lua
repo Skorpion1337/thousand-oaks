@@ -13,6 +13,8 @@ NORMAL_SIZE_AT_PX = 1689.6
 
 MAX_WATER = 0.95
 MAP_SIZE = 1000
+MAX_LAKE_SIZE = 0.005
+MIN_LAKE_SIZE = 0.01
 MAPSPEEDSEC = 0.03
 
 DELIMITER = "+"
@@ -633,14 +635,27 @@ local function tiles_with_prefix(prefix)
     return tiles
 end
 
+function random_float(min, max)
+    return min + math.random() * (max - min)
+end
+
+local function generate_lake(x,y,width,height,limit,visited,tile_n)
+    limit = limit + 1
+    check1 = limit
+    if limit >= tile_n then
+        return nil, nil, true
+    else
+        return limit, visited, false
+    end
+end
+
 local function generate_map()
     Save.gamename = get_planet_name()
 
     Save.mapx = MAP_SIZE/2
     Save.mapy = MAP_SIZE/2
 
-    ground_tiles = tiles_with_prefix("ground")
-    local y_slice={}
+    local ground_tiles = tiles_with_prefix("ground")
     Save.map={}
     for x=1, MAP_SIZE do
         Save.map[x] = {}
@@ -650,6 +665,21 @@ local function generate_map()
     end
 
     local water_ratio = calculate_property_ratio("Water")*MAX_WATER
+    local water_tile_n = water_ratio * MAP_SIZE * MAP_SIZE
+    if water_tile_n > 0 then
+        local visited = {}
+        for i = 1, MAP_SIZE do
+            visited[i] = {}
+            for j = 1, MAP_SIZE do
+                visited[i][j] = false
+            end
+        end
+        local tiles = 0
+        local breakout_limit = false
+        repeat
+            tiles, visited, breakout_limit = generate_lake(math.random(MAP_SIZE),math.random(MAP_SIZE),MAP_SIZE*random_float(MIN_LAKE_SIZE, MAX_LAKE_SIZE),MAP_SIZE*random_float(MIN_LAKE_SIZE, MAX_LAKE_SIZE), tiles, visited, water_tile_n)
+        until breakout_limit
+    end
 end
 
 local function start_game()
