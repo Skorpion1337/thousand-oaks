@@ -677,7 +677,7 @@ local function generate_map()
         local tiles = 0
         local breakout_limit = false
         repeat
-            tiles, visited, breakout_limit = generate_lake(math.random(MAP_SIZE),math.random(MAP_SIZE),MAP_SIZE*random_float(MIN_LAKE_SIZE, MAX_LAKE_SIZE),MAP_SIZE*random_float(MIN_LAKE_SIZE, MAX_LAKE_SIZE), tiles, visited, water_tile_n)
+            tiles, visited, breakout_limit = generate_lake(math.random(MAP_SIZE),math.random(MAP_SIZE),MAP_SIZE^2*random_float(MIN_LAKE_SIZE, MAX_LAKE_SIZE),MAP_SIZE^2*random_float(MIN_LAKE_SIZE, MAX_LAKE_SIZE), tiles, visited, water_tile_n)
         until breakout_limit
     end
 end
