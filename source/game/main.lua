@@ -623,18 +623,29 @@ local function calculate_property_ratio(name, planet)
    return (property_level(name, planet)-1)/(stat_max-1)
 end
 
+local function tiles_with_prefix(prefix)
+    tiles = {}
+    for i = 1, #Tiles do
+        if string.sub(Tiles[i].name,1,string.len(prefix)) == prefix then
+            tiles[#tiles+1] = i
+        end
+    end
+    return tiles
+end
+
 local function generate_map()
     Save.gamename = get_planet_name()
 
-    Save.mapx = 1
-    Save.mapy = 1
+    Save.mapx = MAP_SIZE/2
+    Save.mapy = MAP_SIZE/2
 
+    ground_tiles = tiles_with_prefix("ground")
     local y_slice={}
     Save.map={}
     for x=1, MAP_SIZE do
         Save.map[x] = {}
         for y=1, MAP_SIZE do
-            Save.map[x][y] = math.random(2)
+            Save.map[x][y] = ground_tiles[math.random(#ground_tiles)]
         end
     end
 
