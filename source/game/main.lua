@@ -817,8 +817,14 @@ local function generate_map()
         for i = 1, amount_of_mountains do
             local mountain = {}
             local free
+            local used = {}
             repeat
-                free = free_lookup[make_noise(#free_lookup)]
+                local noise
+                repeat
+                    noise = make_noise(#free_lookup)
+                until not used[noise]
+                used[noise] = true
+                free = free_lookup[noise]
 
                 --free = free_lookup[math.random(#free_lookup)]
                 mountain.size = math.random(volcano1.size_min,volcano1.size_max)
