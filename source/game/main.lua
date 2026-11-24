@@ -788,11 +788,11 @@ local function generate_map()
                     for y=free.y, math.min(MAP_SIZE,free.y+mountain.size) do
                         free_area[x][y] = false
                         free_tiles = free_tiles - 1
-                        for j=#free_lookup, 1, -1 do
+                        --[[for j=#free_lookup, 1, -1 do
                             if free_lookup[j].x == x and free_lookup[j].y == y then
                                 table.remove(free_lookup, j)
                             end
-                        end
+                        end]]--
                     end
                 end
             end
