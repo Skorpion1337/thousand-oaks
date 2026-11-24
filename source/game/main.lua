@@ -796,51 +796,6 @@ local function generate_map()
                     end
                 end
 
-                --[[local last_index = math.random(#free_lookup)
-                local cluster_strength = 25-- Controls how wide the current local clump is
-
-                local function pickExtremeStickyPair()
-                    local weights = {}
-                    local total_weight = 0
-                    local n = #free_lookup
-
-                    for i = 1, n do
-                        -- Distance from the last picked item
-                        local distance = math.abs(i - last_index)
-
-                        -- Massive exponential penalty for moving away from the current spot
-                        local weight = math.exp(-distance / cluster_strength)
-
-                        weights[i] = weight
-                        total_weight = total_weight + weight
-                    end
-
-                    -- Weighted random roll
-                    local r = math.random() * total_weight
-                    local cumulative = 0
-                    local selected_index = last_index
-
-                    for i = 1, n do
-                        cumulative = cumulative + weights[i]
-                        if r <= cumulative then
-                            selected_index = i
-                            break
-                        end
-                    end
-
-                    last_index = selected_index
-                    return free_lookup[selected_index]
-                end]]--
-
-                --free = pickExtremeStickyPair()
-
-                --[[local n = #free_lookup
-                local base_index = math.random(n)
-                -- Add random noise (e.g., between -3 and 3)
-                local noise = math.random(-3, 3)
-                local sampled_index = math.max(1, math.min(n, base_index + noise))
-                free = free_lookup[math.random(sampled_index)]]--
-
                 --free = free_lookup[math.random(#free_lookup)]
                 mountain.size = math.random(volcano1.size_min,volcano1.size_max)
                 fits = true
