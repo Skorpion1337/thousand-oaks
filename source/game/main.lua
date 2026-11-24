@@ -798,6 +798,14 @@ local function generate_map()
             end
         end
     end
+    local free_lookup = {}
+    for x = 1, MAP_SIZE do
+        for y = 1, MAP_SIZE do
+            if has_value(ground_tiles, Save.map[x][y]) and free_area[x][y] == true then
+                free_lookup[#free_lookup+1] = {x=x,y=y}
+            end
+        end
+    end
 end
 
 local function start_game()
