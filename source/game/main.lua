@@ -535,7 +535,7 @@ local function count_map_items(item_number)
     local count = 0
     for x=1,MAP_SQUARE do
         for y=1,MAP_SQUARE do
-            if Save.map[x][y] == item_number then
+            if Save.map[get_index(x, y, MAP_SIZE)] == item_number then
                 count = count + 1
             end
         end
@@ -735,7 +735,7 @@ local function generate_lake(start_x, start_y, width,height,limit,visited,tile_n
 
                 if distance <= 1.0 then
                     if x > 0 and y > 0 and x < MAP_SIZE+1 and y < MAP_SIZE+1 then
-                        Save.map[x][y] = draw_tiles[math.random(#draw_tiles)]
+                        Save.map[get_index(x, y, MAP_SIZE)] = draw_tiles[math.random(#draw_tiles)]
                         visited[get_index(x, y, MAP_SIZE)] = true
                         limit = limit + 1
                         if limit >= tile_n then
@@ -760,7 +760,7 @@ local function generate_map()
     for x=1, MAP_SIZE do
         Save.map[x] = {}
         for y=1, MAP_SIZE do
-            Save.map[x][y] = ground_tiles[math.random(#ground_tiles)]
+            Save.map[get_index(x, y, MAP_SIZE)] = ground_tiles[math.random(#ground_tiles)]
         end
     end
 
@@ -791,7 +791,7 @@ local function generate_map()
     local free_tiles = 0
     for x = 1, MAP_SIZE do
         for y = 1, MAP_SIZE do
-            if has_value(ground_tiles, Save.map[x][y]) then
+            if has_value(ground_tiles, Save.map[get_index(x, y, MAP_SIZE)]) then
                 free_lookup[#free_lookup+1] = {x=x,y=y}
                 free_tiles = free_tiles + 1
             else
@@ -860,7 +860,7 @@ local function generate_map()
     local free_lookup = {}
     for x = 1, MAP_SIZE do
         for y = 1, MAP_SIZE do
-            if has_value(ground_tiles, Save.map[x][y]) and visited[get_index(x, y, MAP_SIZE)] == false then
+            if has_value(ground_tiles, Save.map[get_index(x, y, MAP_SIZE)]) and visited[get_index(x, y, MAP_SIZE)] == false then
                 free_lookup[#free_lookup+1] = {x=x,y=y}
             end
         end
@@ -1309,7 +1309,7 @@ function love.draw()
         for x=Save.mapx,Save.mapx+max_width do
             for y=Save.mapy,Save.mapy+max_height do
                 gfx.push()
-                local tile = Tiles[Save.map[x][y]][property_level("Temperature")]
+                local tile = Tiles[Save.map[get_index(x, y, MAP_SIZE)]][property_level("Temperature")]
                 local scale = ScreenWidth/tile:getWidth()*TILERATIO
                 gfx.scale(scale, scale)
                 gfx.draw(tile, (x-Save.mapx)*ScreenWidth*TILERATIO/scale, (y-Save.mapy)*ScreenWidth*TILERATIO/scale)
