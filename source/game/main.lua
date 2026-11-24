@@ -760,7 +760,88 @@ local function generate_map()
             local mountain = {}
             local free
             repeat
-                free = free_lookup[math.random(#free_lookup)]
+                local weights = {}
+                local total_weight = 0
+
+                for i = 1, #free_lookup do
+                    -- 1. Lower frequencies (0.01 and 0.04) stretch the mountains out wider
+                    local major_range = math.abs(math.cos(i * 0.01))
+                    local jagged_peaks = math.abs(math.sin(i * 0.04))
+
+                    local raw_height = (major_range * 0.7) + (jagged_peaks * 0.3)
+
+                    -- 2. Widen the valleys by subtracting a threshold (e.g., 0.4)
+                    -- Everything below 0.4 becomes a flat, zero-weight valley floor
+                    local valley_threshold = 0.4
+                    local widened_height = math.max(0, raw_height - valley_threshold)
+
+                    -- 3. Power scaling keeps the remaining peaks sharp
+                    local weight = widened_height ^ 3
+
+                    weights[i] = weight
+                    total_weight = total_weight + weight
+                end
+
+                local random_target = math.random() * total_weight
+                local running_total = 0
+
+                -- 5. Walk through the weights to find which index `i` wins
+                for i = 1, #free_lookup do
+                    running_total = running_total + weights[i]
+
+                    -- The moment the running total passes our random roll, `i` is our chosen index!
+                    if random_target <= running_total then
+                        free = free_lookup[i] -- Here is where index `i` gives you your xy_pair
+                        break
+                    end
+                end
+
+                --[[local last_index = math.random(#free_lookup)
+                local cluster_strength = 25-- Controls how wide the current local clump is
+
+                local function pickExtremeStickyPair()
+                    local weights = {}
+                    local total_weight = 0
+                    local n = #free_lookup
+
+                    for i = 1, n do
+                        -- Distance from the last picked item
+                        local distance = math.abs(i - last_index)
+
+                        -- Massive exponential penalty for moving away from the current spot
+                        local weight = math.exp(-distance / cluster_strength)
+
+                        weights[i] = weight
+                        total_weight = total_weight + weight
+                    end
+
+                    -- Weighted random roll
+                    local r = math.random() * total_weight
+                    local cumulative = 0
+                    local selected_index = last_index
+
+                    for i = 1, n do
+                        cumulative = cumulative + weights[i]
+                        if r <= cumulative then
+                            selected_index = i
+                            break
+                        end
+                    end
+
+                    last_index = selected_index
+                    return free_lookup[selected_index]
+                end]]--
+
+                --free = pickExtremeStickyPair()
+
+                --[[local n = #free_lookup
+                local base_index = math.random(n)
+                -- Add random noise (e.g., between -3 and 3)
+                local noise = math.random(-3, 3)
+                local sampled_index = math.max(1, math.min(n, base_index + noise))
+                free = free_lookup[math.random(sampled_index)]]--
+
+                --free = free_lookup[math.random(#free_lookup)]
                 mountain.size = math.random(volcano1.size_min,volcano1.size_max)
                 fits = true
                 for x=free.x, math.min(MAP_SIZE,free.x+mountain.size) do
@@ -788,11 +869,6 @@ local function generate_map()
                     for y=free.y, math.min(MAP_SIZE,free.y+mountain.size) do
                         free_area[x][y] = false
                         free_tiles = free_tiles - 1
-                        --[[for j=#free_lookup, 1, -1 do
-                            if free_lookup[j].x == x and free_lookup[j].y == y then
-                                table.remove(free_lookup, j)
-                            end
-                        end]]--
                     end
                 end
             end
