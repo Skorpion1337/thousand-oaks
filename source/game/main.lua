@@ -705,6 +705,52 @@ local function make_noise(size, factor)
     return free*factor
 end
 
+local function make_noise2(size, factor)
+    factor = factor or 1
+    local effective_size = math.floor(size / factor)
+
+    local weights = {}
+    local total_weight = 0
+
+    -- Lower frequencies make features wider and more clustered ("clumpy")
+    local freq1 = 0.002
+    local freq2 = 0.008
+    local valley_threshold = 0.5
+
+    for i = 1, effective_size do
+        local major_range = math.abs(math.cos(i * freq1))
+        local jagged_peaks = math.abs(math.sin(i * freq2))
+
+        local raw_height = (major_range * 0.7) + (jagged_peaks * 0.3)
+        local widened_height = math.max(0, raw_height - valley_threshold)
+
+        -- Higher power scaling creates sharper, more isolated clumps
+        local weight = widened_height ^ 4
+
+        weights[i] = weight
+        total_weight = total_weight + weight
+    end
+
+    -- Fallback safety check if all weights end up at zero
+    if total_weight == 0 then
+        return math.random(1, effective_size) * factor
+    end
+
+    local random_target = math.random() * total_weight
+    local running_total = 0
+    local chosen_index = effective_size
+
+    for i = 1, effective_size do
+        running_total = running_total + weights[i]
+        if random_target <= running_total then
+            chosen_index = i
+            break
+        end
+    end
+
+    return chosen_index * factor
+end
+
 local function generate_lake(start_x, start_y, width,height,limit,visited,tile_n,draw_tiles)
     local cx = start_x + width / 2
     local cy = start_y + height / 2
@@ -804,7 +850,7 @@ local function generate_map()
             local mountain = {}
             local free
             repeat
-                free = free_lookup[make_noise(#free_lookup,(volcano1.size_min+volcano1.size_max)/2)]
+                free = free_lookup[make_noise2(#free_lookup,(volcano1.size_min+volcano1.size_max)/2)]
 
                 --free = free_lookup[math.random(#free_lookup)]
                 mountain.size = math.random(volcano1.size_min,volcano1.size_max)
