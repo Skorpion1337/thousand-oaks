@@ -1,2 +1,7 @@
 Use W, S, A, D to move around in the map.
 
+Every turn the mines produce resources from the nodes in their area like mountains or forests.
+
+Every turn you can build roads to connect the cities for moving resources for example. The bigger the total population, the more roads you can build per turn. Every structure like mountains and trees counts as road so you can move through them.
+
+Building a new mine costs 100 total oak, it is removed evenly from all mines.

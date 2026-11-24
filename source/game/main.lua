@@ -17,7 +17,7 @@ MAP_SIZE = 300
 MAX_LAKE_SIZE = 0.1*200/MAP_SIZE
 MIN_LAKE_SIZE = 0.2*200/MAP_SIZE
 MAPSPEEDSEC = 0.01
-MAX_VOLCANO = 0.8
+MAX_VOLCANO = 0.05
 VOLCANISM = 1/7
 
 DELIMITER = "+"
@@ -105,12 +105,14 @@ pieces = {
     {name="forest2", size_max = 4, size_min = 1},
 }
 
-local function find_pieces(name)
+local function find_pieces_with_prefix(name)
+    local node = {}
     for i=1, #pieces do
-        if pieces[i].name == name then
-            return pieces[i]
+        if string.sub(pieces[i].name,1,string.len(name)) == name then
+            node[#node+1] = pieces[i]
         end
     end
+    return node
 end
 
 HELP_TEXT = 'REPORTING BUGS\n\n\nPlease report bugs at\n1. Github issues at https://github.com/Skorpion1337/thousand-oaks/issues\n2. Shoutbox at https://tinyurl.com/1000oakz\n\n\nSOMETHING ABOUT CLUTTER\n\n\nLook at folder %APPDATA%/LOVE to save some space! This folder is \nfor starting directly from code.\n \n\nAnd look at folder %APPDATA%/gamename or simply %APPDATA%/game. This folder is \nfor starting from the compiled executable.\n\n\nIn Linux look for these\n$XDG_DATA_HOME/love/ or ~/.local/share/love/\nlove may be replaced by game name or simply "game"\n\n\nIf you corrupt your settings and the game looks wonky, try deleting\nthe "options" file so it is regenerated to its default values.\n\n\nAND NOW FOR LICENSES\n\n\nAdditional licenses not mentioned in the license file in the game folder \nand folder love in the source distribution\n\n\nThis game\nby Skorpion1337\ntinyurl.com/1000oakz\nGPLv3\nhttps://www.gnu.org/licenses/gpl-3.0.html\n\n\n----Libraries----\n\n\nlume\nA collection of functions for Lua, geared towards game development.\nUsing it for serializing data before compression.\nhttps://github.com/rxi/lume\nMIT \n--\n-- lume\n--\n-- Copyright (c) 2020 rxi\n--\n-- Permission is hereby granted, free of charge, to any person obtaining a copy of\n-- this software and associated documentation files (the "Software"), to deal in\n-- the Software without restriction, including without limitation the rights to\n-- use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\n-- of the Software, and to permit persons to whom the Software is furnished to do\n-- so, subject to the following conditions:\n--\n-- The above copyright notice and this permission notice shall be included in all\n-- copies or substantial portions of the Software.\n--\n-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n-- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n-- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n-- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n-- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n-- SOFTWARE.\n--\n\n\n----Graphics----\n\n\nBackground love potion - graphics/potion.jpg\nhttps://en.wikipedia.org/wiki/File:Filtre_d%27Amour.jpg\nFrom user https://commons.wikimedia.org/wiki/User:Arnaud_25 - Arnaud_25\nCreative Commons Attribution-Share Alike 4.0 International\nhttps://creativecommons.org/licenses/by-sa/4.0/deed.en\n\n\nFrozen Lake winter terrain and water tiles - eg. graphics/terrain/1\nSome of them have been touched to fit different temperature states\nhttps://opengameart.org/content/frozen-lake-lpc\nFrom user https://opengameart.org/users/zapaper - Peter\nCredits to http://www.buko-studios.com/ Commissioned by PlayCraft: www.playcraftapp.com\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/deed.en\n\n\n16x16 Overworld Tiles used to create volcano - graphics/terrain/volcano.png\nAnd also mountain - terrain/mountain.png\nAnd also forest tiles - eg. graphics/terrain/1\nhttps://opengameart.org/content/16x16-overworld-tiles\nFrom user https://opengameart.org/users/sharm - Lanea Zimmerman\nCC-BY 4.0\nhttps://creativecommons.org/licenses/by/4.0/deed.en\n\n\nWhispers of Avalon: Desert Tileset  - eg. graphics/terrain/6\nAlso touched to create more desert tiles\nhttps://opengameart.org/content/whispers-of-avalon-desert-tileset\nFrom user https://opengameart.org/users/leonard-pabin - Leonard pabin, Ali-G\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/deed.en\n\n\nWhispers of Avalon: Grassland Tileset - graphics/terrain/5/ground1.png\nhttps://opengameart.org/content/whispers-of-avalon-grassland-tileset\nFrom user https://opengameart.org/users/leonard-pabin - Leonard pabin\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/deed.en\n\n\n17 Grass Tiles - graphics/terrain/ various\nhttps://opengameart.org/content/17-grass-tiles\nFrom user https://opengameart.org/users/hawkadium - Hawkadium\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/deed.en\n\n\n32x32 (and 16x16) RPG Tiles--Forest and some Interior Tiles - graphics/ various forests\nhttps://opengameart.org/content/32x32-and-16x16-rpg-tiles-forest-and-some-interior-tiles\nStephen Challener and the Open Surge team ( http://opensnc.sourceforge.net),\nhosted by OpenGameArt.org\nhttps://opengameart.org/users/redshrike\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/deed.en'
@@ -742,32 +744,57 @@ local function generate_map()
     end
 
     local mountain_ratio = calculate_property_ratio("Volcanism")*MAX_VOLCANO
-    local volcano1 = find_pieces("volcano1")
+    local volcano1 = find_pieces_with_prefix("volcano")[1]
     local amount_of_mountains = mountain_ratio*free_tiles/( (volcano1.size_min+volcano1.size_max)/2 )
+
+    Save.structure_locations = {}
+    for x = 1, MAP_SIZE do
+        Save.structure_locations[x] = {}
+    end
 
     Save.structures = {}
     if amount_of_mountains > 0 then
         for i = 1, amount_of_mountains do
             local mountain = {}
-            local pos = math.random(#free_lookup)
-            local free = free_lookup[pos]
-            table.remove(free_lookup, pos)
+            local free
+            repeat
+                free = free_lookup[math.random(#free_lookup)]
+                mountain.size = math.random(volcano1.size_min,volcano1.size_max)
+                fits = true
+                for x=free.x, math.min(MAP_SIZE,free.x+mountain.size) do
+                    for y=free.y, math.min(MAP_SIZE,free.y+mountain.size) do
+                        if free_area[x][y] == false then
+                            fits = false
+                        end
+                    end
+                end
+            until fits
+            if fits then
+                local each = 1/VOLCANISM
+                local mountainfull = math.random(each)
+                if mountainfull == 1 then
+                    mountain.name = "volcano1"
+                else
+                    mountain.name = "mountain1"
+                end
+                mountain.tile = Tiles[tiles_with_prefix(mountain.name)[1]]
+                mountain.x = free.x
+                mountain.y = free.y
+                Save.structure_locations[free.x][free.y] = #Save.structures+1
+                Save.structures[#Save.structures+1] = mountain
 
-            free_area[free.x][free.y] = false
-            free_tiles = free_tiles - 1
-
-            local each = 1/VOLCANISM
-            local mountainfull = math.random(each)
-            if mountainfull == 1 then
-                mountain.name = "volcano1"
-            else
-                mountain.name = "mountain1"
+                for x=free.x, math.min(MAP_SIZE,free.x+mountain.size) do
+                    for y=free.y, math.min(MAP_SIZE,free.y+mountain.size) do
+                        free_area[x][y] = false
+                        free_tiles = free_tiles - 1
+                        for j=#free_lookup, 1, -1 do
+                            if free_lookup[j].x == x and free_lookup[j].y == y then
+                                table.remove(free_lookup, j)
+                            end
+                        end
+                    end
+                end
             end
-            mountain.tile = Tiles[tiles_with_prefix(mountain.name)[1]]
-            mountain.x = x
-            mountain.y = y
-            mountain.size = math.random(volcano1.size_min,volcano1.size_max)
-            Save.structures[#Save.structures] = mountain
         end
     end
 end
@@ -1209,13 +1236,30 @@ function love.draw()
         gfx.print(State.help_text, Buttons[State.leaf][2].x-beyondbuttonw+State.helppadding, Buttons[State.leaf][2].y+Buttons[State.leaf][2].height+State.helppadding/3)
     elseif State.leaf == 6 then
         gfx.push()
-        for x=Save.mapx,Save.mapx+ScreenWidth/(TILERATIO*ScreenWidth)+1 do
-            for y=Save.mapy,Save.mapy+ScreenHeight/(TILERATIO*ScreenHeight)+1 do
+        local max_width = ScreenWidth/(TILERATIO*ScreenWidth)+1
+        local max_height = ScreenHeight/(TILERATIO*ScreenHeight)+1
+        for x=Save.mapx,Save.mapx+max_width do
+            for y=Save.mapy,Save.mapy+max_height do
                 gfx.push()
                 local tile = Tiles[Save.map[x][y]][property_level("Temperature")]
                 local scale = ScreenWidth/tile:getWidth()*TILERATIO
                 gfx.scale(scale, scale)
                 gfx.draw(tile, (x-Save.mapx)*ScreenWidth*TILERATIO/scale, (y-Save.mapy)*ScreenWidth*TILERATIO/scale)
+                gfx.pop()
+            end
+        end
+        local mountain_max_size = find_pieces_with_prefix("volcano")[1].size_max
+        for x=math.max(1,Save.mapx-mountain_max_size),Save.mapx+max_width do
+            for y=math.max(1, Save.mapy-mountain_max_size),Save.mapy+max_height do
+                gfx.push()
+                if Save.structure_locations[x][y] ~= nil then
+                    local structure = Save.structures[Save.structure_locations[x][y]]
+                    local scale = ScreenWidth/structure.tile[property_level("Temperature")]:getWidth()*TILERATIO*structure.size
+                    gfx.scale(scale, scale)
+                    gfx.draw(structure.tile[property_level("Temperature")],
+                            (x-Save.mapx)*ScreenWidth*TILERATIO/scale,
+                            (y-Save.mapy)*ScreenWidth*TILERATIO/scale)
+                end
                 gfx.pop()
             end
         end
