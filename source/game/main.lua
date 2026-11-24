@@ -661,6 +661,50 @@ function random_float(min, max)
     return min + math.random() * (max - min)
 end
 
+local function make_noise(size, factor)
+    if factor == nil then
+        factor = 1
+    end
+    size = size/factor
+
+    local weights = {}
+    local total_weight = 0
+
+    for i = 1, size do
+        -- 1. Lower frequencies (0.01 and 0.04) stretch the mountains out wider
+        local major_range = math.abs(math.cos(i * 0.01))
+        local jagged_peaks = math.abs(math.sin(i * 0.04))
+
+        local raw_height = (major_range * 0.7) + (jagged_peaks * 0.3)
+
+        -- 2. Widen the valleys by subtracting a threshold (e.g., 0.4)
+        -- Everything below 0.4 becomes a flat, zero-weight valley floor
+        local valley_threshold = 0.4
+        local widened_height = math.max(0, raw_height - valley_threshold)
+
+        -- 3. Power scaling keeps the remaining peaks sharp
+        local weight = widened_height ^ 3
+
+        weights[i] = weight
+        total_weight = total_weight + weight
+    end
+
+    local random_target = math.random() * total_weight
+    local running_total = 0
+
+    -- 5. Walk through the weights to find which index `i` wins
+    for i = 1, size do
+        running_total = running_total + weights[i]
+
+        -- The moment the running total passes our random roll, `i` is our chosen index!
+        if random_target <= running_total then
+            free = i -- Here is where index `i` gives you your xy_pair
+            break
+        end
+    end
+    return free*factor
+end
+
 local function generate_lake(start_x, start_y, width,height,limit,visited,tile_n,draw_tiles)
     local cx = start_x + width / 2
     local cy = start_y + height / 2
@@ -760,41 +804,7 @@ local function generate_map()
             local mountain = {}
             local free
             repeat
-                local weights = {}
-                local total_weight = 0
-
-                for i = 1, #free_lookup do
-                    -- 1. Lower frequencies (0.01 and 0.04) stretch the mountains out wider
-                    local major_range = math.abs(math.cos(i * 0.01))
-                    local jagged_peaks = math.abs(math.sin(i * 0.04))
-
-                    local raw_height = (major_range * 0.7) + (jagged_peaks * 0.3)
-
-                    -- 2. Widen the valleys by subtracting a threshold (e.g., 0.4)
-                    -- Everything below 0.4 becomes a flat, zero-weight valley floor
-                    local valley_threshold = 0.4
-                    local widened_height = math.max(0, raw_height - valley_threshold)
-
-                    -- 3. Power scaling keeps the remaining peaks sharp
-                    local weight = widened_height ^ 3
-
-                    weights[i] = weight
-                    total_weight = total_weight + weight
-                end
-
-                local random_target = math.random() * total_weight
-                local running_total = 0
-
-                -- 5. Walk through the weights to find which index `i` wins
-                for i = 1, #free_lookup do
-                    running_total = running_total + weights[i]
-
-                    -- The moment the running total passes our random roll, `i` is our chosen index!
-                    if random_target <= running_total then
-                        free = free_lookup[i] -- Here is where index `i` gives you your xy_pair
-                        break
-                    end
-                end
+                free = free_lookup[make_noise(#free_lookup,(volcano1.size_min+volcano1.size_max)/2)]
 
                 --free = free_lookup[math.random(#free_lookup)]
                 mountain.size = math.random(volcano1.size_min,volcano1.size_max)
