@@ -661,6 +661,10 @@ function random_float(min, max)
     return min + math.random() * (max - min)
 end
 
+local function get_index(x, y, width)
+    return (y - 1) * width + x
+end
+
 local function make_noise(size)
     factor = 3
     if factor == nil then
@@ -717,7 +721,7 @@ local function generate_lake(start_x, start_y, width,height,limit,visited,tile_n
             local through = false
             if not (x > 0 and y > 0 and x < MAP_SIZE+1 and y < MAP_SIZE+1) then
                 through = true
-            elseif not visited[x][y] then
+            elseif not visited[get_index(x, y, MAP_SIZE)] then
                 through = true
             end
             if through then
@@ -732,7 +736,7 @@ local function generate_lake(start_x, start_y, width,height,limit,visited,tile_n
                 if distance <= 1.0 then
                     if x > 0 and y > 0 and x < MAP_SIZE+1 and y < MAP_SIZE+1 then
                         Save.map[x][y] = draw_tiles[math.random(#draw_tiles)]
-                        visited[x][y] = true
+                        visited[get_index(x, y, MAP_SIZE)] = true
                         limit = limit + 1
                         if limit >= tile_n then
                             return nil, nil, true
@@ -764,9 +768,6 @@ local function generate_map()
     local water_tile_n = water_ratio * MAP_SIZE * MAP_SIZE
     if water_tile_n > 0 then
         local visited = {}
-        for i = 1, MAP_SIZE do
-            visited[i] = {}
-        end
         local tiles = 0
         local breakout_limit = false
         local draw_tiles = tiles_with_prefix("water")
@@ -786,17 +787,15 @@ local function generate_map()
     end
 
     local free_lookup = {}
-    local free_area = {}
+    local visited = {}
     local free_tiles = 0
     for x = 1, MAP_SIZE do
-        free_area[x] = {}
         for y = 1, MAP_SIZE do
             if has_value(ground_tiles, Save.map[x][y]) then
-                free_area[x][y] = true
                 free_lookup[#free_lookup+1] = {x=x,y=y}
                 free_tiles = free_tiles + 1
             else
-                free_area[x][y] = false
+                visited[get_index(x, y, MAP_SIZE)] = true
             end
         end
     end
@@ -826,12 +825,11 @@ local function generate_map()
                 used[noise] = true
                 free = free_lookup[noise]
 
-                --free = free_lookup[math.random(#free_lookup)]
                 mountain.size = math.random(volcano1.size_min,volcano1.size_max)
                 fits = true
                 for x=free.x, math.min(MAP_SIZE,free.x+mountain.size-1) do
                     for y=free.y, math.min(MAP_SIZE,free.y+mountain.size-1) do
-                        if free_area[x][y] == false then
+                        if visited[get_index(x, y, MAP_SIZE)] then
                             fits = false
                         end
                     end
@@ -852,7 +850,7 @@ local function generate_map()
 
                 for x=free.x, math.min(MAP_SIZE,free.x+mountain.size) do
                     for y=free.y, math.min(MAP_SIZE,free.y+mountain.size) do
-                        free_area[x][y] = false
+                        visited[get_index(x, y, MAP_SIZE)] = true
                         free_tiles = free_tiles - 1
                     end
                 end
@@ -862,7 +860,7 @@ local function generate_map()
     local free_lookup = {}
     for x = 1, MAP_SIZE do
         for y = 1, MAP_SIZE do
-            if has_value(ground_tiles, Save.map[x][y]) and free_area[x][y] == true then
+            if has_value(ground_tiles, Save.map[x][y]) and visited[get_index(x, y, MAP_SIZE)] == false then
                 free_lookup[#free_lookup+1] = {x=x,y=y}
             end
         end
