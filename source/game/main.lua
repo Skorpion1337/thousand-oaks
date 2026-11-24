@@ -760,7 +760,6 @@ local function generate_lake(start_x, start_y, width,height,limit,visited,tile_n
     for x = start_x, start_x + width - 1 do
         for y = start_y, start_y + height - 1 do
             local through = false
-            check2 = start_x
             if not (x > 0 and y > 0 and x < MAP_SIZE+1 and y < MAP_SIZE+1) then
                 through = true
             elseif not visited[x][y] then
