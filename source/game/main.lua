@@ -775,7 +775,7 @@ local function generate_lake(start_x, start_y, width,height,limit,visited,tile_n
                 local distance = (dx * dx) + (dy * dy) + noise
 
                 if distance <= 1.0 then
-                    if x > 0 and y > 0 and x < MAP_SIZE and y < MAP_SIZE then
+                    if x > 0 and y > 0 and x < MAP_SIZE+1 and y < MAP_SIZE+1 then
                         Save.map[x][y] = draw_tiles[math.random(#draw_tiles)]
                         visited[x][y] = true
                         limit = limit + 1
