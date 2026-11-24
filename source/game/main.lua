@@ -809,8 +809,8 @@ local function generate_map()
                 --free = free_lookup[math.random(#free_lookup)]
                 mountain.size = math.random(volcano1.size_min,volcano1.size_max)
                 fits = true
-                for x=free.x, math.min(MAP_SIZE,free.x+mountain.size) do
-                    for y=free.y, math.min(MAP_SIZE,free.y+mountain.size) do
+                for x=free.x, math.min(MAP_SIZE,free.x+mountain.size-1) do
+                    for y=free.y, math.min(MAP_SIZE,free.y+mountain.size-1) do
                         if free_area[x][y] == false then
                             fits = false
                         end
