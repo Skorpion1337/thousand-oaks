@@ -759,7 +759,14 @@ local function generate_lake(start_x, start_y, width,height,limit,visited,tile_n
 
     for x = start_x, start_x + width - 1 do
         for y = start_y, start_y + height - 1 do
-            if visited[x][y] == false then
+            local through = false
+            check2 = start_x
+            if not (x > 0 and y > 0 and x < MAP_SIZE+1 and y < MAP_SIZE+1) then
+                through = true
+            elseif not visited[x][y] then
+                through = true
+            end
+            if through then
                 -- Normalized distance from center (-1 to 1 range roughly)
                 local dx = (x - cx) / rx
                 local dy = (y - cy) / ry
@@ -769,11 +776,13 @@ local function generate_lake(start_x, start_y, width,height,limit,visited,tile_n
                 local distance = (dx * dx) + (dy * dy) + noise
 
                 if distance <= 1.0 then
-                    Save.map[x][y] = draw_tiles[math.random(#draw_tiles)]
-                    visited[x][y] = true
-                    limit = limit + 1
-                    if limit >= tile_n then
-                        return nil, nil, true
+                    if x > 0 and y > 0 and x < MAP_SIZE and y < MAP_SIZE then
+                        Save.map[x][y] = draw_tiles[math.random(#draw_tiles)]
+                        visited[x][y] = true
+                        limit = limit + 1
+                        if limit >= tile_n then
+                            return nil, nil, true
+                        end
                     end
                 end
             end
@@ -811,9 +820,17 @@ local function generate_map()
         local breakout_limit = false
         local draw_tiles = tiles_with_prefix("water")
         repeat
-            local width = MAP_SIZE*random_float(MIN_LAKE_SIZE, MAX_LAKE_SIZE)
-            local height = MAP_SIZE*random_float(MIN_LAKE_SIZE, MAX_LAKE_SIZE)
-            tiles, visited, breakout_limit = generate_lake(math.random(MAP_SIZE-width),math.random(MAP_SIZE-height), width, height, tiles, visited, water_tile_n, draw_tiles)
+            local width = math.floor(MAP_SIZE*random_float(MIN_LAKE_SIZE, MAX_LAKE_SIZE))
+            local height = math.floor(MAP_SIZE*random_float(MIN_LAKE_SIZE, MAX_LAKE_SIZE))
+            tiles, visited, breakout_limit = generate_lake(
+                    math.random(-width,MAP_SIZE+width),
+                    math.random(-height,MAP_SIZE+height),
+                    width,
+                    height,
+                    tiles,
+                    visited,
+                    water_tile_n,
+                    draw_tiles)
         until breakout_limit
     end
 
