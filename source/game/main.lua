@@ -811,9 +811,6 @@ local function generate_map()
         local visited = {}
         for i = 1, MAP_SIZE do
             visited[i] = {}
-            for j = 1, MAP_SIZE do
-                visited[i][j] = false
-            end
         end
         local tiles = 0
         local breakout_limit = false
