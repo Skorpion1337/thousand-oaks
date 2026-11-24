@@ -136,7 +136,7 @@ randomgen:setSeed(os.time())
 math.randomseed(os.time())
 
 local function savefile(save_number)
-    local compressed = love.data.compress("string", COMPRESSION, lume.serialize(Save), 1)
+    local compressed = love.data.compress("string", COMPRESSION, lume.serialize(Save), 5)
 
     love.filesystem.write(SAVEFILE..save_number, compressed)
 end
@@ -753,6 +753,8 @@ local function generate_map()
     end
 
     Save.structures = {}
+    local mountain_tile = tiles_with_prefix("mountain")[1]
+    local volcano_tile = tiles_with_prefix("volcano")[1]
     if amount_of_mountains > 0 then
         for i = 1, amount_of_mountains do
             local mountain = {}
@@ -773,11 +775,10 @@ local function generate_map()
                 local each = 1/VOLCANISM
                 local mountainfull = math.random(each)
                 if mountainfull == 1 then
-                    mountain.name = "volcano1"
+                    mountain.tile = volcano_tile
                 else
-                    mountain.name = "mountain1"
+                    mountain.tile = mountain_tile
                 end
-                mountain.tile = Tiles[tiles_with_prefix(mountain.name)[1]]
                 mountain.x = free.x
                 mountain.y = free.y
                 Save.structure_locations[free.x][free.y] = #Save.structures+1
@@ -1254,9 +1255,9 @@ function love.draw()
                 gfx.push()
                 if Save.structure_locations[x][y] ~= nil then
                     local structure = Save.structures[Save.structure_locations[x][y]]
-                    local scale = ScreenWidth/structure.tile[property_level("Temperature")]:getWidth()*TILERATIO*structure.size
+                    local scale = ScreenWidth/Tiles[structure.tile][1]:getWidth()*TILERATIO*structure.size
                     gfx.scale(scale, scale)
-                    gfx.draw(structure.tile[property_level("Temperature")],
+                    gfx.draw(Tiles[structure.tile][1],
                             (x-Save.mapx)*ScreenWidth*TILERATIO/scale,
                             (y-Save.mapy)*ScreenWidth*TILERATIO/scale)
                 end
