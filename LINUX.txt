@@ -1,8 +1,10 @@
 Download the Linux AppImage from love2d.org
 Set it to have executable rights
 Run the command "./Love-AppImage /path/to/main.lua/source/folder"
-See an example in "launch code.bat"
+See an example in "launch code.bat". It is the Windows version of starting directly from code.
 Have fun!
+
+Starting straight from code and starting from the compiled executable have different saves and options.
 
 
 Major distros work out of the box, but here is something for some more eccentric setups!

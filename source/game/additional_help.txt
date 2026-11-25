@@ -9,17 +9,17 @@ Please report bugs at
 SOMETHING ABOUT CLUTTER
 
 
-Look at folder %APPDATA%/LOVE to save some space! This folder is 
-for starting directly from code.
+Look at folder %APPDATA%/LOVE to save some space! 
+This folder is for starting directly from code.
  
 
-And look at folder %APPDATA%/gamename or simply %APPDATA%/game. This folder is 
-for starting from the compiled executable.
+And look at folder %APPDATA%/gamename(eg. thousandoaks) or simply %APPDATA%/game. 
+This folder is for starting from the compiled executable.
 
 
 In Linux look for these
 $XDG_DATA_HOME/love/ or ~/.local/share/love/
-love may be replaced by game name or simply "game"
+love may be replaced by gamename(eg. thousandoaks) or simply "game"
 
 
 If you corrupt your settings and the game looks wonky, try deleting
