@@ -7,11 +7,11 @@ Have fun!
 
 Major distros work out of the box, but here is something for some more eccentric setups!
 
-If if the screen is always centered and x and y option values are ignored, run "SDL_VIDEODRIVER=x11" command and restart the game.
-You can set it back with "SDL_VIDEODRIVER=wayland" later.
-
-If you have problems especially when clicking the New Game button first try using their version of love eg.; sudo pacman -S love
+First and foremost if you cannot start the game or you have problems especially when clicking the New Game button first try using their version of love eg.: "sudo pacman -S love"
 and run with "love /path/to/main.lua/source/folder" instead of running the AppImage
+
+If the screen is still always centered and x and y option values are ignored, run "SDL_VIDEODRIVER=x11" command and restart the game.
+You can set it back with "SDL_VIDEODRIVER=wayland" later.
 
 Lighter desktop environments like Xfce, Cinnamon, or MATE don't support Wayland!
 So if you get Wayland problems simply run the command: "SDL_VIDEODRIVER=x11" and restart the game
