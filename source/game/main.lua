@@ -1,5 +1,10 @@
+VERSION = "v0.0.1"
+VERSION_FILE = "version"
+VICTORY_FILE = "victories"
+
 Save = {}
 Save.gamename = "Thousand Oaks: The Mining Empire"
+IDENT = "thousandoaks"
 
 MINIMUM_SCREEN_SCALE = 25
 SCREENRATIO = 16/9
@@ -18,6 +23,7 @@ MAX_LAKE_SIZE = 0.1*200/MAP_SIZE
 MIN_LAKE_SIZE = 0.2*200/MAP_SIZE
 MAPSPEEDSEC = 0.01
 MAX_VOLCANO = 0.05
+MAX_VEGETATION = MAX_VOLCANO
 VOLCANISM = 1/7
 
 DELIMITER = "+"
@@ -30,6 +36,7 @@ BUTTONNORMALCOLOR = {0.5,0.5,0.5}
 
 SAVEFILE = "savefile" -- +n
 COMPRESSION = "zlib"
+COMPRESSION_LEVEL = 5
 SAVENAMEFILE = "savenames"
 OPTIONSFILE = "options"
 SAVEFILEAMOUNT = 11
@@ -129,14 +136,31 @@ local love = require("love")
 local lume = require("lib.lume")
 local utf8 = require("utf8")
 
+love.filesystem.setIdentity(IDENT)
+
 local gfx = love.graphics
 
 local randomgen = love.math.newRandomGenerator()
 randomgen:setSeed(os.time())
 math.randomseed(os.time())
 
+local function save_victories()
+    local compressed = love.data.compress("string", COMPRESSION, lume.serialize(Victories), COMPRESSION_LEVEL)
+    love.filesystem.write(VICTORY_FILE, compressed)
+end
+
+local function load_victories()
+    local contents, _ = love.filesystem.read(VICTORY_FILE)
+    Victories = lume.deserialize(love.data.decompress("string", COMPRESSION, contents))
+end
+
+local function add_victories()
+    Victories = Victories + 1
+    save_victories()
+end
+
 local function savefile(save_number)
-    local compressed = love.data.compress("string", COMPRESSION, lume.serialize(Save), 5)
+    local compressed = love.data.compress("string", COMPRESSION, lume.serialize(Save), COMPRESSION_LEVEL)
 
     love.filesystem.write(SAVEFILE..save_number, compressed)
 end
@@ -657,7 +681,7 @@ local function tiles_with_prefix(prefix)
     return tiles
 end
 
-function random_float(min, max)
+local function random_float(min, max)
     return min + math.random() * (max - min)
 end
 
@@ -665,11 +689,21 @@ local function get_index(x, y, width)
     return (y - 1) * width + x
 end
 
+local function mean_value(list_of_values)
+    if #list_of_values == 0 then
+        return 0 -- Handle empty lists to avoid division by zero
+    end
+
+    local sum = 0
+    for i = 1, #list_of_values do
+        sum = sum + list_of_values[i]
+    end
+
+    return sum / #list_of_values
+end
+
 local function make_noise(size)
     factor = 3
-    if factor == nil then
-        factor = 1
-    end
     size = size/factor
 
     local weights = {}
@@ -800,6 +834,7 @@ local function generate_map()
         end
     end
 
+    -- this is actually wrong but works, at least the side(the mean value calc) should be squared but who cares
     local mountain_ratio = calculate_property_ratio("Volcanism")*MAX_VOLCANO
     local volcano1 = find_pieces_with_prefix("volcano")[1]
     local amount_of_mountains = mountain_ratio*free_tiles/( (volcano1.size_min+volcano1.size_max)/2 )
@@ -835,24 +870,22 @@ local function generate_map()
                     end
                 end
             until fits
-            if fits then
-                local each = 1/VOLCANISM
-                local mountainfull = math.random(each)
-                if mountainfull == 1 then
-                    mountain.tile = volcano_tile
-                else
-                    mountain.tile = mountain_tile
-                end
-                mountain.x = free.x
-                mountain.y = free.y
-                Save.structure_locations[free.x][free.y] = #Save.structures+1
-                Save.structures[#Save.structures+1] = mountain
+            local each = 1/VOLCANISM
+            local mountainfull = math.random(each)
+            if mountainfull == 1 then
+                mountain.tile = volcano_tile
+            else
+                mountain.tile = mountain_tile
+            end
+            mountain.x = free.x
+            mountain.y = free.y
+            Save.structure_locations[free.x][free.y] = #Save.structures+1
+            Save.structures[#Save.structures+1] = mountain
 
-                for x=free.x, math.min(MAP_SIZE,free.x+mountain.size) do
-                    for y=free.y, math.min(MAP_SIZE,free.y+mountain.size) do
-                        visited[get_index(x, y, MAP_SIZE)] = true
-                        free_tiles = free_tiles - 1
-                    end
+            for x=free.x, math.min(MAP_SIZE,free.x+mountain.size) do
+                for y=free.y, math.min(MAP_SIZE,free.y+mountain.size) do
+                    visited[get_index(x, y, MAP_SIZE)] = true
+                    free_tiles = free_tiles - 1
                 end
             end
         end
@@ -860,9 +893,58 @@ local function generate_map()
     local free_lookup = {}
     for x = 1, MAP_SIZE do
         for y = 1, MAP_SIZE do
-            if has_value(ground_tiles, Save.map[get_index(x, y, MAP_SIZE)]) and visited[get_index(x, y, MAP_SIZE)] == false then
+            if not visited[get_index(x, y, MAP_SIZE)] then
                 free_lookup[#free_lookup+1] = {x=x,y=y}
             end
+        end
+    end
+
+    local all_pieces = {}
+    local forests = find_pieces_with_prefix("forest")
+    for i=1, #forests do
+        all_pieces[#all_pieces+1] = forests[i]
+    end
+    local trees = find_pieces_with_prefix("tree")
+    for i=1, #trees do
+        all_pieces[#all_pieces+1] = trees[i] --2.33 with 3 and 2.25 with 4
+    end
+    local sum_of_means = 0
+    for i=1, #all_pieces do
+        sum_of_means = sum_of_means + mean_value({all_pieces[i].size_min, all_pieces[i].size_max})
+    end
+    local final_mean = sum_of_means / #all_pieces
+
+    -- this is actually wrong but works, at least the side (final_mean) should be squared but who cares
+    local forest_ratio = calculate_property_ratio("Vegetation")*MAX_VEGETATION
+    local amount_of_trees = forest_ratio*free_tiles/final_mean*0.1
+
+    if amount_of_trees > 0 then
+        for i=1, amount_of_trees do
+            local tree = {}
+            local free
+            local used = {}
+            repeat
+                local noise
+                repeat
+                    noise = make_noise(#free_lookup)
+                until not used[noise]
+                used[noise] = true
+                free = free_lookup[noise]
+
+                local piece = all_pieces[math.random(#all_pieces)]
+                tree.tile = piece--- start here
+                tree.size = math.random(piece.size_min, piece.size_max)
+
+                fits = true
+                --[[for x=free.x, math.min(MAP_SIZE,free.x+tree.size-1) do
+                    for y=free.y, math.min(MAP_SIZE,free.y+tree.size-1) do
+                        if visited[get_index(x, y, MAP_SIZE)] then
+                            fits = false
+                        end
+                    end
+                end]]--
+                check1 = #free_lookup
+            until fits
         end
     end
 end
@@ -1048,7 +1130,53 @@ function love.mousemoved(x, y, dx, dy, istouch )
     Currentx, Currenty = x,y
 end
 
+local function clearFilesExceptProtected(dir) --add manually, right now VERSION_FILE and VICTORY_FILE
+    dir = dir or ""
+    local items = love.filesystem.getDirectoryItems(dir)
+
+    for _, item in ipairs(items) do
+        local path = (dir == "") and item or (dir .. "/" .. item)
+
+        -- Check if the current item is NOT 'victories' and NOT 'version'
+        if item ~= VICTORY_FILE and item ~= VERSION_FILE then
+            local info = love.filesystem.getInfo(path)
+            if info then
+                if info.type == "file" then
+                    love.filesystem.remove(path)
+                elseif info.type == "directory" then
+                    -- Recursively clear subdirectories first, then remove the folder
+                    clearFilesExceptProtected(path)
+                    love.filesystem.remove(path)
+                end
+            end
+        end
+    end
+end
+
+local function reset_dirs()
+    love.filesystem.write(VERSION_FILE, VERSION)
+    clearFilesExceptProtected()
+end
+
 function love.load()
+    local info = love.filesystem.getInfo(VERSION_FILE)
+    if not info then
+        reset_dirs()
+    else
+        local contained_version = love.filesystem.read(VERSION_FILE)
+        if contained_version ~= VERSION then
+            reset_dirs()
+        end
+    end
+
+    local info = love.filesystem.getInfo(VICTORY_FILE)
+    if not info then
+        Victories = 0
+        save_victories()
+    else
+        load_victories()
+    end
+
     Save.planets = {}
 
     State = { leaf = 1, old_leaf = 1, dialog_type = nil, dialog_param=nil, hoover = 0, logo = gfx.newImage("graphics/logo.png"), logo2 = gfx.newImage("graphics/logo2.png"), button_bg = nil, button_bg_quad = nil, button_bg_hover = nil, bg_tile = gfx.newImage("graphics/bg_tile.png"), banner = gfx.newImage("graphics/banner.png"), bannerx = gfx.newImage("graphics/red.png"), bannerm = gfx.newImage("graphics/yellow.png"), red_crystal = gfx.newImage("graphics/crystal.png"), helpbg = gfx.newImage("graphics/forest.png"), helppadding = 0, savedhelpprefix=0, xprefix=0, yprefix=0, walkingwait = WALKSPEED, lovepotion=gfx.newImage("graphics/potion.jpg"), sulphur_mining = gfx.newImage("graphics/sulphur_mining_PD.jpg"), horsehead_nebula = gfx.newImage("graphics/horsehead_PD.jpg"), new_machine = gfx.newImage("graphics/new_machine.png"), star_of_dawn = gfx.newImage("graphics/star_of_dawn.png"), star_of_dawn_scale = 0, aim = gfx.newImage("graphics/aim.png"), mainmenubgs = {}, mainmenubgslocation = {}, mainmenubgsamount= 10, mainmenurepeat = 10, dialog_width = 0, dialog_height = 0}
