@@ -19,6 +19,7 @@ It makes dialog boxes fail silently so you cannot even open New Game cause it ha
 Install zenity (or kdialog if you're on KDE Plasma) via your package manager:
 sudo pacman -S zenity
 
-If New Game button still does not work you might also try GSK_RENDERER=cairo or GSK_RENDERER=gl and restart
+If New Game button still does not work you might also try running "GSK_RENDERER=cairo" or "GSK_RENDERER=gl" and restart
+You can later reset it with "unset GSK_RENDERER"
 
 
