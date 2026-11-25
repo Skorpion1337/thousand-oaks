@@ -3,3 +3,22 @@ Set it to have executable rights
 Run the command "./Love-AppImage /path/to/main.lua/source/folder"
 See an example in "launch code.bat"
 Have fun!
+
+
+Major distros work out of the box, but here is something for some more eccentric setups!
+
+First try using their version of love eg.; sudo pacman -S love
+and run with "love /path/to/main.lua/source/folder" instead of running the AppImage
+
+Lighter desktop environments like Xfce, Cinnamon, or MATE don't support Wayland!
+So if you get Wayland problems simply run the command: "SDL_VIDEODRIVER=x11" and restart
+You can set it back later with: "SDL_VIDEODRIVER=wayland"
+
+You might also be missing zenity or kdialog (Most Common on Arch / EndeavourOS)
+It makes dialog boxes fail silently so you cannot even open New Game cause it has a dialog
+Install zenity (or kdialog if you're on KDE Plasma) via your package manager:
+sudo pacman -S zenity
+
+If New Game button still does not work you might also try GSK_RENDERER=cairo or GSK_RENDERER=gl and restart
+
+
