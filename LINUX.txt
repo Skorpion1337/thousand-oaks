@@ -5,6 +5,10 @@ See an example in "launch code.bat"
 Have fun!
 
 
+Run "SDL_VIDEODRIVER=x11" command if you don't want the screen to be always centered and x and y option values ignored.
+You can set it back with "SDL_VIDEODRIVER=wayland"
+
+
 Major distros work out of the box, but here is something for some more eccentric setups!
 
 First try using their version of love eg.; sudo pacman -S love
@@ -21,5 +25,3 @@ sudo pacman -S zenity
 
 If New Game button still does not work you might also try running "GSK_RENDERER=cairo" or "GSK_RENDERER=gl" and restart
 You can later reset it with "unset GSK_RENDERER"
-
-
