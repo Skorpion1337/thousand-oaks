@@ -840,9 +840,6 @@ local function generate_map()
     local amount_of_mountains = mountain_ratio*free_tiles/( (volcano1.size_min+volcano1.size_max)/2 )
 
     Save.structure_locations = {}
-    for x = 1, MAP_SIZE do
-        Save.structure_locations[x] = {}
-    end
 
     Save.structures = {}
     local mountain_tile = tiles_with_prefix("mountain")[1]
@@ -879,7 +876,7 @@ local function generate_map()
             end
             mountain.x = free.x
             mountain.y = free.y
-            Save.structure_locations[free.x][free.y] = #Save.structures+1
+            Save.structure_locations[get_index(free.x, free.y, MAP_SIZE)] = #Save.structures+1
             Save.structures[#Save.structures+1] = mountain
 
             for x=free.x, math.min(MAP_SIZE,free.x+mountain.size) do
@@ -1448,8 +1445,8 @@ function love.draw()
         for x=math.max(1,Save.mapx-mountain_max_size),Save.mapx+max_width do
             for y=math.max(1, Save.mapy-mountain_max_size),Save.mapy+max_height do
                 gfx.push()
-                if Save.structure_locations[x][y] ~= nil then
-                    local structure = Save.structures[Save.structure_locations[x][y]]
+                if Save.structure_locations[get_index(x, y, MAP_SIZE)] ~= nil then
+                    local structure = Save.structures[Save.structure_locations[get_index(x, y, MAP_SIZE)]]
                     local scale = ScreenWidth/Tiles[structure.tile][1]:getWidth()*TILERATIO*structure.size
                     gfx.scale(scale, scale)
                     gfx.draw(Tiles[structure.tile][1],
