@@ -1,10 +1,10 @@
-VERSION = "v0.0.1"
-VERSION_FILE = "version"
-VICTORY_FILE = "victories"
-
+VERSION = "v0.0.1" -- remember to change version with every new release
+IDENT = "thousandoaks" -- remember to change ident if you make a new derivative of the game to avoid same files
 Save = {}
 Save.gamename = "Thousand Oaks: The Mining Empire"
-IDENT = "thousandoaks"
+
+VERSION_FILE = "version"
+VICTORY_FILE = "victories"
 
 MINIMUM_SCREEN_SCALE = 25
 SCREENRATIO = 16/9
@@ -959,7 +959,6 @@ local function generate_map()
                 used[noise] = true
                 free = free_lookup[noise]
 
-                --piece = all_pieces[math.random(#all_pieces)] --add noise !!! !!!
                 local index = math.random(#all_pieces)
                 -- Add noise: shift by -1, 0, or +1
                 local noise = math.random(-1, 1)
