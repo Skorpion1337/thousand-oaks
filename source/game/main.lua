@@ -23,7 +23,7 @@ MAX_LAKE_SIZE = 0.1*200/MAP_SIZE
 MIN_LAKE_SIZE = 0.2*200/MAP_SIZE
 MAPSPEEDSEC = 0.01
 MAX_VOLCANO = 0.05
-MAX_VEGETATION = MAX_VOLCANO
+MAX_VEGETATION = 0.3
 VOLCANISM = 1/7
 
 DELIMITER = "+"
@@ -106,11 +106,19 @@ temperature_colors= {
 pieces = {
     {name="volcano1", size_max = 8, size_min = 2}, -- keep same
     {name="mountain1", size_max = 8, size_min = 2}, -- keep same
-    {name="tree1", size_max = 3, size_min = 1},
-    {name="tree2", size_max = 3, size_min = 1},
-    {name="forest1", size_max = 4, size_min = 1},
-    {name="forest2", size_max = 4, size_min = 1},
+    {name="tree1", size_max = 4, size_min = 2},
+    {name="tree2", size_max = 3, size_min = 2},
+    {name="forest1", size_max = 5, size_min = 2},
+    {name="forest2", size_max = 5, size_min = 2},
 }
+-- Save the name into Tiles[] as well!!
+
+max_piece_size = 0
+for i=1, #pieces do
+    if pieces[i].size_max > max_piece_size then
+        max_piece_size = pieces[i].size_max
+    end
+end
 
 local function find_pieces_with_prefix(name)
     local node = {}
@@ -181,6 +189,12 @@ local function table_len(t)
         n = n + 1
     end
     return n
+end
+
+local function clamp(val, lower, upper)
+    if val < lower then return lower end
+    if val > upper then return upper end
+    return val
 end
 
 local function find_hoovered_button(x, y)
@@ -702,7 +716,7 @@ local function mean_value(list_of_values)
     return sum / #list_of_values
 end
 
-local function make_noise(size)
+local function make_noise_volc(size)
     factor = 3
     size = size/factor
 
@@ -743,6 +757,22 @@ local function make_noise(size)
     end
     return free*factor
 end
+
+local make_noise_veg = (function()
+    local x = 0
+    return function(size)
+        x = x + 1 -- Automatically advances every time you call it!
+
+        -- Fast O(1) wave calculation for natural clustering
+        local wave = math.sin(x * 0.05) + (math.cos(x * 0.12) * 0.5)
+        local normalized = (wave + 1.5) / 3.0
+
+        local index = math.floor(normalized * size) + 1
+        if index < 1 then return 1 end
+        if index > size then return size end
+        return index
+    end
+end)()
 
 local function generate_lake(start_x, start_y, width,height,limit,visited,tile_n,draw_tiles)
     local cx = start_x + width / 2
@@ -852,7 +882,7 @@ local function generate_map()
             repeat
                 local noise
                 repeat
-                    noise = make_noise(#free_lookup)
+                    noise = make_noise_volc(#free_lookup)
                 until not used[noise]
                 used[noise] = true
                 free = free_lookup[noise]
@@ -920,27 +950,49 @@ local function generate_map()
             local tree = {}
             local free
             local used = {}
+            local piece
             repeat
                 local noise
                 repeat
-                    noise = make_noise(#free_lookup)
+                    noise = make_noise_veg(#free_lookup)
                 until not used[noise]
                 used[noise] = true
                 free = free_lookup[noise]
 
-                local piece = all_pieces[math.random(#all_pieces)]
-                tree.tile = piece--- start here
+                --piece = all_pieces[math.random(#all_pieces)] --add noise !!! !!!
+                local index = math.random(#all_pieces)
+                -- Add noise: shift by -1, 0, or +1
+                local noise = math.random(-1, 1)
+                local targetIndex = clamp(index + noise, 1, #all_pieces)
+
+                piece = all_pieces[targetIndex]
+
                 tree.size = math.random(piece.size_min, piece.size_max)
 
                 fits = true
-                --[[for x=free.x, math.min(MAP_SIZE,free.x+tree.size-1) do
+                for x=free.x, math.min(MAP_SIZE,free.x+tree.size-1) do
                     for y=free.y, math.min(MAP_SIZE,free.y+tree.size-1) do
                         if visited[get_index(x, y, MAP_SIZE)] then
                             fits = false
                         end
                     end
-                end]]--
+                end
             until fits
+
+            local tiles = tiles_with_prefix(piece.name)
+            tree.tile = tiles[math.random(#tiles)]
+
+            tree.x = free.x
+            tree.y = free.y
+            Save.structure_locations[get_index(free.x, free.y, MAP_SIZE)] = #Save.structures+1
+            Save.structures[#Save.structures+1] = tree
+
+            for x=free.x, math.min(MAP_SIZE,free.x+tree.size) do
+                for y=free.y, math.min(MAP_SIZE,free.y+tree.size) do
+                    visited[get_index(x, y, MAP_SIZE)] = true
+                    free_tiles = free_tiles - 1
+                end
+            end
         end
     end
 end
@@ -1188,6 +1240,7 @@ function love.load()
 
     State.button_bg_quad = gfx.newQuad(0.5, 0, 1, 1, 2, 1)
 
+    -- Save the name into pieces[] as well!!
     Tiles = {}
     Tiles[#Tiles+1]={i = #Tiles+1, name="ground1", obstacle = false}
     for i = 1, stat_max do
@@ -1430,25 +1483,25 @@ function love.draw()
         gfx.push()
         local max_width = ScreenWidth/(TILERATIO*ScreenWidth)+1
         local max_height = ScreenHeight/(TILERATIO*ScreenHeight)+1
+        local temperature_level = property_level("Temperature")
         for x=Save.mapx,Save.mapx+max_width do
             for y=Save.mapy,Save.mapy+max_height do
                 gfx.push()
-                local tile = Tiles[Save.map[get_index(x, y, MAP_SIZE)]][property_level("Temperature")]
+                local tile = Tiles[Save.map[get_index(x, y, MAP_SIZE)]][temperature_level]
                 local scale = ScreenWidth/tile:getWidth()*TILERATIO
                 gfx.scale(scale, scale)
                 gfx.draw(tile, (x-Save.mapx)*ScreenWidth*TILERATIO/scale, (y-Save.mapy)*ScreenWidth*TILERATIO/scale)
                 gfx.pop()
             end
         end
-        local mountain_max_size = find_pieces_with_prefix("volcano")[1].size_max
-        for x=math.max(1,Save.mapx-mountain_max_size),Save.mapx+max_width do
-            for y=math.max(1, Save.mapy-mountain_max_size),Save.mapy+max_height do
+        for x=math.max(1,Save.mapx-max_piece_size),Save.mapx+max_width do
+            for y=math.max(1, Save.mapy-max_piece_size),Save.mapy+max_height do
                 gfx.push()
                 if Save.structure_locations[get_index(x, y, MAP_SIZE)] ~= nil then
                     local structure = Save.structures[Save.structure_locations[get_index(x, y, MAP_SIZE)]]
-                    local scale = ScreenWidth/Tiles[structure.tile][1]:getWidth()*TILERATIO*structure.size
+                    local scale = ScreenWidth/Tiles[structure.tile][temperature_level]:getWidth()*TILERATIO*structure.size
                     gfx.scale(scale, scale)
-                    gfx.draw(Tiles[structure.tile][1],
+                    gfx.draw(Tiles[structure.tile][temperature_level],
                             (x-Save.mapx)*ScreenWidth*TILERATIO/scale,
                             (y-Save.mapy)*ScreenWidth*TILERATIO/scale)
                 end
