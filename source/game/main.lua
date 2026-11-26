@@ -766,10 +766,10 @@ local make_noise_veg = (function()
         x = x + 1 -- Automatically advances every time you call it!
 
         -- Fast O(1) wave calculation for natural clustering
-        local wave = math.sin(x * 0.05) + (math.cos(x * 0.12) * 0.5)
+        local wave = sin(x * 0.05) + (cos(x * 0.12) * 0.5)
         local normalized = (wave + 1.5) / 3.0
 
-        local index = math.floor(normalized * size) + 1
+        local index = floor(normalized * size) + 1
         if index < 1 then return 1 end
         if index > size then return size end
         return index
