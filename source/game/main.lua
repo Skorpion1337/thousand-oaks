@@ -1019,7 +1019,7 @@ refresh_state = function()
     love.window.setMode(ScreenWidth, ScreenHeight, {resizable = false, borderless = true, y=ScreenY, x=ScreenX})
 
     love.window.setTitle(Save.gamename)
-    love.window.setVSync(2)
+    love.window.setVSync(-1)
     love.keyboard.setKeyRepeat(true)
     love.window.setIcon(love.image.newImageData("graphics/large_purple.png"))
 
