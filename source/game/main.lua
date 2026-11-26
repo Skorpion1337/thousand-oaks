@@ -716,46 +716,48 @@ local function mean_value(list_of_values)
     return sum / #list_of_values
 end
 
+local abs = math.abs
+local cos = math.cos
+local sin = math.sin
+local max = math.max
+local random = math.random
+local floor = math.floor
+
 local function make_noise_volc(size)
-    factor = 3
-    size = size/factor
+    local factor = 3
+    local scaled_size = floor(size / factor)
 
     local weights = {}
     local total_weight = 0
 
-    for i = 1, size do
-        -- 1. Lower frequencies (0.01 and 0.04) stretch the mountains out wider
-        local major_range = math.abs(math.cos(i * 0.01))
-        local jagged_peaks = math.abs(math.sin(i * 0.04))
-
+    for i = 1, scaled_size do
+        local major_range = abs(cos(i * 0.01))
+        local jagged_peaks = abs(sin(i * 0.04))
         local raw_height = (major_range * 0.7) + (jagged_peaks * 0.3)
 
-        -- 2. Widen the valleys by subtracting a threshold (e.g., 0.4)
-        -- Everything below 0.4 becomes a flat, zero-weight valley floor
-        local valley_threshold = 0.4
-        local widened_height = math.max(0, raw_height - valley_threshold)
+        local widened_height = max(0, raw_height - 0.4)
 
-        -- 3. Power scaling keeps the remaining peaks sharp
-        local weight = widened_height ^ 3
+        -- Fast multiplication instead of power (^3)
+        local weight = widened_height * widened_height * widened_height
 
         weights[i] = weight
         total_weight = total_weight + weight
     end
 
-    local random_target = math.random() * total_weight
+    local random_target = random() * total_weight
     local running_total = 0
+    local chosen_index = 1
 
-    -- 5. Walk through the weights to find which index `i` wins
-    for i = 1, size do
+    for i = 1, scaled_size do
         running_total = running_total + weights[i]
 
-        -- The moment the running total passes our random roll, `i` is our chosen index!
         if random_target <= running_total then
-            free = i -- Here is where index `i` gives you your xy_pair
+            chosen_index = i
             break
         end
     end
-    return free*factor
+
+    return chosen_index * factor
 end
 
 local make_noise_veg = (function()
