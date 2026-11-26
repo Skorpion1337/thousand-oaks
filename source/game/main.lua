@@ -886,7 +886,7 @@ local function generate_map()
                 repeat
                     noise = make_noise_volc(#free_lookup)
                 until not used[noise]
-                used[noise] = true
+                used[noise] = true -- this should be done when it checks that it fits not immediately, but it works
                 free = free_lookup[noise]
 
                 mountain.size = math.random(volcano1.size_min,volcano1.size_max)
@@ -958,7 +958,7 @@ local function generate_map()
                 repeat
                     noise = make_noise_veg(#free_lookup)
                 until not used[noise]
-                used[noise] = true
+                used[noise] = true  -- this should be done when it checks that it fits not immediately, but it works
                 free = free_lookup[noise]
 
                 local index = math.random(#all_pieces)
@@ -996,6 +996,8 @@ local function generate_map()
             end
         end
     end
+
+    TemperatureLevel = property_level("Temperature")
 end
 
 local function start_game()
@@ -1484,11 +1486,10 @@ function love.draw()
         gfx.push()
         local max_width = ScreenWidth/(TILERATIO*ScreenWidth)+1
         local max_height = ScreenHeight/(TILERATIO*ScreenHeight)+1
-        local temperature_level = property_level("Temperature")
         for x=Save.mapx,Save.mapx+max_width do
             for y=Save.mapy,Save.mapy+max_height do
                 gfx.push()
-                local tile = Tiles[Save.map[get_index(x, y, MAP_SIZE)]][temperature_level]
+                local tile = Tiles[Save.map[get_index(x, y, MAP_SIZE)]][TemperatureLevel]
                 local scale = ScreenWidth/tile:getWidth()*TILERATIO
                 gfx.scale(scale, scale)
                 gfx.draw(tile, (x-Save.mapx)*ScreenWidth*TILERATIO/scale, (y-Save.mapy)*ScreenWidth*TILERATIO/scale)
@@ -1500,9 +1501,10 @@ function love.draw()
                 gfx.push()
                 if Save.structure_locations[get_index(x, y, MAP_SIZE)] ~= nil then
                     local structure = Save.structures[Save.structure_locations[get_index(x, y, MAP_SIZE)]]
-                    local scale = ScreenWidth/Tiles[structure.tile][temperature_level]:getWidth()*TILERATIO*structure.size
+                    local tile = Tiles[structure.tile][TemperatureLevel]
+                    local scale = ScreenWidth/tile:getWidth()*TILERATIO*structure.size
                     gfx.scale(scale, scale)
-                    gfx.draw(Tiles[structure.tile][temperature_level],
+                    gfx.draw(tile,
                             (x-Save.mapx)*ScreenWidth*TILERATIO/scale,
                             (y-Save.mapy)*ScreenWidth*TILERATIO/scale)
                 end
