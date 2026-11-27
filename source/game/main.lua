@@ -130,7 +130,7 @@ local function find_pieces_with_prefix(name)
     return node
 end
 
-HELP_TEXT = 'REPORTING BUGS\n\n\nPlease report bugs at\n1. Github issues at https://github.com/Skorpion1337/thousand-oaks/issues\n2. Shoutbox at https://tinyurl.com/1000oakz\n\n\nSOMETHING ABOUT CLUTTER\n\n\nLook at folder %APPDATA%/LOVE to save some space! \nThis folder is for starting directly from code.\n \n\nAnd look at folder %APPDATA%/gamename(eg. thousandoaks) or simply %APPDATA%/game. \nThis folder is for starting from the compiled executable.\n\n\nIn Linux look for these\n$XDG_DATA_HOME/love/ or ~/.local/share/love/\nlove may be replaced by gamename(eg. thousandoaks) or simply "game"\n\n\nIf you corrupt your settings and the game looks wonky, try deleting\nthe "options" file so it is regenerated to its default values.\n\n\nAND NOW FOR LICENSES\n\n\nAdditional licenses not mentioned in the license file in the game folder \nand folder love in the source distribution\n\n\nThis game\nby Skorpion1337\ntinyurl.com/1000oakz\nGPLv3\nhttps://www.gnu.org/licenses/gpl-3.0.html\n\n\n----Libraries----\n\n\nlume\nA collection of functions for Lua, geared towards game development.\nUsing it for serializing data before compression.\nhttps://github.com/rxi/lume\nMIT \n--\n-- lume\n--\n-- Copyright (c) 2020 rxi\n--\n-- Permission is hereby granted, free of charge, to any person obtaining a copy of\n-- this software and associated documentation files (the "Software"), to deal in\n-- the Software without restriction, including without limitation the rights to\n-- use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\n-- of the Software, and to permit persons to whom the Software is furnished to do\n-- so, subject to the following conditions:\n--\n-- The above copyright notice and this permission notice shall be included in all\n-- copies or substantial portions of the Software.\n--\n-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n-- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n-- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n-- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n-- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n-- SOFTWARE.\n--\n\n\n----Graphics----\n\n\nBackground love potion - graphics/potion.jpg\nhttps://en.wikipedia.org/wiki/File:Filtre_d%27Amour.jpg\nFrom user https://commons.wikimedia.org/wiki/User:Arnaud_25 - Arnaud_25\nCreative Commons Attribution-Share Alike 4.0 International\nhttps://creativecommons.org/licenses/by-sa/4.0/deed.en\n\n\nFrozen Lake winter terrain and water tiles - eg. graphics/terrain/1\nSome of them have been touched to fit different temperature states\nhttps://opengameart.org/content/frozen-lake-lpc\nFrom user https://opengameart.org/users/zapaper - Peter\nCredits to http://www.buko-studios.com/ Commissioned by PlayCraft: www.playcraftapp.com\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/deed.en\n\n\n16x16 Overworld Tiles used to create volcano - graphics/terrain/volcano.png\nAnd also mountain - terrain/mountain.png\nAnd also forest tiles - eg. graphics/terrain/1\nhttps://opengameart.org/content/16x16-overworld-tiles\nFrom user https://opengameart.org/users/sharm - Lanea Zimmerman\nCC-BY 4.0\nhttps://creativecommons.org/licenses/by/4.0/deed.en\n\n\nWhispers of Avalon: Desert Tileset  - eg. graphics/terrain/6\nAlso touched to create more desert tiles\nhttps://opengameart.org/content/whispers-of-avalon-desert-tileset\nFrom user https://opengameart.org/users/leonard-pabin - Leonard pabin, Ali-G\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/deed.en\n\n\nWhispers of Avalon: Grassland Tileset - graphics/terrain/5/ground1.png\nhttps://opengameart.org/content/whispers-of-avalon-grassland-tileset\nFrom user https://opengameart.org/users/leonard-pabin - Leonard pabin\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/deed.en\n\n\n17 Grass Tiles - graphics/terrain/ various\nhttps://opengameart.org/content/17-grass-tiles\nFrom user https://opengameart.org/users/hawkadium - Hawkadium\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/deed.en\n\n\n32x32 (and 16x16) RPG Tiles--Forest and some Interior Tiles - graphics/ various forests\nhttps://opengameart.org/content/32x32-and-16x16-rpg-tiles-forest-and-some-interior-tiles\nStephen Challener and the Open Surge team ( http://opensnc.sourceforge.net), \nhosted by OpenGameArt.org\nhttps://opengameart.org/users/redshrike\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/deed.en'
+HELP_TEXT = 'REPORTING BUGS\n\n\nPlease report bugs at\n1. Github issues at https://github.com/Skorpion1337/thousand-oaks/issues\n2. Shoutbox at https://tinyurl.com/1000oakz\n\n\nSOMETHING ABOUT CLUTTER\n\n\nLook at folder %APPDATA%/LOVE to save some space! \nThis folder is for starting directly from code.\n \n\nAnd look at folder %APPDATA%/gamename(eg. thousandoaks) or simply %APPDATA%/game. \nThis folder is for starting from the compiled executable.\n\n\nIn Linux look for these\n$XDG_DATA_HOME/love/ or ~/.local/share/love/\nlove may be replaced by gamename(eg. thousandoaks) or simply "game"\n\n\nIf you corrupt your settings and the game looks wonky, try deleting\nthe "options" file so it is regenerated to its default values.\n\n\nAND NOW FOR LICENSES\n\n\nAdditional licenses not mentioned in the license file in the game folder \nand folder love in the source distribution\n\n\nThis game\nby Skorpion1337\ntinyurl.com/1000oakz\nGPLv3\nhttps://www.gnu.org/licenses/gpl-3.0.html\n\n\n----Libraries----\n\n\nlume\nA collection of functions for Lua, geared towards game development.\nUsing it for serializing data before compression.\nhttps://github.com/rxi/lume\nMIT \n--\n-- lume\n--\n-- Copyright (c) 2020 rxi\n--\n-- Permission is hereby granted, free of charge, to any person obtaining a copy of\n-- this software and associated documentation files (the "Software"), to deal in\n-- the Software without restriction, including without limitation the rights to\n-- use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\n-- of the Software, and to permit persons to whom the Software is furnished to do\n-- so, subject to the following conditions:\n--\n-- The above copyright notice and this permission notice shall be included in all\n-- copies or substantial portions of the Software.\n--\n-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n-- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n-- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n-- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n-- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n-- SOFTWARE.\n--\n\n\n----Graphics----\n\n\nBackground love potion - graphics/potion.jpg\nhttps://en.wikipedia.org/wiki/File:Filtre_d%27Amour.jpg\nFrom user https://commons.wikimedia.org/wiki/User:Arnaud_25 - Arnaud_25\nCreative Commons Attribution-Share Alike 4.0 International\nhttps://creativecommons.org/licenses/by-sa/4.0/\n\n\nFrozen Lake winter terrain and water tiles - eg. graphics/terrain/1\nSome of them have been touched to fit different temperature states\nhttps://opengameart.org/content/frozen-lake-lpc\nFrom user https://opengameart.org/users/zapaper - Peter\nCredits to http://www.buko-studios.com/ Commissioned by PlayCraft: www.playcraftapp.com\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/\n\n\n16x16 Overworld Tiles used to create volcano - graphics/terrain/volcano.png\nAnd also mountain - terrain/mountain.png\nAnd also forest tiles - eg. graphics/terrain/1\nhttps://opengameart.org/content/16x16-overworld-tiles\nFrom user https://opengameart.org/users/sharm - Lanea Zimmerman\nCC-BY 4.0\nhttps://creativecommons.org/licenses/by/4.0/\n\n\nWhispers of Avalon: Desert Tileset  - eg. graphics/terrain/6\nAlso touched to create more desert tiles\nhttps://opengameart.org/content/whispers-of-avalon-desert-tileset\nFrom user https://opengameart.org/users/leonard-pabin - Leonard pabin, Ali-G\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/\n\n\nWhispers of Avalon: Grassland Tileset - graphics/terrain/5/ground1.png\nhttps://opengameart.org/content/whispers-of-avalon-grassland-tileset\nFrom user https://opengameart.org/users/leonard-pabin - Leonard pabin\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/\n\n\n17 Grass Tiles - graphics/terrain/ various\nhttps://opengameart.org/content/17-grass-tiles\nFrom user https://opengameart.org/users/hawkadium - Hawkadium\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/\n\n\n32x32 (and 16x16) RPG Tiles--Forest and some Interior Tiles - graphics/ various forests\nhttps://opengameart.org/content/32x32-and-16x16-rpg-tiles-forest-and-some-interior-tiles\nStephen Challener and the Open Surge team ( http://opensnc.sourceforge.net), \nhosted by OpenGameArt.org\nhttps://opengameart.org/users/redshrike\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/\n\n\nRandom RPG Icons Part 1 - used as blood and sulfur icons for example\nhttps://opengameart.org/content/random-rpg-icons-part-1\nFrom user https://opengameart.org/users/horrorpen - HorrorPen\nCC-BY 3.0\nhttps://creativecommons.org/licenses/by/3.0/\n\n\nRPG Crafting Material Icons - used as leather and other resources\nhttps://opengameart.org/content/rpg-crafting-material-icons\nFrom user https://opengameart.org/users/bizmasterstudios - Michael Williams\nCC-BY 4.0\nhttps://creativecommons.org/licenses/by/4.0/'
 
 check1 = ""
 check2 = ""
@@ -1285,6 +1285,50 @@ function love.load()
     for i = 1, stat_max do
         Tiles[#Tiles][i] = gfx.newImage("graphics/terrain/volcano1.png")
     end
+    
+    resource_names =  {"meat", "bone", "blood", "leather", "venom", "sulphur", "gold", "iron", "copper", "tin", "aluminium", "obsidian", "rune", "zinc", "voidstone", "uranium"}
+    ResourceIcons = {}
+    for i=1, #resource_names do
+        ResourceIcons[resource_names[i]] = gfx.newImage("graphics/resources/"..resource_names[i]..".png")
+    end
+
+    MonsterTiles = {
+        { -- rad level 1
+            {i=1, },
+            {i=2, },
+            {i=3, },
+        },
+        { -- rad level 2
+            {i=1, },
+            {i=2, },
+            {i=3, },
+        },
+        { -- rad level 3
+            {i=1, },
+            {i=2, },
+            {i=3, },
+        },
+        { -- rad level 4
+            {i=1, },
+            {i=2, },
+            {i=3, },
+        },
+        { -- rad level 5
+            {i=1, },
+            {i=2, },
+            {i=3, },
+        },
+        { -- rad level 6
+            {i=1, },
+            {i=2, },
+            {i=3, },
+        },
+        { -- rad level 7
+            {i=1, name = "Hell Goat", gfx.newImage("graphics/monsters/7/1.png"), resources={venom=10}},
+            {i=2, },
+            {i=3, },
+        },
+    }
 
     Hooveredx, Hooveredy = 0, 0
 
