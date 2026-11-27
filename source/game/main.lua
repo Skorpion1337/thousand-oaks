@@ -1309,6 +1309,7 @@ function love.load()
     for i=1, #all_names do
         ResourceIcons[all_names[i]] = gfx.newImage("graphics/resources/"..all_names[i]..".png")
     end
+    MaxResource = 10
 
     MonsterTiles = {
         { -- rad level 1
@@ -1342,9 +1343,9 @@ function love.load()
             {i=3, },
         },
         { -- rad level 7
-            {i=1, name = "Hell Goat", gfx.newImage("graphics/monsters/7/1.png"), resources={venom=10}},
-            {i=2, name = "Shadow", gfx.newImage("graphics/monsters/7/2.png"), resources={blood=10}},
-            {i=3, name = "White Centaur", gfx.newImage("graphics/monsters/7/3.png"), resources={meat=3, bone=2, leather=3}}
+            {i=1, name = "Hell Goat", gfx.newImage("graphics/monsters/7/1.png"), resources={venom=MaxResource}},
+            {i=2, name = "Shadow", gfx.newImage("graphics/monsters/7/2.png"), resources={blood=MaxResource}},
+            {i=3, name = "White Centaur", gfx.newImage("graphics/monsters/7/3.png"), resources={meat=math.floor(MaxResource/3), bone=math.floor(MaxResource/3), leather=math.floor(MaxResource/3)}}
         }
     }
     -- "meat", "bone", "blood", "leather", "venom"
