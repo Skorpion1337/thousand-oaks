@@ -197,6 +197,21 @@ local function clamp(val, lower, upper)
     return val
 end
 
+local function concatLists(...)
+    local result = {}
+    local args = {...}
+
+    for _, list in ipairs(args) do
+        if type(list) == "table" then
+            for _, value in ipairs(list) do
+                table.insert(result, value)
+            end
+        end
+    end
+
+    return result
+end
+
 local function find_hoovered_button(x, y)
     State.hoover = 0
     local len = table_len(Buttons[State.leaf])
@@ -1285,11 +1300,14 @@ function love.load()
     for i = 1, stat_max do
         Tiles[#Tiles][i] = gfx.newImage("graphics/terrain/volcano1.png")
     end
-    
-    resource_names =  {"meat", "bone", "blood", "leather", "venom", "sulphur", "gold", "iron", "copper", "tin", "aluminium", "obsidian", "rune", "zinc", "voidstone", "uranium"}
+
+    tree_resource_names = {"oak"}
+    monster_resource_names = {"meat", "bone", "blood", "leather", "venom"}
+    mountain_resource_names =  {"sulphur", "gold", "iron", "copper", "tin", "aluminium", "obsidian", "rune", "zinc", "voidstone", "uranium"}
+    all_names = concatLists(tree_resource_names, monster_resource_names, mountain_resource_names)
     ResourceIcons = {}
-    for i=1, #resource_names do
-        ResourceIcons[resource_names[i]] = gfx.newImage("graphics/resources/"..resource_names[i]..".png")
+    for i=1, #all_names do
+        ResourceIcons[all_names[i]] = gfx.newImage("graphics/resources/"..all_names[i]..".png")
     end
 
     MonsterTiles = {
@@ -1325,10 +1343,11 @@ function love.load()
         },
         { -- rad level 7
             {i=1, name = "Hell Goat", gfx.newImage("graphics/monsters/7/1.png"), resources={venom=10}},
-            {i=2, },
-            {i=3, },
-        },
+            {i=2, name = "Shadow", gfx.newImage("graphics/monsters/7/2.png"), resources={blood=10}},
+            {i=3, name = "White Centaur", gfx.newImage("graphics/monsters/7/3.png"), resources={meat=3, bone=2, leather=3}}
+        }
     }
+    -- "meat", "bone", "blood", "leather", "venom"
 
     Hooveredx, Hooveredy = 0, 0
 
