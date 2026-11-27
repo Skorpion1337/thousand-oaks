@@ -1327,27 +1327,30 @@ function love.load()
             {i=3, },
         },
         { -- rad level 4
-            {i=1, },
+            {i=1, name = "Bat", gfx.newImage("graphics/monsters/4/1.png"), resources={blood=0.5, leather=0.5}},
             {i=2, },
             {i=3, },
         },
         { -- rad level 5
-            {i=1, name = "Frost Biter", gfx.newImage("graphics/monsters/5/1.png"), resources={meat=5, bone=5}},
+            {i=1, name = "Frost Biter", gfx.newImage("graphics/monsters/5/1.png"), resources={meat=0.5, bone=0.5}},
             {i=2, },
             {i=3, },
         },
         { -- rad level 6
-            {i=1, name = "Dead Priest", gfx.newImage("graphics/monsters/6/1.png"), resources={blood=8, bone=2}},
+            {i=1, name = "Dead Priest", gfx.newImage("graphics/monsters/6/1.png"), resources={blood=0.8, bone=0.2}},
             {i=2, },
             {i=3, },
         },
         { -- rad level 7
-            {i=1, name = "Hell Goat", gfx.newImage("graphics/monsters/7/1.png"), resources={venom=10}},
-            {i=2, name = "Shadow", gfx.newImage("graphics/monsters/7/2.png"), resources={blood=10}},
-            {i=3, name = "White Centaur", gfx.newImage("graphics/monsters/7/3.png"), resources={meat=3, bone=3, leather=3}}
+            {i=1, name = "Hell Goat", gfx.newImage("graphics/monsters/7/1.png"), resources={venom=1}},
+            {i=2, name = "Shadow", gfx.newImage("graphics/monsters/7/2.png"), resources={blood=1}},
+            {i=3, name = "White Centaur", gfx.newImage("graphics/monsters/7/3.png"), resources={meat=0.333, bone=0.333, leather=0.333}}
         }
     }
+    MaxResources = 10
     -- "meat", "bone", "blood", "leather", "venom"
+    -- Radiation decides the type of monsters and biodiversity their amount
+    -- Apply mineral richness to mountains not trees, normal amounts at 4, this time (1-7)/7
 
     Hooveredx, Hooveredy = 0, 0
 
