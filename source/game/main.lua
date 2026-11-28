@@ -514,7 +514,7 @@ local function generate_planets()
         planet.y = math.random()
         Save.planets[i] = planet
     end
-    Save.PlanetChoice = 1
+    Save.PlanetChoice = math.random(#Save.planets)
     Save.PlanetsGenerated = true
 end
 
