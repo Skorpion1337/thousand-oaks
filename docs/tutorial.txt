@@ -1,13 +1,9 @@
 Use W, S, A, D to move around in the map.
 
-Every turn the mines produce resources from the nodes in their area like volcanoes, mountains or forests.
-
-In colder climates mines require heat which is produced by volcanoes. So start next to a volcano. Mines without volcanoes might be fed manually by moving the heat item between road-connected mines.
+Every turn the mines produce resources from the nodes in their area like volcanoes, mountains or forests. And from the monsters that live in them.
 
 Every turn you can build roads to connect the cities for moving resources for example. The bigger the total population, the more roads you can build per turn. Every structure like volcanoes, mountains and trees counts as road so you can move through them.
 
-Building a new mine costs 100 oak or 100 heat, it is built from one mine where it takes the oak or heat from. So put your first mine next to some forests and trees or some volcanoes. Trees give oak slower than forests.
+Building a new mine costs 100 oak, it is built from one mine where it takes the oak from. So put your first mine next to some forests and trees. Trees give oak slower than forests.
 
-There exists building a wonder victory and collect a thousand of each meat victory!
-
-To store more meat inside a mine, which is where all the resources are anyway, you need to build more meat silos. To win the thousand of each meat victory!
+Right now there exists building a wonder victory and collect a thousand of each metal in one mine victory!
