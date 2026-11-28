@@ -24,6 +24,7 @@ MIN_LAKE_SIZE = 0.2*200/MAP_SIZE
 MAPSPEEDSEC = 0.01
 MAX_VOLCANO = 0.04
 MAX_VEGETATION = 0.3
+MAX_MONSTERS = 0.5
 VOLCANISM = 1/7
 
 DELIMITER = "+"
@@ -210,6 +211,27 @@ local function concatLists(...)
     end
 
     return result
+end
+
+local function get_noise_biased_from_keys(t, keys)
+    local num_keys = #keys
+    if num_keys == 0 then
+        return nil, nil
+    end
+
+    local base_index = math.random(1, num_keys)
+
+    local offset = 0
+    if math.noise then
+        -- Note: passing a random base_index to math.noise makes it act like random numbers.
+        -- If you want true smooth noise wandering, use a persistent counter/time variable instead!
+        offset = math.floor(math.noise(base_index) * 3)
+    end
+
+    local final_index = math.max(1, math.min(base_index + offset, num_keys))
+    local selected_key = keys[final_index]
+
+    return selected_key, t[selected_key]
 end
 
 local function find_hoovered_button(x, y)
@@ -1012,7 +1034,62 @@ local function generate_map()
         end
     end
 
+    local all_pieces = {}
+    local forests = find_pieces_with_prefix("forest")
+    for i=1, #forests do
+        all_pieces[#all_pieces+1] = forests[i]
+    end
+    local trees = find_pieces_with_prefix("tree")
+    for i=1, #trees do
+        all_pieces[#all_pieces+1] = trees[i] --2.33 with 3 and 2.25 with 4
+    end
+    local mountains = find_pieces_with_prefix("mountain")
+    for i=1, #mountains do
+        all_pieces[#all_pieces+1] = mountains[i] --2.33 with 3 and 2.25 with 4
+    end
+    local volcanos = find_pieces_with_prefix("volcano")
+    for i=1, #volcanos do
+        all_pieces[#all_pieces+1] = volcanos[i] --2.33 with 3 and 2.25 with 4
+    end
+    local sum_of_means = 0
+    for i=1, #all_pieces do
+        sum_of_means = sum_of_means + mean_value({all_pieces[i].size_min, all_pieces[i].size_max})
+    end
+    local final_mean = sum_of_means / #all_pieces
+
+    local count = 0
+    for _ in pairs(Save.structure_locations) do
+        count = count + 1
+    end
+
+    -- may not be perfect
+    local monster_amount = math.floor(MAX_MONSTERS*count*final_mean^2/MonsterSide^2)
+    monster_amount = math.min(MAX_MONSTERS*count, monster_amount)
+
+    local keys = {}
+    for k, _ in pairs(Save.structure_locations) do
+        keys[#keys + 1] = k
+    end
+
+    for i=1, monster_amount do
+        if #keys == 0 then break end
+        local base_index = math.random(1, #keys)
+
+        local offset = 0
+        if math.noise then
+            -- Note: passing a random base_index to math.noise makes it act like random numbers.
+            -- If you want true smooth noise wandering, use a persistent counter/time variable instead!
+            offset = math.floor(math.noise(base_index) * 3)
+        end
+
+        local final_index = math.max(1, math.min(base_index + offset, #keys))
+
+        structure = Save.structures[Save.structure_locations[keys[final_index]]]
+        table.remove(keys, final_index)
+    end
+
     TemperatureLevel = property_level("Temperature")
+    RadiationLevel = 7 --property_level("Radiation")
 end
 
 local function start_game()
@@ -1348,6 +1425,7 @@ function love.load()
         }
     }
     MaxResources = 10
+    MonsterSide = 2
     -- "meat", "bone", "blood", "leather", "venom"
     -- Radiation decides the type of monsters and biodiversity their amount
     -- Apply mineral richness to mountains not trees, normal amounts at 4, this time (1-7)/7
