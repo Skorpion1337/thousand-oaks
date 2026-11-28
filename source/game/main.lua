@@ -24,7 +24,7 @@ MIN_LAKE_SIZE = 0.2*200/MAP_SIZE
 MAPSPEEDSEC = 0.01
 MAX_VOLCANO = 0.04
 MAX_VEGETATION = 0.3
-MAX_MONSTERS = 0.5
+MAX_MONSTERS = 0.7
 VOLCANISM = 1/7
 
 DELIMITER = "+"
@@ -493,7 +493,19 @@ local function generate_planets()
             elseif planet_properties[j].name == "" then
                 planet[j].level_name = ""
             else
-                local severity_level = math.random(#planet_properties[j].levels)
+                local max_levels = #planet_properties[j].levels
+                local base_index = math.random(1, max_levels)
+
+                local offset = 0
+                if math.noise then
+                    -- Pass BOTH the planet ID and property index 'j' into 2D noise.
+                    -- Multiplying 'j' by a larger number (like 10.0) breaks the table-order link!
+                    local noise_val = math.noise(i * 1.2, j * 10.0)
+                    offset = math.floor(noise_val * 3) -- shifts between -3 and +3
+                end
+
+                local severity_level = math.max(1, math.min(base_index + offset, max_levels))
+
                 planet[j].level_name=planet_properties[j].levels[severity_level]
                 planet[j].level = severity_level
             end
@@ -1065,13 +1077,15 @@ local function generate_map()
     -- may not be perfect
     local monster_amount = math.floor(MAX_MONSTERS*count*final_mean^2/MonsterSide^2)
     monster_amount = math.min(MAX_MONSTERS*count, monster_amount)
+    monster_amount = calculate_property_ratio("Biodiversity") * monster_amount
 
     local keys = {}
     for k, _ in pairs(Save.structure_locations) do
         keys[#keys + 1] = k
     end
 
-    for i=1, monster_amount do
+    local created_monsters = 0
+    repeat
         if #keys == 0 then break end
         local base_index = math.random(1, #keys)
 
@@ -1086,7 +1100,10 @@ local function generate_map()
 
         structure = Save.structures[Save.structure_locations[keys[final_index]]]
         table.remove(keys, final_index)
-    end
+
+        created_monsters = created_monsters + 1
+
+    until created_monsters > monster_amount
 
     TemperatureLevel = property_level("Temperature")
     RadiationLevel = 7 --property_level("Radiation")
